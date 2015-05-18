@@ -10,6 +10,7 @@ public class MyException extends Exception{
 
 	  private int errorCode;
 	  private String errorMsg;
+	  private boolean errorCritical;
 
 	  /**
 	   * the created exception gets the values of the error
@@ -18,6 +19,7 @@ public class MyException extends Exception{
 	  public MyException(ErrorCodes error) {
 	    this.errorMsg = error.getMsg();
 	    this.errorCode = error.getId();
+	    this.errorCritical = error.getCrit();
 	  }
 	  
 	  public int getErrorCode() {
