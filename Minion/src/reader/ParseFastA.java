@@ -1,6 +1,5 @@
 package reader;
-
-//TODO counter for sequences parsed 
+//TODO FileNot FOund exception
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -8,11 +7,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import error.*;
-/**
- * 
- * @author Friederike Hanssen
 
- *
+/**
+* @author Friederike Hanssen
+* Contract: This class gets a filename and construct an object containing two array list, 
+* one containing all correct reads, one containing all incorrect ones including all the information about the occured error.
+* We will count all correct and incorrect sequences to keep track of where errors occur.
  */
 	public class ParseFastA{
 	
@@ -21,15 +21,19 @@ import error.*;
 	private ArrayList<IncorrectFastAEntry> fastAErrorList;
 	
 	/**
-	 * 
-	 * @param inputFile gets the via the main written in String
+	 * First of all it is checked if the file name is correct.(This should better not happen in the constructor, but i couldn't find a better solution yet)
+	 * If it is a valid file name we will parse it, else the incorrectFastAEntry list will only contain this error and the nothing will be parsed
+	 * @param inputFile 
 	 * @throws IOException
 	 */
 	public ParseFastA (String inputFile) throws IOException{
 		
 		try{
+			
+			
 			isFileName(inputFile);
 			
+			//Needed to process the file any further
 			File file = new File(inputFile); 
 			FileReader fileReader = new FileReader(file); 
 			bufferReader = new BufferedReader(fileReader);
@@ -37,10 +41,14 @@ import error.*;
 			fastAList = new ArrayList<FastAEntry>();
 			fastAErrorList = new ArrayList<IncorrectFastAEntry>();
 			
-			run();
-		}
-		catch(MyException e){
+			//the file will be parsed further if it's valid
+			parseFile();
 			
+		}catch(MyException e){
+			//If the sequence is incorrect a IncorrectFastAEntry object is created. 
+			//It always consists of all the information we so far gather about an error: 
+			//positionParsed(-1 -> none parsed), Code from the database, message and critical to determine later if it deserves a popup
+			int positionParsed = -1;
 			int errorCode = e.getErrorCode();
 			String errorMessage = e.getMessage();
 			boolean isCritical = e.isCriticalError();
@@ -48,19 +56,18 @@ import error.*;
 			fastAList = new ArrayList<FastAEntry>();
 			fastAErrorList = new ArrayList<IncorrectFastAEntry>();
 			
+			//fastAList can't contain anything, since there are none sequences read
 			FastAEntry fastAEntry = new FastAEntry(null, null);
 			fastAList.add(fastAEntry);
-			IncorrectFastAEntry incorretFastAEntry = new IncorrectFastAEntry (-1,errorMessage, errorCode,isCritical);
+			
+			IncorrectFastAEntry incorretFastAEntry = new IncorrectFastAEntry (positionParsed,errorMessage, errorCode,isCritical);
 			fastAErrorList.add(incorretFastAEntry);
-		}
-		
-		
-		
-		
+		}	
 	}
 
-
-
+	/**
+	 * checks for .fasta ending, thus if the input is a correct file type. Anything else can't be parsed
+	 */
 	private void isFileName(String inputFile) throws MyException {
 	
 		if(!inputFile.endsWith(".fasta")){
@@ -69,21 +76,6 @@ import error.*;
 		
 	}
 
-
-
-	private void run() throws IOException {
-		processFile();
-	}
-
-
-
-//	private void print() {
-//		for(FastAEntry entry : fastAList){
-//			System.out.println("We found the following sequence \n" + entry.getIdentity() + "\n" + entry.getSequence()+"\n");
-//		}
-//	}
-	
-	
 	
 	/**
 	 * 
@@ -93,16 +85,14 @@ import error.*;
 	 * @param sequence: stores the sequence
 	 * @param identity: stores the identity
 	 * 
-	 * Reads each line. If the first sign was a >, the whole line is saved in identity. The following lines are stored in sequence until the next > is found
-	 * Identity and sequence are then stored as a FastAEntry object in an ArrayList
-	 * If nothing is written in the sequence it is thrown out and not stored
+	 * Reads each line. If the first sign was a >, the whole line is saved in identity. The following lines are stored in sequence until the next > is found.
+	 *If we hit a new > everything is checked for errors. The newline starting with > is stored and the rest is read.
 	 */
-	private void processFile() throws IOException{
+	private void parseFile() throws IOException{
 		
 		String temp = "";
 		String sequence = "";
 		String identity ="";
-		boolean checkEntry = false;
 		int counter = 0;
 		
 		while((temp = bufferReader.readLine()) != null){
@@ -128,38 +118,47 @@ import error.*;
 		
 	}
 
-
-
+	
+	/**
+	 * Each entry is checked for correctness before stored and the corresponding list
+	 */
 	private void processRead(String sequence, String identity) {
-		int amountParsed =0;
+		
+		int amountParsed = 0;
+		
 		try{
-			readerError(identity, sequence);
+			checkForReadingError(identity, sequence);
+			
+			//If there is no reading error, we have a new sequence parsed and store it.
+			amountParsed++;
 			FastAEntry fastAEntry = new FastAEntry(identity, sequence);
 			fastAList.add(fastAEntry);
-			amountParsed++;
+			
 		}catch(MyException e){
+			//creating new incorrect fasta entry object and stores it
 			int errorCode = e.getErrorCode();
 			String errorMessage = e.getMessage();
 			boolean isCritical = e.isCriticalError();
 			amountParsed++;
+			
+			
 			IncorrectFastAEntry incorretFastAEntry = new IncorrectFastAEntry (amountParsed,errorMessage, errorCode,isCritical);
 			fastAErrorList.add(incorretFastAEntry);
 		}
 	}
 	
-	private int readerError(String identity, String sequence) throws MyException{
-		//non gapped, correctsequence, that has a name
-		if(sequence==""){
-			throw new MyException(ErrorCodes.NO_SEQUENCE);
-		}
-		if(sequence != sequence.toUpperCase()){
-			throw new MyException(ErrorCodes.LOWERCASE_SEQUENCE);
-		}
-		char[] seq = sequence.toCharArray();
-		for(int i = 0; i < seq.length; i++){
-			if(seq[i] != 'A' || seq[i] != 'C'||seq[i] != 'T'||seq[i] != 'G')
-				throw new MyException(ErrorCodes.CORRUPTED_SEQUENCE);
-		}
+	/**
+	 * This class works together with the error package and figures out the correct error.
+	 * Possible errors are:
+	 * no name,no sequence, corrupted sequence(gaps, non nucleotids...) -> critical
+	 * lowercase of ACTG -> non critical
+	 * The if's are sorted in a way that critical errors are found first.
+	 * @param identity
+	 * @param sequence
+	 * @return
+	 * @throws MyException
+	 */
+	private int checkForReadingError(String identity, String sequence) throws MyException{
 		
 		
 		char[] id = identity.toCharArray();
@@ -175,28 +174,42 @@ import error.*;
 		}
 		
 		
+		if(sequence==""){
+			throw new MyException(ErrorCodes.NO_SEQUENCE);
+		}
+		
+		
+		
+		char[] seq = sequence.toCharArray();
+		for(int i = 0; i < seq.length; i++){
+			if(seq[i] != 'A' || seq[i] != 'C'||seq[i] != 'T'||seq[i] != 'G')
+				throw new MyException(ErrorCodes.CORRUPTED_SEQUENCE);
+		}
+		
+		//TODO actually won't be called
+		if(sequence != sequence.toUpperCase()){
+			throw new MyException(ErrorCodes.LOWERCASE_SEQUENCE);
+		}
+		
 		return 0;
 	}
 	
-	private void setFastAErrorList(ArrayList<IncorrectFastAEntry> fastAErrorList) {
-		this.fastAErrorList = fastAErrorList;
-	}
-
-
-
 	public ArrayList<IncorrectFastAEntry> getFastAErrorList() {
 		return fastAErrorList;
 	}
 
-
-
 	public ArrayList<FastAEntry> getFastAList() {
 		return fastAList;
 	}
-
-	private void setFastAList(ArrayList<FastAEntry> fastAList) {
-		this.fastAList = fastAList;
+	
+	
+	
+	//TEST
+	private void print() {
+	for(IncorrectFastAEntry entry : fastAErrorList){
+		System.out.println("We found the following errors \n" + entry.getPositionParsed() + "\n" + entry.getErrorMessage()+"\n" +entry.getErrorCode()+"\n"+entry.isCritical()+"\n");
 	}
+}
 
 //	public static void main(String[] args) throws IOException{
 //		 	
@@ -209,5 +222,7 @@ import error.*;
 //		}
 //
 //	}
+	
+	
 	
 }

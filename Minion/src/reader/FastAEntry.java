@@ -4,7 +4,7 @@ package reader;
  * 
  * @author Friederike Hanssen
  *This class creates a new fasta entry containing of a name and a sequence. 
- *As methods it only contains getters and setters for the attributes.
+ *As methods it only contains getters for the attributes.
  */
 public class FastAEntry {
 	private String identity;
@@ -26,20 +26,8 @@ public class FastAEntry {
 		return identity;
 	}
 
-
-	public void setIdentity(String identity) {
-		this.identity = identity;
-	}
-
-
 	public String getSequence() {
 		return sequence;
 	}
-
-
-	public void setSequence(String sequence) {
-		this.sequence = sequence;
-	}
-	
 
 }
