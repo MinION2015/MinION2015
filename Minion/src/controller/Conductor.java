@@ -1,36 +1,31 @@
 package controller;
+import reader.FastAEntry;
+import reader.IncorrectFastAEntry;
+import reader.ParseFastA;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
-import reader.FastQEntry;
-import reader.FastQParser;
-import controller.Input;
-
 public class Conductor {
+	ArrayList<FastAEntry> correctfastAList;
 
-	public void main(String args){
+	/*
+	 * called by the ActionListener of the gui. gets the filename and and calles the model functions.
+	 * Returns the a ArrayList of incorrectFatAFiles.
+	 */
+	public ArrayList<IncorrectFastAEntry> modelFile(String filename) throws IOException
+	{
+		ParseFastA newParsedfile = new ParseFastA(filename);
+		Conductor conductor = new Conductor(newParsedfile.getFastAList());
 		
-		Input in = new Input();
-		String fastQName = in.getFastQNameInput();		//gets name of the fastQ file as string
 		
-		FastQParser fQParser = new FastQParser(fastQName);			//new ParserObject
-		fQParser.getIncorrectArray();
-		
+		return newParsedfile.getFastAErrorList();	//returns the ArrayList of incorrect FastA Files
 	}
 	/*
-	 * check the Error id and returns it
+	 * gets the ArrayList of correct FastaEntrys. Stores it in the Conductor Object.
 	 */
-	public String checkErrorID(int id)
+	private Conductor(ArrayList<FastAEntry> correctfastAList)
 	{
-		return "";
-	}
-	
-	/*
-	 * gets MEssages and outputs them on the gui
-	 */
-	public void Output(String ErrorMessage, String CorrectMessage)
-	{
-		gui.textfield_Error.setText(ErrorMessage);		//gui as placeholder
-		textfield_Correct.setText(CorrectMessage);
+		correctfastAList = correctfastAList;
 	}
 }
