@@ -14,35 +14,35 @@ public enum ErrorCodes {
 	LOWERCASE_SEQUENCE(2002, "There is at least one lowercase nucleotide in the sequence.", false),
 	
 	
-	NO_SEQUENCE_NAME(2010, "There is no sequence name.", false)	
-	;
+	NO_SEQUENCE_NAME(2010, "There is no sequence name.", false);
 	
 	
-	private final int id;
-	private final String msg;
-	private final boolean crit;
+	private final int identity;
+	private final String message;
+	private final boolean critical;
 	
 	/**
 	 * if u dont understand this constructor u will have a hard time 
-	 * @param id the id of the errors
-	 * @param msg the message of the errors
+	 * @param identity the id of the errors
+	 * @param message the message of the errors
 	 */
-	ErrorCodes(int id, String msg, boolean crit) {
-		this.id = id;
-		this.msg = msg;
-		this.crit = crit;
+	ErrorCodes(int identity, String message, boolean critical) {
+		this.identity = identity;
+		this.message = message;
+		this.critical = critical;
 	}
 	
-	public int getId(){
-		return this.id;
+	public int getIdentity(){
+		return this.identity;
 	}
 
-	public String getMsg(){
-		return this.msg;
+	public String getMessage(){
+		return this.message;
 	}
 	
-	public boolean getCrit(){
-		return this.crit;
+	public boolean getCritical(){
+		return this.critical;
+
 	}
 	
 }

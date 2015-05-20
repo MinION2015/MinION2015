@@ -10,23 +10,27 @@ public class MyException extends Exception{
 
 	  private int errorCode;
 	  private String errorMsg;
-	  private boolean errorCritical;
+	  private boolean isCriticalError;
 
 	  /**
 	   * the created exception gets the values of the error
 	   * @param error
 	   */
 	  public MyException(ErrorCodes error) {
-	    this.errorMsg = error.getMsg();
-	    this.errorCode = error.getId();
-	    this.errorCritical = error.getCrit();
+	    this.errorMsg = error.getMessage();
+	    this.errorCode = error.getIdentity();
+	    this.isCriticalError = error.getCritical();
 	  }
 	  
-	  public int getErrorCode() {
+	  public boolean isCriticalError() {
+		return isCriticalError;
+	}
+
+	public int getErrorCode() {
 	    return errorCode;
 	  }
 
-	  public String getErrorMsg() {
+	  public String getErrorMessage() {
 	    return errorMsg;
 	  }
 }

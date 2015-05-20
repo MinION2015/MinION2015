@@ -2,12 +2,25 @@ package reader;
 
 public class IncorrectFastAEntry {
 
+	private int amountParsed;
 	private String errorMessage;
 	private int errorCode;
+	private boolean isCritical;
 	
-	public IncorrectFastAEntry(String sequence, int errorNumber){
+	
+	public IncorrectFastAEntry(int amountParsed,String sequence, int errorNumber,boolean isCritical){
+		this.amountParsed = amountParsed;
 		this.errorMessage = sequence;
 		this.errorCode = errorNumber;
+		this.isCritical = isCritical;
+	}
+
+	public boolean isCritical() {
+		return isCritical;
+	}
+
+	public void setCritical(boolean isCritical) {
+		this.isCritical = isCritical;
 	}
 
 	public String getSequence() {

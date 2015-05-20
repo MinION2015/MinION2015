@@ -1,22 +1,24 @@
 package reader;
 
+//TODO counter for sequences parsed 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import error.*;
 /**
  * 
  * @author Friederike Hanssen
 
  *
  */
-public class ParseFastA{
+	public class ParseFastA{
 	
-	BufferedReader bufferReader;
-	ArrayList<FastAEntry> fastAList;
-	ArrayList<IncorrectFastAEntry> fastAErrorList;
+	private BufferedReader bufferReader;
+	private ArrayList<FastAEntry> fastAList;
+	private ArrayList<IncorrectFastAEntry> fastAErrorList;
 	
 	/**
 	 * 
@@ -25,14 +27,45 @@ public class ParseFastA{
 	 */
 	public ParseFastA (String inputFile) throws IOException{
 		
-		File file = new File(inputFile); 
-		FileReader fileReader = new FileReader(file); 
-		bufferReader = new BufferedReader(fileReader);
+		try{
+			isFileName(inputFile);
+			
+			File file = new File(inputFile); 
+			FileReader fileReader = new FileReader(file); 
+			bufferReader = new BufferedReader(fileReader);
+			
+			fastAList = new ArrayList<FastAEntry>();
+			fastAErrorList = new ArrayList<IncorrectFastAEntry>();
+			
+			run();
+		}
+		catch(MyException e){
+			
+			int errorCode = e.getErrorCode();
+			String errorMessage = e.getMessage();
+			boolean isCritical = e.isCriticalError();
+			
+			fastAList = new ArrayList<FastAEntry>();
+			fastAErrorList = new ArrayList<IncorrectFastAEntry>();
+			
+			FastAEntry fastAEntry = new FastAEntry(null, null);
+			fastAList.add(fastAEntry);
+			IncorrectFastAEntry incorretFastAEntry = new IncorrectFastAEntry (-1,errorMessage, errorCode,isCritical);
+			fastAErrorList.add(incorretFastAEntry);
+		}
 		
-		fastAList = new ArrayList<FastAEntry>();
-		fastAErrorList = new ArrayList<IncorrectFastAEntry>();
 		
-		run();
+		
+		
+	}
+
+
+
+	private void isFileName(String inputFile) throws MyException {
+	
+		if(!inputFile.endsWith(".fasta")){
+			throw new MyException(ErrorCodes.BAD_FILETYPE);
+		}
 		
 	}
 
@@ -98,15 +131,18 @@ public class ParseFastA{
 
 
 	private void processRead(String sequence, String identity) {
-
+		int amountParsed =0;
 		try{
 			readerError(identity, sequence);
 			FastAEntry fastAEntry = new FastAEntry(identity, sequence);
 			fastAList.add(fastAEntry);
+			amountParsed++;
 		}catch(MyException e){
 			int errorCode = e.getErrorCode();
-			String errorMessage = e.getErrorMessage();
-			IncorrectFastAEntry incorretFastAEntry = new IncorrectFastAEntry(errorMessage, errorCode);
+			String errorMessage = e.getMessage();
+			boolean isCritical = e.isCriticalError();
+			amountParsed++;
+			IncorrectFastAEntry incorretFastAEntry = new IncorrectFastAEntry (amountParsed,errorMessage, errorCode,isCritical);
 			fastAErrorList.add(incorretFastAEntry);
 		}
 	}
