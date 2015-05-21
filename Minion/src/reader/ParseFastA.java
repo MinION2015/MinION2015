@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import error.*;
-//not able to recognize example1.fasta, only example1
+//works for most tested files but not for some.
 /**
 * @author Friederike Hanssen
 * Contract: This class gets a filename and construct an object containing two array list, 
@@ -26,52 +26,48 @@ import error.*;
 	 * @param inputFile 
 	 * @throws IOException
 	 */
-	public ParseFastA (String inputFile) throws IOException{
+	public ParseFastA (String inputFile) throws IOException, MyException{
 		
-//		try{
-//
-//
-//			//Needed to process the file any further
-//			File file = new File(inputFile); 
-//			FileReader fileReader = new FileReader(file); 
-//			bufferReader = new BufferedReader(fileReader);
-//			
-//			fastAList = new ArrayList<FastAEntry>();
-//			fastAErrorList = new ArrayList<IncorrectFastAEntry>();
-//			
-//			//the file will be parsed further if it's valid
-//			parseFile();
-//			
-//		}catch(MyException e){
-//			//If the sequence is incorrect a IncorrectFastAEntry object is created. 
-//			//It always consists of all the information we so far gather about an error: 
-//			//positionParsed(-1 -> none parsed), Code from the database, message and critical to determine later if it deserves a popup
-//			int positionParsed = -1;
-//			int errorCode = e.getErrorCode();
-//			String errorMessage = e.getErrorMessage();
-//			boolean isCritical = e.isCriticalError();
-//			
-//			fastAList = new ArrayList<FastAEntry>();
-//			fastAErrorList = new ArrayList<IncorrectFastAEntry>();
-//			
-//			//fastAList can't contain anything, since there are none sequences read
-//			FastAEntry fastAEntry = new FastAEntry(null, null);
-//			fastAList.add(fastAEntry);
-//			
-//			IncorrectFastAEntry incorretFastAEntry = new IncorrectFastAEntry(positionParsed,errorCode,errorMessage, isCritical);
-//			fastAErrorList.add(incorretFastAEntry);
-//		}	
+		try{
+
+			isFileName(inputFile);
+			
+			//Needed to process the file any further
+			File file = new File(inputFile); 
+			FileReader fileReader = new FileReader(file); 
+			bufferReader = new BufferedReader(fileReader);
+			
+			fastAList = new ArrayList<FastAEntry>();
+			fastAErrorList = new ArrayList<IncorrectFastAEntry>();
+			
+			//the file will be parsed further if it's valid
+			parseFile();
+			print();
+			
+		}catch(MyException e){
+			//If the sequence is incorrect a IncorrectFastAEntry object is created. 
+			//It always consists of all the information we so far gather about an error: 
+			//positionParsed(-1 -> none parsed), Code from the database, message and critical to determine later if it deserves a popup
+			int positionParsed = -1;
+			int errorCode = e.getErrorCode();
+			String errorMessage = e.getErrorMessage();
+			boolean isCritical = e.isCriticalError();
+			
+			fastAList = new ArrayList<FastAEntry>();
+			fastAErrorList = new ArrayList<IncorrectFastAEntry>();
+			
+			//fastAList can't contain anything, since there are none sequences read
+			FastAEntry fastAEntry = new FastAEntry(null, null);
+			fastAList.add(fastAEntry);
+			
+			IncorrectFastAEntry incorretFastAEntry = new IncorrectFastAEntry(positionParsed,errorCode,errorMessage, isCritical);
+			fastAErrorList.add(incorretFastAEntry);
+			
+			print();
+		}catch(IOException x){
+			
+		}	
 		
-		File file = new File(inputFile); 
-		FileReader fileReader = new FileReader(file); 
-		bufferReader = new BufferedReader(fileReader);
-		
-		fastAList = new ArrayList<FastAEntry>();
-		fastAErrorList = new ArrayList<IncorrectFastAEntry>();
-		
-		//the file will be parsed further if it's valid
-		parseFile();
-		print();
 	}
 
 	/**
@@ -234,7 +230,7 @@ import error.*;
 
 	}
 
-	public static void main(String[] args) throws IOException{
+	public static void main(String[] args) throws IOException, MyException{
 		if(args.length != 1){
 			System.err.println("You should specify a FastA file as input!");
 			System.exit(1);
