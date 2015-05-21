@@ -42,7 +42,7 @@ import error.*;
 			
 			//the file will be parsed further if it's valid
 			parseFile();
-			//print();
+			print();
 			
 		}catch(MyException e){
 			//If the sequence is incorrect a IncorrectFastAEntry object is created. 
@@ -63,7 +63,7 @@ import error.*;
 			IncorrectFastAEntry incorretFastAEntry = new IncorrectFastAEntry(positionParsed,errorCode,errorMessage, isCritical);
 			fastAErrorList.add(incorretFastAEntry);
 			
-			//print();
+			print();
 		}catch(IOException x){
 			
 		}	
@@ -214,33 +214,33 @@ import error.*;
 	
 	
 	
-	// TEST
-//	private void print() {
-//		for (FastAEntry entry : fastAList) {
-//			System.out.println(entry.getIdentity() + "\n" + entry.getSequence()
-//					+ "\n");
-//		}
-//
-//		for (IncorrectFastAEntry entry : fastAErrorList) {
-//			System.out.println("We found the following errors \n"
-//					+ entry.getPositionParsed() + "\n"
-//					+ entry.getErrorMessage() + "\n" + entry.getErrorCode()
-//					+ "\n" + entry.isCritical() + "\n");
-//		}
-//
-//	}
-//
-//	public static void main(String[] args) throws IOException, MyException{
-//		if(args.length != 1){
-//			System.err.println("You should specify a FastA file as input!");
-//			System.exit(1);
-//		}else{
-//			ParseFastA pfastA = new ParseFastA(args[0]);
-//	
-//		}
-//
-//	}
-//	
+	 //TEST
+	private void print() {
+		for (FastAEntry entry : fastAList) {
+			System.out.println(entry.getIdentity() + "\n" + entry.getSequence()
+					+ "\n");
+		}
+
+		for (IncorrectFastAEntry entry : fastAErrorList) {
+			System.out.println("We found the following errors \n"
+					+ entry.getPositionParsed() + "\n"
+					+ entry.getErrorMessage() + "\n" + entry.getErrorCode()
+					+ "\n" + entry.isCritical() + "\n");
+		}
+
+	}
+
+	public static void main(String[] args) throws IOException, MyException{
+		if(args.length != 1){
+			System.err.println("You should specify a FastA file as input!");
+			System.exit(1);
+		}else{
+			ParseFastA pfastA = new ParseFastA(args[0]);
+	
+		}
+
+	}
+	
 	
 	
 }
