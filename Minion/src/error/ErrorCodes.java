@@ -19,17 +19,17 @@ public enum ErrorCodes {
 	
 	private final int identity;
 	private final String message;
-	private final boolean critical;
+	private final boolean isCritical;
 	
 	/**
 	 * if u dont understand this constructor u will have a hard time 
 	 * @param identity the id of the errors
 	 * @param message the message of the errors
 	 */
-	ErrorCodes(int identity, String message, boolean critical) {
+	ErrorCodes(int identity, String message, boolean isCritical) {
 		this.identity = identity;
 		this.message = message;
-		this.critical = critical;
+		this.isCritical = isCritical;
 	}
 	
 	public int getIdentity(){
@@ -40,8 +40,8 @@ public enum ErrorCodes {
 		return this.message;
 	}
 	
-	public boolean getCritical(){
-		return this.critical;
+	public boolean getIsCritical(){
+		return this.isCritical;
 
 	}
 	

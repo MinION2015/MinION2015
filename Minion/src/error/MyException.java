@@ -9,7 +9,7 @@ package error;
 public class MyException extends Exception{
 
 	  private int errorCode;
-	  private String errorMsg;
+	  private String errorMessage;
 	  private boolean isCriticalError;
 
 	  /**
@@ -17,20 +17,24 @@ public class MyException extends Exception{
 	   * @param error
 	   */
 	  public MyException(ErrorCodes error) {
-	    this.errorMsg = error.getMessage();
+	    this.errorMessage = error.getMessage();
 	    this.errorCode = error.getIdentity();
-	    this.isCriticalError = error.getCritical();
+	    this.isCriticalError = error.getIsCritical();
 	  }
 	  
-	  public boolean isCriticalError() {
+	 
+
+	public boolean isCriticalError() {
 		return isCriticalError;
 	}
+
+
 
 	public int getErrorCode() {
 	    return errorCode;
 	  }
 
 	  public String getErrorMessage() {
-	    return errorMsg;
+	    return errorMessage;
 	  }
 }
