@@ -28,22 +28,31 @@ import error.*;
 	 */
 	public ParseFastA (String inputFile) throws IOException, MyException{
 		
-		try{
-
-			isFileName(inputFile);
-			
-			//Needed to process the file any further
-			File file = new File(inputFile); 
-			FileReader fileReader = new FileReader(file); 
-			bufferReader = new BufferedReader(fileReader);
-			
-			fastAList = new ArrayList<FastAEntry>();
-			fastAErrorList = new ArrayList<IncorrectFastAEntry>();
-			
-			//the file will be parsed further if it's valid
+		
+		//Needed to process the file any further
+		File file = new File(inputFile); 
+		FileReader fileReader = new FileReader(file); 
+		bufferReader = new BufferedReader(fileReader);
+		
+		fastAList = new ArrayList<FastAEntry>();
+		fastAErrorList = new ArrayList<IncorrectFastAEntry>();
+		
+		if(isFileName(inputFile)){
 			parseFile();
 			print();
-			
+		};
+		
+	}
+
+	/**
+	 * checks for .fasta ending, thus if the input is a correct file type. Anything else can't be parsed
+	 */
+	private boolean isFileName(String inputFile) throws MyException {
+		boolean isFileName = false;
+		try{
+			//the file will be parsed further if it's valid
+			isValidFileEnding(inputFile);
+			isFileName = true;			
 		}catch(MyException e){
 			//If the sequence is incorrect a IncorrectFastAEntry object is created. 
 			//It always consists of all the information we so far gather about an error: 
@@ -52,10 +61,7 @@ import error.*;
 			int errorCode = e.getErrorCode();
 			String errorMessage = e.getErrorMessage();
 			boolean isCritical = e.isCriticalError();
-			
-			fastAList = new ArrayList<FastAEntry>();
-			fastAErrorList = new ArrayList<IncorrectFastAEntry>();
-			
+
 			//fastAList can't contain anything, since there are none sequences read
 			FastAEntry fastAEntry = new FastAEntry(null, null);
 			fastAList.add(fastAEntry);
@@ -64,17 +70,12 @@ import error.*;
 			fastAErrorList.add(incorretFastAEntry);
 			
 			print();
-		}catch(IOException x){
-			
-		}	
-		
+		}
+		return isFileName;
+
 	}
 
-	/**
-	 * checks for .fasta ending, thus if the input is a correct file type. Anything else can't be parsed
-	 */
-	private void isFileName(String inputFile) throws MyException {
-		
+	private void isValidFileEnding(String inputFile) throws MyException {
 		if(!inputFile.endsWith(".fasta")){
 			throw new MyException(ErrorCodes.BAD_FILETYPE);
 		}
