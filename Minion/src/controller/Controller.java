@@ -19,7 +19,7 @@ public class Controller {
 	 * gets the ArrayList of correct FastaEntrys. Stores it in the Controller
 	 * Object.
 	 */
-	private Controller(String filename) throws IOException, MyException {
+	public Controller(String filename) throws IOException, MyException {
 		try {
 			ParseFastA newParsedfile = new ParseFastA(filename);
 			this.correctfastAList = newParsedfile.getFastAList();
