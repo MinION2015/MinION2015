@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import error.*;
-//works for most tested files but not for some.
+
 /**
 * @author Friederike Hanssen
 * Contract: This class gets a filename and construct an object containing two array list, 
@@ -42,7 +42,7 @@ import error.*;
 			
 			//the file will be parsed further if it's valid
 			parseFile();
-			print();
+			//print();
 			
 		}catch(MyException e){
 			//If the sequence is incorrect a IncorrectFastAEntry object is created. 
@@ -63,7 +63,7 @@ import error.*;
 			IncorrectFastAEntry incorretFastAEntry = new IncorrectFastAEntry(positionParsed,errorCode,errorMessage, isCritical);
 			fastAErrorList.add(incorretFastAEntry);
 			
-			print();
+			//print();
 		}catch(IOException x){
 			
 		}	
@@ -167,7 +167,6 @@ import error.*;
 	 */
 	private int checkForReadingError(String identity, String sequence) throws MyException{
 		
-		
 		char[] id = identity.toCharArray();
 		boolean emptyName = true;
 		for(int i = 1; i< id.length; i++){
@@ -192,9 +191,10 @@ import error.*;
 		
 		
 		for(int i = 0; i < sequence.length(); i++){
-			if((!sequence.contains("A") || !sequence.contains("C")||!sequence.contains("T")||!sequence.contains("G"))
-					&& (!sequence.contains("a") || !sequence.contains("c")||!sequence.contains("t")||!sequence.contains("g")) )
+			if((!sequence.contains("A") && !sequence.contains("C")&&!sequence.contains("T")&&!sequence.contains("G"))
+					&& (!sequence.contains("a") && !sequence.contains("c")&&!sequence.contains("t")&&!sequence.contains("g")) ){
 				throw new MyException(ErrorCodes.CORRUPTED_SEQUENCE);
+			}
 		}
 		
 		if(sequence != sequence.toUpperCase()){
@@ -215,32 +215,32 @@ import error.*;
 	
 	
 	// TEST
-	private void print() {
-		for (FastAEntry entry : fastAList) {
-			System.out.println(entry.getIdentity() + "\n" + entry.getSequence()
-					+ "\n");
-		}
-
-		for (IncorrectFastAEntry entry : fastAErrorList) {
-			System.out.println("We found the following errors \n"
-					+ entry.getPositionParsed() + "\n"
-					+ entry.getErrorMessage() + "\n" + entry.getErrorCode()
-					+ "\n" + entry.isCritical() + "\n");
-		}
-
-	}
-
-	public static void main(String[] args) throws IOException, MyException{
-		if(args.length != 1){
-			System.err.println("You should specify a FastA file as input!");
-			System.exit(1);
-		}else{
-			ParseFastA pfastA = new ParseFastA(args[0]);
-	
-		}
-
-	}
-	
+//	private void print() {
+//		for (FastAEntry entry : fastAList) {
+//			System.out.println(entry.getIdentity() + "\n" + entry.getSequence()
+//					+ "\n");
+//		}
+//
+//		for (IncorrectFastAEntry entry : fastAErrorList) {
+//			System.out.println("We found the following errors \n"
+//					+ entry.getPositionParsed() + "\n"
+//					+ entry.getErrorMessage() + "\n" + entry.getErrorCode()
+//					+ "\n" + entry.isCritical() + "\n");
+//		}
+//
+//	}
+//
+//	public static void main(String[] args) throws IOException, MyException{
+//		if(args.length != 1){
+//			System.err.println("You should specify a FastA file as input!");
+//			System.exit(1);
+//		}else{
+//			ParseFastA pfastA = new ParseFastA(args[0]);
+//	
+//		}
+//
+//	}
+//	
 	
 	
 }

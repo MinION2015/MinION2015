@@ -16,11 +16,11 @@ public class MyException extends Exception{
 	   * the created exception gets the values of the error
 	   * @param error
 	   */
-	  public MyException(ErrorCodes error) {
+	 public MyException(ErrorCodes error) {
 	    this.errorMessage = error.getMessage();
 	    this.errorCode = error.getIdentity();
 	    this.isCriticalError = error.getIsCritical();
-	  }
+	 }
 	  
 	 
 
