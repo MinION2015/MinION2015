@@ -13,11 +13,12 @@ public class IncorrectFastAEntry {
 	private boolean isCritical;
 	
 	
-	public IncorrectFastAEntry(int positionParsed,String sequence, int errorCode,boolean isCritical){
+	public IncorrectFastAEntry(int positionParsed,int errorCode,String sequence, boolean isCritical){
 		this.positionParsed = positionParsed;
-		this.errorMessage = sequence;
 		this.errorCode = errorCode;
+		this.errorMessage = sequence;
 		this.isCritical = isCritical;
+		
 	}
 
 

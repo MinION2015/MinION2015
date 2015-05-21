@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import error.*;
-
+//not able to recognize example1.fasta, only example1
 /**
 * @author Friederike Hanssen
 * Contract: This class gets a filename and construct an object containing two array list, 
@@ -28,52 +28,60 @@ import error.*;
 	 */
 	public ParseFastA (String inputFile) throws IOException{
 		
-		try{
-			
-			
-			isFileName(inputFile);
-			
-			//Needed to process the file any further
-			File file = new File(inputFile); 
-			FileReader fileReader = new FileReader(file); 
-			bufferReader = new BufferedReader(fileReader);
-			
-			fastAList = new ArrayList<FastAEntry>();
-			fastAErrorList = new ArrayList<IncorrectFastAEntry>();
-			
-			//the file will be parsed further if it's valid
-			parseFile();
-			
-		}catch(MyException e){
-			//If the sequence is incorrect a IncorrectFastAEntry object is created. 
-			//It always consists of all the information we so far gather about an error: 
-			//positionParsed(-1 -> none parsed), Code from the database, message and critical to determine later if it deserves a popup
-			int positionParsed = -1;
-			int errorCode = e.getErrorCode();
-			String errorMessage = e.getMessage();
-			boolean isCritical = e.isCriticalError();
-			
-			fastAList = new ArrayList<FastAEntry>();
-			fastAErrorList = new ArrayList<IncorrectFastAEntry>();
-			
-			//fastAList can't contain anything, since there are none sequences read
-			FastAEntry fastAEntry = new FastAEntry(null, null);
-			fastAList.add(fastAEntry);
-			
-			IncorrectFastAEntry incorretFastAEntry = new IncorrectFastAEntry (positionParsed,errorMessage, errorCode,isCritical);
-			fastAErrorList.add(incorretFastAEntry);
-		}	
+//		try{
+//
+//
+//			//Needed to process the file any further
+//			File file = new File(inputFile); 
+//			FileReader fileReader = new FileReader(file); 
+//			bufferReader = new BufferedReader(fileReader);
+//			
+//			fastAList = new ArrayList<FastAEntry>();
+//			fastAErrorList = new ArrayList<IncorrectFastAEntry>();
+//			
+//			//the file will be parsed further if it's valid
+//			parseFile();
+//			
+//		}catch(MyException e){
+//			//If the sequence is incorrect a IncorrectFastAEntry object is created. 
+//			//It always consists of all the information we so far gather about an error: 
+//			//positionParsed(-1 -> none parsed), Code from the database, message and critical to determine later if it deserves a popup
+//			int positionParsed = -1;
+//			int errorCode = e.getErrorCode();
+//			String errorMessage = e.getErrorMessage();
+//			boolean isCritical = e.isCriticalError();
+//			
+//			fastAList = new ArrayList<FastAEntry>();
+//			fastAErrorList = new ArrayList<IncorrectFastAEntry>();
+//			
+//			//fastAList can't contain anything, since there are none sequences read
+//			FastAEntry fastAEntry = new FastAEntry(null, null);
+//			fastAList.add(fastAEntry);
+//			
+//			IncorrectFastAEntry incorretFastAEntry = new IncorrectFastAEntry(positionParsed,errorCode,errorMessage, isCritical);
+//			fastAErrorList.add(incorretFastAEntry);
+//		}	
+		
+		File file = new File(inputFile); 
+		FileReader fileReader = new FileReader(file); 
+		bufferReader = new BufferedReader(fileReader);
+		
+		fastAList = new ArrayList<FastAEntry>();
+		fastAErrorList = new ArrayList<IncorrectFastAEntry>();
+		
+		//the file will be parsed further if it's valid
+		parseFile();
+		print();
 	}
 
 	/**
 	 * checks for .fasta ending, thus if the input is a correct file type. Anything else can't be parsed
 	 */
 	private void isFileName(String inputFile) throws MyException {
-	
+		
 		if(!inputFile.endsWith(".fasta")){
 			throw new MyException(ErrorCodes.BAD_FILETYPE);
 		}
-		
 	}
 
 	
@@ -94,6 +102,7 @@ import error.*;
 		String sequence = "";
 		String identity ="";
 		int counter = 0;
+		int amountParsed = 0;
 		
 		while((temp = bufferReader.readLine()) != null){
 			
@@ -107,44 +116,46 @@ import error.*;
 				if(!temp.startsWith(">")){
 					sequence += temp;
 				}else{
-					processRead(identity,sequence);
+//					System.out.println(identity);
+//					System.out.println(sequence);
+					amountParsed++;
+					processRead(identity,sequence,amountParsed);
 					identity = temp;
 					sequence ="";
 				}
 			}
 		}
-		processRead(sequence, identity);
+//		System.out.println(identity);
+//		System.out.println(sequence);
+		amountParsed++;
+		processRead(identity, sequence,amountParsed);
 		
 		
 	}
 
 	
 	/**
-	 * Each entry is checked for correctness before stored and the corresponding list
+	 * Each entry is checked for correctness before stored in the corresponding list
 	 */
-	private void processRead(String sequence, String identity) {
-		
-		int amountParsed = 0;
-		
+	private void processRead(String identity,String sequence, int amountParsed) {	
+	
 		try{
 			checkForReadingError(identity, sequence);
 			
 			//If there is no reading error, we have a new sequence parsed and store it.
-			amountParsed++;
 			FastAEntry fastAEntry = new FastAEntry(identity, sequence);
 			fastAList.add(fastAEntry);
 			
 		}catch(MyException e){
 			//creating new incorrect fasta entry object and stores it
 			int errorCode = e.getErrorCode();
-			String errorMessage = e.getMessage();
-			boolean isCritical = e.isCriticalError();
-			amountParsed++;
+			String errorMessage = e.getErrorMessage();
+			boolean isCritical = e.isCriticalError();		
 			
-			
-			IncorrectFastAEntry incorretFastAEntry = new IncorrectFastAEntry (amountParsed,errorMessage, errorCode,isCritical);
+			IncorrectFastAEntry incorretFastAEntry = new IncorrectFastAEntry (amountParsed, errorCode,errorMessage,isCritical);
 			fastAErrorList.add(incorretFastAEntry);
 		}
+
 	}
 	
 	/**
@@ -169,24 +180,27 @@ import error.*;
 				break;
 			}
 		}
+		
 		if(emptyName){
 			throw new MyException(ErrorCodes.NO_SEQUENCE_NAME);
 		}
 		
 		
-		if(sequence==""){
+		if(sequence.isEmpty()){
 			throw new MyException(ErrorCodes.NO_SEQUENCE);
 		}
 		
+		if(sequence.contains("-")){
+			throw new MyException(ErrorCodes.GAPPED_SEQUENCE);
+		}
 		
 		
-		char[] seq = sequence.toCharArray();
-		for(int i = 0; i < seq.length; i++){
-			if(seq[i] != 'A' || seq[i] != 'C'||seq[i] != 'T'||seq[i] != 'G')
+		for(int i = 0; i < sequence.length(); i++){
+			if((!sequence.contains("A") || !sequence.contains("C")||!sequence.contains("T")||!sequence.contains("G"))
+					&& (!sequence.contains("a") || !sequence.contains("c")||!sequence.contains("t")||!sequence.contains("g")) )
 				throw new MyException(ErrorCodes.CORRUPTED_SEQUENCE);
 		}
 		
-		//TODO actually won't be called
 		if(sequence != sequence.toUpperCase()){
 			throw new MyException(ErrorCodes.LOWERCASE_SEQUENCE);
 		}
@@ -204,24 +218,32 @@ import error.*;
 	
 	
 	
-	//TEST
+	// TEST
 	private void print() {
-	for(IncorrectFastAEntry entry : fastAErrorList){
-		System.out.println("We found the following errors \n" + entry.getPositionParsed() + "\n" + entry.getErrorMessage()+"\n" +entry.getErrorCode()+"\n"+entry.isCritical()+"\n");
-	}
-}
+		for (FastAEntry entry : fastAList) {
+			System.out.println(entry.getIdentity() + "\n" + entry.getSequence()
+					+ "\n");
+		}
 
-//	public static void main(String[] args) throws IOException{
-//		 	
-//		if(args.length != 1){
-//			System.err.println("You should specify a FastA file as input!");
-//			System.exit(1);
-//		}else{
-//			ParseFastA pfastA = new ParseFastA(args[0]);
-//			
-//		}
-//
-//	}
+		for (IncorrectFastAEntry entry : fastAErrorList) {
+			System.out.println("We found the following errors \n"
+					+ entry.getPositionParsed() + "\n"
+					+ entry.getErrorMessage() + "\n" + entry.getErrorCode()
+					+ "\n" + entry.isCritical() + "\n");
+		}
+
+	}
+
+	public static void main(String[] args) throws IOException{
+		if(args.length != 1){
+			System.err.println("You should specify a FastA file as input!");
+			System.exit(1);
+		}else{
+			ParseFastA pfastA = new ParseFastA(args[0]);
+	
+		}
+
+	}
 	
 	
 	
