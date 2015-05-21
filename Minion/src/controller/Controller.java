@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Controller {
-	ArrayList<FastAEntry> correctfastAList;
-	ArrayList<IncorrectFastAEntry> incorrectfastAList;
+	private ArrayList<FastAEntry> correctfastAList;
+	private ArrayList<IncorrectFastAEntry> incorrectfastAList;
 
 	/*
 	 * called by the ActionListener of the gui. gets the filename and and calls
