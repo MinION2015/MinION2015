@@ -14,6 +14,7 @@ import controller.*;
 import error.*;
 import reader.*;
 
+
 /**
  * 
  * @author Albert Langensiepen
@@ -89,7 +90,7 @@ public class GUI extends JFrame implements ActionListener {
 	        
             if(ae.getSource() == this.startButton && returnVal==JFileChooser.APPROVE_OPTION){
 	        	
-            	String message= "";
+            	String message= "<html>";
             	Controller cd = null;
 				try {
 					cd = new Controller(fc.getSelectedFile().getName());
@@ -107,9 +108,9 @@ public class GUI extends JFrame implements ActionListener {
             	
             	for(int i=0; i<length;i++)
             	{
-            		message= message+cd.getincorrectfastAList().get(i).getErrorMessage()+"<p/>";
+            		message= message+cd.getincorrectfastAList().get(i).getErrorMessage()+"</p>";
             	}
-            	
+            	message=message+"</html>";
             	
 	        	label.setText(message);
 	            
@@ -119,3 +120,4 @@ public class GUI extends JFrame implements ActionListener {
 	      
 	    }
 }
+
