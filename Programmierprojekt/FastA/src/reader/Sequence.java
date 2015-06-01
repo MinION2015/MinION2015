@@ -2,7 +2,7 @@ package reader;
 /**
  * 
  * @author Friederike Hanssen
- *
+ *blub
  */
 public class Sequence {
 	
