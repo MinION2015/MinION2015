@@ -15,7 +15,7 @@ import error.MyException;
  * 
  * @author Friederike Hanssen
  * FastA contains two Arraylists of the same length. One stores the entry in the fastA file the other some kind of error information.
- * The given file is parsed and the results stored in a new file.
+ * The given  file is parsed and the results stored in a new file.
  *
  */
 public class FastA implements Filetype {
