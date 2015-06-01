@@ -2,7 +2,7 @@ package reader;
 /**
  * 
  * @author Friederike Hanssen
- *blub
+ *Each sequence contains a header and the sequence, metadata won't be stored
  */
 public class Sequence {
 	

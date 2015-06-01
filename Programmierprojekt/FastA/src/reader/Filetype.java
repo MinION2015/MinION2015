@@ -7,6 +7,7 @@ import error.MyException;
 /**
  * 
  * @author Friederike Hanssen
+ * Interface for implementing a new readable filetype
  *
  */
 public interface Filetype {

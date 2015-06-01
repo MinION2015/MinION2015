@@ -2,7 +2,7 @@ package reader;
 /**
  * 
  * @author Friederike Hanssen
- *
+ *Each error contains an errorMessage, an ErrorCode and flag for critical errors
  */
 public class ErrorInSequence {
 	
