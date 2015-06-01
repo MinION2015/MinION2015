@@ -177,32 +177,19 @@ public class FastA implements Filetype {
 		return errList;
 	}
 	
-//	private void print() {
-//	for (Sequence entry : seqList) {
-//		System.out.println(entry.getHeader() + "\n" + entry.getSequence()
-//				+ "\n");
-//	}
-//
-//	for (ErrorInSequence entry : errList) {
-//		System.out.println("We found the following errors \n"
-//				+ entry.getErrorMessage() + "\n" + entry.getErrorCode()
-//				+ "\n" + entry.isCritical() + "\n");
-//	}
-//
-//}
-	
-	public static void main(String[] args) throws IOException, MyException{
-		if(args.length != 1){
-			System.err.println("You should specify a FastA file as input!");
-			System.exit(1);
-		}else{
-			
-			FastA pfastA = new FastA();
-			pfastA.parse(args[0]);
-			pfastA.writeInFile("C:/Users/Friederike/Desktop/MinionTestParser/MinionTestParser.txt");
-			
-		}
 
-	}
+//	public static void main(String[] args) throws IOException, MyException{
+//		if(args.length != 1){
+//			System.err.println("You should specify a FastA file as input!");
+//			System.exit(1);
+//		}else{
+//			
+//			FastA pfastA = new FastA();
+//			pfastA.parse(args[0]);
+//			pfastA.writeInFile("C:/Users/Friederike/Desktop/MinionTestParser/MinionTestParser.txt");
+//			
+//		}
+//
+//	}
 
 }
