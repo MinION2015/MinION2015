@@ -2,13 +2,12 @@ package error;
 
 public class ErrorRate {
 
+
 	public ErrorRate(){
 		
+		double[][] transProb1D = {{},{},{},{}};
+		double[][] transProb2D = {{},{},{},{}};
 	}
 	
-	public double getRate(int basecalling, char letter) throws MyException{
 	
-		
-		return 0;
-	}
 }
