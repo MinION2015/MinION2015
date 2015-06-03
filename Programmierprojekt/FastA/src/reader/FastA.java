@@ -178,18 +178,18 @@ public class FastA implements Filetype {
 	}
 	
 
-//	public static void main(String[] args) throws IOException, MyException{
-//		if(args.length != 1){
-//			System.err.println("You should specify a FastA file as input!");
-//			System.exit(1);
-//		}else{
-//			
-//			FastA pfastA = new FastA();
-//			pfastA.parse(args[0]);
-//			pfastA.writeInFile("C:/Users/Friederike/Desktop/MinionTestParser/MinionTestParser.txt");
-//			
-//		}
-//
-//	}
+	public static void main(String[] args) throws IOException, MyException{
+		if(args.length != 1){
+			System.err.println("You should specify a FastA file as input!");
+			System.exit(1);
+		}else{
+			
+			FastA pfastA = new FastA();
+			pfastA.parse(args[0]);
+			pfastA.writeInFile("C:/Users/Friederike/Desktop/MinionTestParser/MinionTestParser.txt");
+			
+		}
+
+	}
 
 }
