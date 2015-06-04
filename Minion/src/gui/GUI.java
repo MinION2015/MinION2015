@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JComboBox;
 
 import controller.*;
 import error.*;
@@ -33,6 +34,7 @@ public class GUI extends JFrame implements ActionListener {
 	    JButton loadButton;
 	    JLabel label;
 	    JPanel panel;
+	    JComboBox chooseParameter;
 	    final JFileChooser fc = new JFileChooser();
 	 
 	 /*
@@ -46,17 +48,22 @@ public class GUI extends JFrame implements ActionListener {
 	        panel = new JPanel();
 	        label = new JLabel();
 
+
 	        startButton = new JButton("START SIMULATION");
 	        loadButton = new JButton ("LOAD FILE");
 
 	        startButton.addActionListener(this);
 	        loadButton.addActionListener(this);
 	        
+	        String[] parameter = {"1D","2D"};
+	        chooseParameter = new JComboBox(parameter);
+	        
 	        panel.setLayout( new java.awt.BorderLayout() );
 	        
 	        panel.add(startButton, java.awt.BorderLayout.SOUTH);
 	        panel.add(loadButton, java.awt.BorderLayout.NORTH);
 	        panel.add(label, java.awt.BorderLayout.CENTER);
+	        panel.add(chooseParameter, java.awt.BorderLayout.WEST);
 	        
 	        this.getContentPane().add ( panel ) ;
 
@@ -99,33 +106,39 @@ public class GUI extends JFrame implements ActionListener {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (MyException e) {
-					if (e.isCriticalError()) {
-				        JOptionPane.showMessageDialog(null, "Error", e.getErrorMessage(), JOptionPane.ERROR_MESSAGE);
-					} else {
-						label.setText(e.getErrorMessage());
-					}
+
 					e.printStackTrace();
 				}
-			
-            	
+
+				
             	int length= cd.getincorrectfastAList().size();
-            	
-            	
+                        	
             	for(int i=0; i<length;i++)
             	{
-            		message= message+cd.getincorrectfastAList().get(i).getErrorMessage()+"</p>";
+            		if(cd.getincorrectfastAList().get(i).isCritical()) {
+    			        JOptionPane.showMessageDialog(null, cd.getincorrectfastAList().get(i).getErrorMessage(), "Critical Error", JOptionPane.ERROR_MESSAGE);
+            		} else {
+                		message= message + " " + cd.getincorrectfastAList().get(i).getErrorMessage()+"</p>";
+            		}
             	}
             	message=message+"</html>";
-            	
-            	System.out.print(message);
-            	
-	        	label.setText(message);
-
-
-	            
-	            
+            	            	
+	        	label.setText(message);  
 	            
 	        }
+            
+            if (ae.getSource() == this.chooseParameter) {
+            	
+            	String choice = (String) chooseParameter.getSelectedItem();
+            	
+            	if (choice.equals("1D")) {
+            		//TODO
+            	} else if (choice.equals("2D")) {
+            		//TODO
+            	}
+            	
+            	
+            }
 	      
 	    }
 }
