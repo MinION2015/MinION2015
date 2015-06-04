@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -11,6 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JComboBox;
+import javax.swing.BoxLayout;
 
 import controller.*;
 import error.*;
@@ -34,7 +36,7 @@ public class GUI extends JFrame implements ActionListener {
 	    JButton loadButton;
 	    JLabel label;
 	    JPanel panel;
-	    JComboBox chooseParameter;
+	    JComboBox choice;
 	    final JFileChooser fc = new JFileChooser();
 	 
 	 /*
@@ -56,18 +58,19 @@ public class GUI extends JFrame implements ActionListener {
 	        loadButton.addActionListener(this);
 	        
 	        String[] parameter = {"1D","2D"};
-	        chooseParameter = new JComboBox(parameter);
+	        choice = new JComboBox(parameter);
 	        
 	        panel.setLayout( new java.awt.BorderLayout() );
+	        JPanel box = new JPanel();
+	        box.setLayout(new BoxLayout(box,BoxLayout.Y_AXIS));
+	        box.add(loadButton);
+	        box.add(startButton);
+	        box.add(choice);
 	        
-	        panel.add(startButton, java.awt.BorderLayout.SOUTH);
-	        panel.add(loadButton, java.awt.BorderLayout.NORTH);
+	        panel.add(box, java.awt.BorderLayout.NORTH);
 	        panel.add(label, java.awt.BorderLayout.CENTER);
-	        panel.add(chooseParameter, java.awt.BorderLayout.WEST);
 	        
 	        this.getContentPane().add ( panel ) ;
-
-	        panel.add(label);
 	        this.add(panel);
 	    }
 	 
@@ -103,10 +106,10 @@ public class GUI extends JFrame implements ActionListener {
 				try {
 					cd = new Controller(fc.getSelectedFile().getName());
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
+					//TODO
 					e.printStackTrace();
 				} catch (MyException e) {
-
+					//TODO
 					e.printStackTrace();
 				}
 
@@ -127,13 +130,13 @@ public class GUI extends JFrame implements ActionListener {
 	            
 	        }
             
-            if (ae.getSource() == this.chooseParameter) {
+            if (ae.getSource() == this.choice) {
             	
-            	String choice = (String) chooseParameter.getSelectedItem();
+            	String chosen = (String) choice.getSelectedItem();
             	
-            	if (choice.equals("1D")) {
+            	if (chosen.equals("1D")) {
             		//TODO
-            	} else if (choice.equals("2D")) {
+            	} else if (chosen.equals("2D")) {
             		//TODO
             	}
             	
