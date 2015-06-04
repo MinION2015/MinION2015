@@ -1,9 +1,13 @@
 package controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
-import reader.*;
-import error.*;
+import reader.ErrorInSequence;
+import reader.FastA;
+import reader.Sequence;
+import error.ErrorBasecalling;
+import error.MyException;
 
 /**
  * 
@@ -13,13 +17,14 @@ import error.*;
 public class Controller{
 	
 	private String filename;
+	private FastA readInFile;
 	
-	public Controller(String filename, int basecalling) throws IOException{
+	public Controller(String filename) throws IOException{
 		this.filename = filename;
-		run(basecalling);
+		this.readInFile = new FastA();
 	}
 
-	private void run(int basecalling) throws IOException{
+	public void run(int basecalling) throws IOException{
 		
 		FastA f = new FastA();
 		try{
@@ -45,18 +50,27 @@ public class Controller{
 		}
 		
 		porePassed.writeInFile("C:/Users/Friederike/Desktop/MinionTestParser/MinionTestParser.txt");
+	
 	}
 	
-	public static void main(String[] args) throws IOException, MyException{
-		if(args.length != 1){
-			System.err.println("You should specify a FastA file as input!");
-			System.exit(1);
-		}else{
-
-			Controller c = new Controller(args[0],1);
-
-		}
+//	public ArrayList<FastA> getcorrectfastAList() {
+//		return this.correctfastAList;
+//	}
+//
+	public ArrayList<ErrorInSequence> getincorrectfastAList() {
+		return this.readInFile.getErrorInSequence();
 	}
+	
+//	public static void main(String[] args) throws IOException, MyException{
+//		if(args.length != 1){
+//			System.err.println("You should specify a FastA file as input!");
+//			System.exit(1);
+//		}else{
+//
+//			Controller c = new Controller(args[0]);
+//
+//		}
+//	}
 }
 
 
