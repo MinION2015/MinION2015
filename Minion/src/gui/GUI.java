@@ -8,6 +8,7 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import controller.*;
@@ -98,7 +99,11 @@ public class GUI extends JFrame implements ActionListener {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (MyException e) {
-					// TODO Auto-generated catch block
+					if (e.isCriticalError()) {
+				        JOptionPane.showMessageDialog(null, "Error", e.getErrorMessage(), JOptionPane.ERROR_MESSAGE);
+					} else {
+						label.setText(e.getErrorMessage());
+					}
 					e.printStackTrace();
 				}
 			
@@ -112,7 +117,11 @@ public class GUI extends JFrame implements ActionListener {
             	}
             	message=message+"</html>";
             	
+            	System.out.print(message);
+            	
 	        	label.setText(message);
+
+
 	            
 	            
 	            
