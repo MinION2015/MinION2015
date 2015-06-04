@@ -30,13 +30,12 @@ public class Pore {
 		}
 		//System.out.println(length);
 		String subseq = sequence.substring(start, start+length);
-		
+		//System.out.println(subseq);
 		String fasta = errorModel.apply(subseq, 1);
-
+		//System.out.println(fasta);
 
 		return fasta;
-		
-		
+
 	}
 	
 

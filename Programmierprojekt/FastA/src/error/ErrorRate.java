@@ -36,7 +36,7 @@ public class ErrorRate {
 				
 				transProb[2][0] = 0.1;
 				transProb[2][1] = 0.2;
-				transProb[2][1] = 0.8;
+				transProb[2][2] = 0.8;
 				transProb[2][3] = 1;
 				
 				
@@ -87,6 +87,23 @@ public class ErrorRate {
 		}
 		return -1;
 	}
+	
+//	private int length(){
+//		return transProb.length;
+//	}
+//	public static void main(String args[]){
+//		ErrorRate err = new ErrorRate(2);
+//		for(int i = 0; i < err.length();i++){
+//			for(int j = 0; j < err.length();j++){
+//				System.out.print(err.getValue(i,j) + " ");
+//			}
+//		System.out.println();
+//		}
+//		
+//		System.out.println(err.getBase(2)); //T
+//		
+//		System.out.println(err.getRow('T')); //2
+//	}
 	
 	
 	

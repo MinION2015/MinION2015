@@ -3,7 +3,7 @@ package controller;
 import error.Chance;
 /**
  * 
- * @author Friederike
+ * @author Friederike Hanssen
  *
  */
 public class LengthDistribution {
@@ -28,4 +28,10 @@ public class LengthDistribution {
 		
 		return -1;
 	}
+	
+//	public static void main(String args[]){
+//		LengthDistribution l = new LengthDistribution();
+//		double rand = l.getRandLength();
+//		System.out.println(rand);
+//	}
 }

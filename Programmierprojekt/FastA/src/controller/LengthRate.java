@@ -37,4 +37,15 @@ public class LengthRate {
 	public double getProb(int index){
 		return length[index][0];
 	}
+	
+//	public static void main(String args[]){
+//		LengthRate r = new LengthRate();
+//		for(int i = 0; i < 4; i++){
+//				System.out.print(r.getProb(i) +" ");
+//		}
+//		System.out.println();
+//		for(int i = 0; i < 4; i++){
+//			System.out.print(r.getLength(i)+" ");
+//		}
+//	}
 }

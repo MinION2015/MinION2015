@@ -80,11 +80,10 @@ public class FastA implements Filetype {
 			String errorMessage = e.getErrorMessage();
 			boolean isCritical = e.isCriticalError();
 			
-//			Sequence seq = new Sequence(null,null);
-			header = null;
-			sequence = null;
+			Sequence seq = new Sequence(null,null);
+		
 //			if(!isCritical){
-			Sequence seq = new Sequence(header, sequence);
+//				Sequence seq = new Sequence(header, sequence);
 		//	}
 			ErrorInSequence err = new ErrorInSequence(errorCode, errorMessage,
 					isCritical);
@@ -144,6 +143,8 @@ public class FastA implements Filetype {
 			FileWriter fw = new FileWriter(write_file);
 			BufferedWriter bw = new BufferedWriter(fw);
 			for (int i = 0; i < seqList.size();i++) {
+				bw.append("Entry:");
+				bw.newLine();
 				bw.append(seqList.get(i).getHeader());
 				bw.newLine();
 				bw.append(seqList.get(i).getSequence());
@@ -151,6 +152,7 @@ public class FastA implements Filetype {
 				bw.append("Errors found:");
 				bw.newLine();
 				bw.append(errList.get(i).getErrorMessage());
+				bw.newLine();
 				bw.newLine();
 			}
 
@@ -182,8 +184,6 @@ public class FastA implements Filetype {
 	public void addSeq(Sequence seq) throws MyException{
 		
 		processRead(seq.getHeader(),seq.getSequence());
-	
-		
 	}
 	
 
