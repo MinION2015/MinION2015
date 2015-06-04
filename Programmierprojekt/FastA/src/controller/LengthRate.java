@@ -26,7 +26,7 @@ public class LengthRate {
 		length[0][1] = 10;
 		length[1][1] = 20;
 		length[2][1] = 5;
-		length[3][1] = 3;
+		length[3][1] = 1;
 	}
 	
 	public double getLength(int index){

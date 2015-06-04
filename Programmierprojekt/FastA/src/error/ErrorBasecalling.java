@@ -26,9 +26,8 @@ public class ErrorBasecalling implements ErrorModel{
 	
 	
 	private String mutate(char letter, ErrorRate rate){
-		
-		Chance rand = new Chance();
-		double prob = rand.getRand(0,1);
+	
+		double prob = Chance.getRand(0,1);
 		int row = rate.getRow(letter);
 		
 		if(prob <= rate.getValue(row, 0)){

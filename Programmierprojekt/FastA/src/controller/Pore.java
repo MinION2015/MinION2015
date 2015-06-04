@@ -23,10 +23,10 @@ public class Pore {
 		 */
 		while(length > sequence.length()-start)
 		{
-			//length= l.getRandomLength;
+			length= (int)l.getRandLength();
 			
 		}
-		
+		System.out.println(length);
 		String subseq = sequence.substring(start, start+length);
 		
 		String fasta = errorModel.apply(subseq, 1);

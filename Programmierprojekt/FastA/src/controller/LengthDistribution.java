@@ -13,8 +13,7 @@ public class LengthDistribution {
 	}
 	
 	public double getRandLength(){
-		Chance rand = new Chance();
-		double prob = rand.getRand(0,1);
+		double prob = Chance.getRand();
 		LengthRate l = new LengthRate();
 		
 		if(prob <= l.getProb(0)){
