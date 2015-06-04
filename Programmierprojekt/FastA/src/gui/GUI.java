@@ -131,7 +131,7 @@ public class GUI extends JFrame implements ActionListener {
             		if(cd.getincorrectfastAList().get(i).isCritical()) {
     			        JOptionPane.showMessageDialog(null, cd.getincorrectfastAList().get(i).getErrorMessage(), "Critical Error", JOptionPane.ERROR_MESSAGE);
             		} else {
-                		message= message + " " + cd.getincorrectfastAList().get(i).getErrorMessage()+"</p>";
+                		message= message + " " + cd.getincorrectfastAList().get(i).getErrorMessage()+"<br>";
             		}
             	}
             	message=message+"</html>";
