@@ -1,7 +1,9 @@
 package controller;
 
 import java.util.Random;
-
+/**
+ * @author Albert Langensiepen
+ */
 import error.ErrorBasecalling;
 
 public class Pore {
@@ -14,7 +16,7 @@ public class Pore {
 		Random rand = new Random();
 		//random number between 0 and sequenceLength-1 is created
 		int start = rand.nextInt(sequence.length());
-		
+		//System.out.println(start);
 		int length =(int) l.getRandLength();
 		/*
 		 *  if the given length is smaller than the difference
@@ -26,7 +28,7 @@ public class Pore {
 			length= (int)l.getRandLength();
 			
 		}
-		System.out.println(length);
+		//System.out.println(length);
 		String subseq = sequence.substring(start, start+length);
 		
 		String fasta = errorModel.apply(subseq, 1);

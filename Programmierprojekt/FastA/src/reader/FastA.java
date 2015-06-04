@@ -80,10 +80,12 @@ public class FastA implements Filetype {
 			String errorMessage = e.getErrorMessage();
 			boolean isCritical = e.isCriticalError();
 			
-			Sequence seq = new Sequence(null,null);
-			if(!isCritical){
-				seq = new Sequence(header, sequence);
-			}
+//			Sequence seq = new Sequence(null,null);
+			header = null;
+			sequence = null;
+//			if(!isCritical){
+			Sequence seq = new Sequence(header, sequence);
+		//	}
 			ErrorInSequence err = new ErrorInSequence(errorCode, errorMessage,
 					isCritical);
 			seqList.add(seq);

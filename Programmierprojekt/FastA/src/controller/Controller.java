@@ -33,12 +33,14 @@ public class Controller{
 		LengthDistribution lengthType = new LengthDistribution();
 		
 		for(Sequence entry: f.getSequence()){
+			if(entry.getSequence() != null){
 			String simSeq = pore.simulate(entry.getSequence(),errorType,lengthType);
 			Sequence seq = new Sequence(entry.getHeader(),simSeq);
 			try{
 				porePassed.addSeq(seq);
 			}catch(MyException e){
 				
+			}
 			}
 		}
 		
