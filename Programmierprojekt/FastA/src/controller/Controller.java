@@ -17,20 +17,20 @@ import error.MyException;
 public class Controller{
 	
 	private String filename;
-	private FastA readInFile;
+	private FastA f;
 	
 	public Controller(String filename) throws IOException{
 		this.filename = filename;
-		this.readInFile = new FastA();
-	}
-
-	public void run(int basecalling) throws IOException{
-		
-		FastA f = new FastA();
+		this.f = new FastA();
 		try{
 			f.parse(filename);
 		}catch(Exception e){
 		}
+	}
+
+	public void run(int basecalling) throws IOException{
+		
+		
 		
 		Pore pore = new Pore();
 		ErrorBasecalling errorType = new ErrorBasecalling();
@@ -58,7 +58,7 @@ public class Controller{
 //	}
 //
 	public ArrayList<ErrorInSequence> getincorrectfastAList() {
-		return this.readInFile.getErrorInSequence();
+		return this.f.getErrorInSequence();
 	}
 	
 //	public static void main(String[] args) throws IOException, MyException{
