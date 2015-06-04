@@ -177,6 +177,13 @@ public class FastA implements Filetype {
 		return errList;
 	}
 	
+	public void addSeq(Sequence seq) throws MyException{
+		
+		processRead(seq.getHeader(),seq.getSequence());
+	
+		
+	}
+	
 
 //	public static void main(String[] args) throws IOException, MyException{
 //		if(args.length != 1){
