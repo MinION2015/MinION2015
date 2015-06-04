@@ -35,7 +35,11 @@ public class Controller{
 		for(Sequence entry: f.getSequence()){
 			String simSeq = pore.simulate(entry.getSequence(),errorType,lengthType);
 			Sequence seq = new Sequence(entry.getHeader(),simSeq);
-			porePassed.addSeq(seq);
+			try{
+				porePassed.addSeq(seq);
+			}catch(MyException e){
+				
+			}
 		}
 		
 		porePassed.writeInFile("C:/Users/Friederike/Desktop/MinionTestParser/MinionTestParser.txt");
