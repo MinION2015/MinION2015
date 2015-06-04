@@ -14,12 +14,12 @@ public class Controller{
 	
 	private String filename;
 	
-	public Controller(String filename) throws IOException{
+	public Controller(String filename, int basecalling) throws IOException{
 		this.filename = filename;
-		run();
+		run(basecalling);
 	}
 
-	private void run() throws IOException{
+	private void run(int basecalling) throws IOException{
 		
 		FastA f = new FastA();
 		try{
@@ -34,7 +34,7 @@ public class Controller{
 		
 		for(Sequence entry: f.getSequence()){
 			if(entry.getSequence() != null){
-			String simSeq = pore.simulate(entry.getSequence(),errorType,lengthType);
+			String simSeq = pore.simulate(entry.getSequence(),errorType,lengthType,basecalling);
 			Sequence seq = new Sequence(entry.getHeader(),simSeq);
 			try{
 				porePassed.addSeq(seq);
@@ -53,7 +53,7 @@ public class Controller{
 			System.exit(1);
 		}else{
 
-			Controller c = new Controller(args[0]);
+			Controller c = new Controller(args[0],1);
 
 		}
 	}

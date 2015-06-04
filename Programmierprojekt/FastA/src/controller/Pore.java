@@ -9,9 +9,11 @@ import error.ErrorBasecalling;
 public class Pore {
 	
 	public Pore()
-	{};
+	{
+		
+	}
 
-	public String simulate(String sequence, ErrorBasecalling errorModel, LengthDistribution l )
+	public String simulate(String sequence, ErrorBasecalling errorModel, LengthDistribution l, int basecalling)
 	{
 		Random rand = new Random();
 		//random number between 0 and sequenceLength-1 is created
@@ -31,7 +33,7 @@ public class Pore {
 		//System.out.println(length);
 		String subseq = sequence.substring(start, start+length);
 		//System.out.println(subseq);
-		String fasta = errorModel.apply(subseq, 1);
+		String fasta = errorModel.apply(subseq, basecalling);
 		//System.out.println(fasta);
 
 		return fasta;
