@@ -58,17 +58,21 @@ public class Controller{
 		for(Sequence entry: f.getSequence()){
 			if(entry.getSequence() != null){
 			String simSeq = pore.simulate(entry.getSequence(),errorType,lengthType,basecalling);
+			
 			Sequence seq = new Sequence(entry.getHeader(),simSeq);
+			
 			try{
+				
 				porePassed.addSeq(seq);
+			
 			}catch(MyException e){
 				
 			}
 			}
 		}
 		
+		//porePassed.writeInFile("C:/Users/Friederike/Desktop/MinionTestParser/Test.txt");
 		porePassed.writeInFile("C:/Users/Friederike/Desktop/MinionTestParser/MinionTestParser.txt");
-	
 	}
 	
 	/**
@@ -80,13 +84,13 @@ public class Controller{
 	}
 	
 //	public static void main(String[] args) throws IOException, MyException{
+//		
 //		if(args.length != 1){
 //			System.err.println("You should specify a FastA file as input!");
 //			System.exit(1);
 //		}else{
-//
 //			Controller c = new Controller(args[0]);
-//
+//			c.run(1);
 //		}
 //	}
 }
