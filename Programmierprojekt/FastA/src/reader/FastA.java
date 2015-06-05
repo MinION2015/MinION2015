@@ -16,6 +16,8 @@ import error.MyException;
  * @author Friederike Hanssen
  * FastA contains two Arraylists of the same length. One stores the entry in the fastA file the other some kind of error information.
  * The given  file is parsed and the results stored in a new file.
+ * 
+ * TODO HAven't quite figured out how to store MyException objects instead of errorinsequence as Sina suggested.
  *
  */
 public class FastA implements Filetype {
@@ -28,6 +30,11 @@ public class FastA implements Filetype {
 		this.errList = new ArrayList<ErrorInSequence>();
 	}
 
+	
+	/**
+	 * Gets a filename and parses each sequence.
+	 * param inputFilename gets the inputFilename
+	 */
 	@Override
 	public void parse(String inputFilename) throws IOException, MyException {
 		File file = new File(inputFilename);
@@ -65,6 +72,14 @@ public class FastA implements Filetype {
 		bufferReader.close();
 	}
 
+	/**
+	 * Each read is checked for errors and accordingly stored. Error containing sequences are not stored but a sequence object containing null instead. 
+	 * The error in sequence list is built as the counterpart, anytime there is no error, a sequence object is stored in the sequence list, while in the error list there is an object containing null.
+	 * 
+	 * @param header
+	 * @param sequence
+	 * @throws MyException
+	 */
 	private void processRead(String header, String sequence) throws MyException {
 
 		try {
@@ -92,7 +107,13 @@ public class FastA implements Filetype {
 		}
 
 	}
-
+/**
+ * 
+ * @param identity
+ * @param sequence
+ * @return
+ * @throws MyException
+ */
 	private int checkForReadingError(String identity, String sequence)
 			throws MyException {
 
@@ -134,10 +155,13 @@ public class FastA implements Filetype {
 		return 0;
 	}
 
+	/**
+	 * Writes reultsin the given filename. Each sequence in the order: Entry\\header\\sequence\\Errors:\\errormessages||null
+	 */
 	@Override
-	public void writeInFile(String filename) {
+	public void writeInFile(String outputFilename) {
 		// TODO Auto-generated method stub
-		File write_file = new File(filename);
+		File write_file = new File(outputFilename);
 		try
 		{
 			FileWriter fw = new FileWriter(write_file);
@@ -181,6 +205,9 @@ public class FastA implements Filetype {
 		return errList;
 	}
 	
+	/**
+	 * Adds a singel sequence to an exsting fasta file and processes it accordingly
+	 */
 	public void addSeq(Sequence seq) throws MyException{
 		
 		processRead(seq.getHeader(),seq.getSequence());

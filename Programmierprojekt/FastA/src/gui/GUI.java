@@ -103,6 +103,7 @@ public class GUI extends JFrame implements ActionListener {
             	Controller cd = null;
 				try {
 					int basecalling = 0;
+					// moved the if clause to safe the choice 1D/2D and run the controller with that choice
 					   if (ae.getSource() == this.choice) {
 			            	
 			            	String chosen = (String) choice.getSelectedItem();
@@ -116,8 +117,8 @@ public class GUI extends JFrame implements ActionListener {
 			            	}
 			           	
 			            }
-					cd = new Controller(fc.getSelectedFile().getName());
-					cd.run(basecalling);
+					   cd = new Controller(fc.getSelectedFile().getName());
+					   cd.run(basecalling);
 				} catch (IOException e) {
 					//TODO
 					e.printStackTrace();
@@ -134,12 +135,26 @@ public class GUI extends JFrame implements ActionListener {
                 		message= message + " " + cd.getincorrectfastAList().get(i).getErrorMessage()+"<br>";
             		}
             	}
+            	
             	message=message+"</html>";
             	            	
 	        	label.setText(message);  
 	            
+//	        	 if (ae.getSource() == this.choice) {
+//		            	
+//		            	String chosen = (String) choice.getSelectedItem();
+//		            	
+//		            	if (chosen.equals("1D")) {
+//		            		//TODO
+//		      
+//		            	} else if (chosen.equals("2D")) {
+//		            		//TODO
+//		            	}    	
+//		            	}
+		           	
+		            }
 	        }
            
 	      
 	    }
-}
+

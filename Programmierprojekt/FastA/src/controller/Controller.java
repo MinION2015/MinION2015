@@ -12,22 +12,40 @@ import error.MyException;
 /**
  * 
  * @author Friederike Hanssen
- *
+ * Gets a filename, parses the content in a FastA object. Sofar the gui is not able to display if we have an invalid filename.
+ * Then a pore is simulated and the content of the file will be 'sent' through the pore and according to the parameters 1D/2D and
+ * the error type(in our case only basecalling errors are relevant, time and length-basecalling has not been implemented,)will be applied.
+ * The results are written in a file.
+ * 
+ * Should prob be redone with adding things like chosing the filename the results get written into and considering for the gui that the controller now holds a fasta object
+ * Was just a quick solution to get our code to work together.
  */
 public class Controller{
 	
 	private String filename;
 	private FastA f;
 	
-	public Controller(String filename) throws IOException{
-		this.filename = filename;
+	/**
+	 * controller gets source filename, creates a fasta object and parses the filename saving it as the fasta object
+	 * @param sourceFilename
+	 * @throws IOException
+	 */
+	public Controller(String sourceFilename) throws IOException{
+		this.filename = sourceFilename;
 		this.f = new FastA();
 		try{
-			f.parse(filename);
+			f.parse(sourceFilename);
 		}catch(Exception e){
+			
 		}
 	}
 
+	
+	/**
+	 * A pore is simulated, through which the sequences in from the file are sent. Basecalling errors are simulated.
+	 * @param basecalling: Basecalling type (1D=1/2D=2) as selected in the gui
+	 * @throws IOException
+	 */
 	public void run(int basecalling) throws IOException{
 		
 		
@@ -53,10 +71,10 @@ public class Controller{
 	
 	}
 	
-//	public ArrayList<FastA> getcorrectfastAList() {
-//		return this.correctfastAList;
-//	}
-//
+	/**
+	 * MEthod for the gui to get the Error messages. Can't see incorrect filename or such.
+	 * @return
+	 */
 	public ArrayList<ErrorInSequence> getincorrectfastAList() {
 		return this.f.getErrorInSequence();
 	}

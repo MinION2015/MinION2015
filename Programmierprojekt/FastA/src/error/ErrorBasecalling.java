@@ -4,7 +4,8 @@ package error;
 /**
  * 
  * @author Friederike Hanssen
- *
+ *A ErrorBAsecalling object is used to apply a given error rate to a sequence. 
+ *I now think it might actually make more sense to implement it just as a method that can be called.
  */
 public class ErrorBasecalling implements ErrorModel{
 
