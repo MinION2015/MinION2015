@@ -7,27 +7,24 @@ package error;
  *A ErrorBAsecalling object is used to apply a given error rate to a sequence. 
  *I now think it might actually make more sense to implement it just as a method that can be called.
  */
-public class ErrorBasecalling implements ErrorModel{
+public class SimulationError{
 
-	public ErrorBasecalling(){
+	public SimulationError(){
 		
 	}
-	@Override
-	public String apply(String seq, int basecalling) {
-		// TODO Auto-generated method stub
-		ErrorRate rate = new ErrorRate(basecalling);
+
+	public String applyErrorBasecalling(String seq, int basecalling) {
+		BasecallingErrorRate rate = new BasecallingErrorRate(basecalling);
 		String err = "";
 		for(int i = 0; i < seq.length();i++){
-			err = err.concat(mutate(seq.charAt(i),rate));
+			err = err.concat(callBase(seq.charAt(i),rate));
 		}
 		
 		return err;
 	}
+
 	
-	
-	
-	
-	private String mutate(char letter, ErrorRate rate){
+	private String callBase(char letter, BasecallingErrorRate rate){
 	
 		double prob = Chance.getRand();
 		int row = rate.getRow(letter);

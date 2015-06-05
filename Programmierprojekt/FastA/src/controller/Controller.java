@@ -49,7 +49,7 @@ public class Controller{
 		
 		
 		Pore pore = new Pore();
-		ErrorBasecalling errorType = new ErrorBasecalling();
+		SimulationError errorType = new SimulationError();
 		FastA porePassed = new FastA();
 		LengthDistribution lengthType = new LengthDistribution();
 		

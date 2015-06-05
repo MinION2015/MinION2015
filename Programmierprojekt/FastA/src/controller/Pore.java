@@ -4,7 +4,7 @@ import java.util.Random;
 /**
  * @author Albert Langensiepen
  */
-import error.ErrorBasecalling;
+import error.*;
 
 public class Pore {
 	
@@ -13,7 +13,7 @@ public class Pore {
 		
 	}
 
-	public String simulate(String sequence, ErrorBasecalling errorModel, LengthDistribution l, int basecalling)
+	public String simulate(String sequence, SimulationError errorModel, LengthDistribution l, int basecalling)
 	{
 		Random rand = new Random();
 		//random number between 0 and sequenceLength-1 is created
@@ -33,7 +33,7 @@ public class Pore {
 		//System.out.println(length);
 		String subseq = sequence.substring(start, start+length);
 		//System.out.println(subseq);
-		String fasta = errorModel.apply(subseq, basecalling);
+		String fasta = errorModel.applyErrorBasecalling(subseq, basecalling);
 		//System.out.println(fasta);
 
 		return fasta;

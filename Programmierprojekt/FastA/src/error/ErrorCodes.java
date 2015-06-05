@@ -17,9 +17,8 @@ public enum ErrorCodes {
 	GAPPED_SEQUENCE(2003,"This sequence contains gaps!",true),
 	
 	
-	NO_SEQUENCE_NAME(2010, "There is no sequence name.", false),
+	NO_SEQUENCE_NAME(2010, "There is no sequence name.", false);
 	
-	BASECALLING_NOT_VALID(2011,"Not a valid base",true);
 	
 	private final int identity;
 	private final String message;

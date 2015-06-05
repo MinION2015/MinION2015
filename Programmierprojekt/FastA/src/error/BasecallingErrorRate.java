@@ -6,12 +6,12 @@ package error;
  *Hardcoded error rates for basecalling, calculated from the data. So far only dummy values are written. 
  *To generate the values for each position each letter gets a window. For example if a A switches to a G the value wirtten down is 1, but the prob is 0.1(->1-0.9).
  */
-public class ErrorRate {
+public class BasecallingErrorRate {
 
 
 	private double[][] transProb;
 	private char[] base = {'A','C','T','G'};
-	public ErrorRate(int basecalling){
+	public BasecallingErrorRate(int basecalling){
 		
 		
 		this.transProb = new double[4][4];

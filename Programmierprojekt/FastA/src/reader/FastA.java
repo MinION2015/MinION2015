@@ -16,15 +16,15 @@ import error.MyException;
  * @author Friederike Hanssen
  * FastA contains two Arraylists of the same length. One stores the entry in the fastA file the other some kind of error information.
  * The given  file is parsed and the results stored in a new file.
- * 
- * TODO HAven't quite figured out how to store MyException objects instead of errorinsequence as Sina suggested.
- *
  */
 public class FastA implements Filetype {
 
 	private ArrayList<Sequence> seqList;
 	private ArrayList<MyException> errList;
 
+	/**
+	 * fastA object contains two arrylist, one storing correct sequences, one storing occuring errors.
+	 */
 	public FastA() {
 		this.seqList = new ArrayList<Sequence>();
 		this.errList = new ArrayList<MyException>();
@@ -33,7 +33,7 @@ public class FastA implements Filetype {
 	
 	/**
 	 * Gets a filename and parses each sequence.
-	 * param inputFilename gets the inputFilename
+	 * @param inputFilename gets the inputFilename
 	 */
 	@Override
 	public void parse(String inputFilename) throws IOException, MyException {
@@ -89,19 +89,9 @@ public class FastA implements Filetype {
 			seqList.add(seq);
 			errList.add(err);
 
-		} catch (MyException e) {
-			// creating new incorrect fasta entry object and stores it
-//			int errorCode = e.getErrorCode();
-//			String errorMessage = e.getErrorMessage();
-//			boolean isCritical = e.isCriticalError();
+		} catch (MyException e){
 			
 			Sequence seq = new Sequence(null,null);
-		
-//			if(!isCritical){
-//				Sequence seq = new Sequence(header, sequence);
-		//	}
-//			ErrorInSequence err = new ErrorInSequence(errorCode, errorMessage,
-//					isCritical);
 			seqList.add(seq);
 			errList.add(e);
 		}
@@ -195,18 +185,16 @@ public class FastA implements Filetype {
 
 	@Override
 	public ArrayList<Sequence> getSequence() {
-		// TODO Auto-generated method stub
 		return seqList;
 	}
 
 	@Override
 	public ArrayList<MyException> getErrorInSequence() {
-		// TODO Auto-generated method stub
 		return errList;
 	}
 	
 	/**
-	 * Adds a singel sequence to an exsting fasta file and processes it accordingly
+	 * Adds a single sequence to an exsting fasta file and processes it accordingly
 	 */
 	public void addSeq(Sequence seq) throws MyException{
 		
