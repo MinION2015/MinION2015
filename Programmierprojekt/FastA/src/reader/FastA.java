@@ -23,11 +23,11 @@ import error.MyException;
 public class FastA implements Filetype {
 
 	private ArrayList<Sequence> seqList;
-	private ArrayList<ErrorInSequence> errList;
+	private ArrayList<MyException> errList;
 
 	public FastA() {
 		this.seqList = new ArrayList<Sequence>();
-		this.errList = new ArrayList<ErrorInSequence>();
+		this.errList = new ArrayList<MyException>();
 	}
 
 	
@@ -85,25 +85,25 @@ public class FastA implements Filetype {
 		try {
 			checkForReadingError(header, sequence);
 			Sequence seq = new Sequence(header, sequence);
-			ErrorInSequence err = new ErrorInSequence(-1, null, false);
+			MyException err = new MyException(ErrorCodes.NO_ERROR);
 			seqList.add(seq);
 			errList.add(err);
 
 		} catch (MyException e) {
 			// creating new incorrect fasta entry object and stores it
-			int errorCode = e.getErrorCode();
-			String errorMessage = e.getErrorMessage();
-			boolean isCritical = e.isCriticalError();
+//			int errorCode = e.getErrorCode();
+//			String errorMessage = e.getErrorMessage();
+//			boolean isCritical = e.isCriticalError();
 			
 			Sequence seq = new Sequence(null,null);
 		
 //			if(!isCritical){
 //				Sequence seq = new Sequence(header, sequence);
 		//	}
-			ErrorInSequence err = new ErrorInSequence(errorCode, errorMessage,
-					isCritical);
+//			ErrorInSequence err = new ErrorInSequence(errorCode, errorMessage,
+//					isCritical);
 			seqList.add(seq);
-			errList.add(err);
+			errList.add(e);
 		}
 
 	}
@@ -200,7 +200,7 @@ public class FastA implements Filetype {
 	}
 
 	@Override
-	public ArrayList<ErrorInSequence> getErrorInSequence() {
+	public ArrayList<MyException> getErrorInSequence() {
 		// TODO Auto-generated method stub
 		return errList;
 	}
@@ -222,7 +222,7 @@ public class FastA implements Filetype {
 //			
 //			FastA pfastA = new FastA();
 //			pfastA.parse(args[0]);
-//			pfastA.writeInFile("C:/Users/Friederike/Desktop/MinionTestParser/MinionTestParser.txt");
+//			pfastA.writeInFile("C:/Users/Friederike/Desktop/MinionTestParser/Test2.txt");
 //			
 //		}
 //

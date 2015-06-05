@@ -125,7 +125,7 @@ public class GUI extends JFrame implements ActionListener {
 				//For some reason results are not stored in the file but only null. tested the controller separatly,which worked just fine
 				//seems like basecalling doens't get reassigned, as it stays 0;
 				System.out.println(basecalling);
-				cd.run(basecalling);
+				cd.run(1);
 				
 				
 			} catch (IOException e) {
@@ -138,7 +138,7 @@ public class GUI extends JFrame implements ActionListener {
 
 			for(int i=0; i<length;i++)
 			{
-				if(cd.getincorrectfastAList().get(i).isCritical()) {
+				if(cd.getincorrectfastAList().get(i).isCriticalError()) {
 					JOptionPane.showMessageDialog(null, cd.getincorrectfastAList().get(i).getErrorMessage(), "Critical Error", JOptionPane.ERROR_MESSAGE);
 				} else {
 					message= message + " " + cd.getincorrectfastAList().get(i).getErrorMessage()+"<br>";

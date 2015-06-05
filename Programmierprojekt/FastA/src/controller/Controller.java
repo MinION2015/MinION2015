@@ -3,11 +3,9 @@ package controller;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import reader.ErrorInSequence;
-import reader.FastA;
-import reader.Sequence;
-import error.ErrorBasecalling;
-import error.MyException;
+import reader.*;
+
+import error.*;
 
 /**
  * 
@@ -79,7 +77,7 @@ public class Controller{
 	 * MEthod for the gui to get the Error messages. Can't see incorrect filename or such.
 	 * @return
 	 */
-	public ArrayList<ErrorInSequence> getincorrectfastAList() {
+	public ArrayList<MyException> getincorrectfastAList() {
 		return this.f.getErrorInSequence();
 	}
 	

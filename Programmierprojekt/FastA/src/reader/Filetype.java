@@ -22,7 +22,7 @@ public interface Filetype {
 	
 	
 	public ArrayList<Sequence> getSequence();
-	public ArrayList <ErrorInSequence> getErrorInSequence();
+	public ArrayList <MyException> getErrorInSequence();
 	
 	
 }
