@@ -1,5 +1,7 @@
 package error;
 
+
+
 /**
  * This is a subclass of Exception, so that we can throw back our own errors
  * 
@@ -38,3 +40,4 @@ public class MyException extends Exception{
 	    return errorMessage;
 	  }
 }
+
