@@ -17,7 +17,11 @@ public enum ErrorCodes {
 	GAPPED_SEQUENCE(2003,"This sequence contains gaps!",true),
 	
 	
-	NO_SEQUENCE_NAME(2010, "There is no sequence name.", false);
+	NO_SEQUENCE_NAME(2010, "There is no sequence name.", false),
+	
+	PORE_HAS_DIED(3000,"Pore has died.",true),
+	PORE_INITIATED(3001,"The Pore has started sequencing.",true),
+	PORE_FINISHED(3002,"The Pore has finished without problems.",true);
 	
 	
 	private final int identity;
