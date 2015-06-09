@@ -105,7 +105,7 @@ public class FastA implements FiletypeContainingSequences {
  * @return
  * @throws MyException
  */
-	private int checkForReadingError(String identity, String sequence)
+	private void checkForReadingError(String identity, String sequence)
 			throws MyException {
 
 		char[] id = identity.toCharArray();
@@ -142,8 +142,6 @@ public class FastA implements FiletypeContainingSequences {
 		if (sequence != sequence.toUpperCase()) {
 			throw new MyException(ErrorCodes.LOWERCASE_SEQUENCE);
 		}
-
-		return 0;
 	}
 
 	/**
@@ -178,8 +176,6 @@ public class FastA implements FiletypeContainingSequences {
 		{
 			System.out.println(e);
 		}
-
-
 	}
 
 
@@ -210,13 +206,36 @@ public class FastA implements FiletypeContainingSequences {
 //			System.err.println("You should specify a FastA file as input!");
 //			System.exit(1);
 //		}else{
-//			
 //			FastA pfastA = new FastA();
 //			pfastA.parse(args[0]);
 //			pfastA.writeInFile("C:/Users/Friederike/Desktop/MinionTestParser/Test2.txt");
 //			
 //		}
-//
+		/**
+		 * TEsts	
+		 */
+//			FastA pfastA = new FastA();
+//			Sequence seq = new Sequence ("me", "ACTG");
+//			pfastA.addSeq (seq);
+//			ArrayList<Sequence> arr = pfastA.getSequence();
+//			ArrayList<MyException> err = pfastA.getErrorInSequence();
+//			System.out.println(arr.get(0).getHeader()+" "+arr.get(0).getSequence());
+//			System.out.println(err.get(0).getErrorMessage());
+//			seq = new Sequence("me","ACFT");
+//			try{
+//				pfastA.checkForReadingError("me", "ACT-");
+//			}catch(MyException e){
+//				//expected: sequence contains gaps
+//				System.out.println(e.getErrorMessage());
+//			}
+//			pfastA.processRead("me", "ACTGGA");
+//			System.out.println(pfastA.getSequence().get(1).getHeader());
+//			System.out.println(pfastA.getSequence().get(1).getSequence());
+//			
+//			pfastA.parse("TestFile.fasta");
+			
+		//}
+
 //	}
 
 }

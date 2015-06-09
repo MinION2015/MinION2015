@@ -8,6 +8,8 @@ import error.MyException;
  * 
  * @author Friederike Hanssen
  * Interface for implementing a new readable filetype
+ * No input
+ * Output: data is written into a file, arraylists can be called
  *
  */
 public interface FiletypeContainingSequences {

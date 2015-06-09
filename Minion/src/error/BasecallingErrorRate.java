@@ -3,6 +3,9 @@ package error;
 /**
  * 
  * @author Friederike Hanssen
+ * For a certain base and a basecalling type the transformation rate can becalled here
+ * Input: basecalling type
+ * Output: getters for the value, base and row
  *Hardcoded error rates for basecalling, calculated from the data. So far only dummy values are written. 
  *To generate the values for each position each letter gets a window. For example if a A switches to a G the value wirtten down is 1, but the prob is 0.1(->1-0.9).
  */
@@ -92,13 +95,11 @@ public class BasecallingErrorRate {
 	/**
 	 * Test
 	 */
-//	private int length(){
-//		return transProb.length;
-//	}
+
 //	public static void main(String args[]){
-//		ErrorRate err = new ErrorRate(2);
-//		for(int i = 0; i < err.length();i++){
-//			for(int j = 0; j < err.length();j++){
+//		BasecallingErrorRate err = new BasecallingErrorRate(2);
+//		for(int i = 0; i < 4;i++){
+//			for(int j = 0; j < 4;j++){
 //				System.out.print(err.getValue(i,j) + " ");
 //			}
 //		System.out.println();
@@ -108,7 +109,7 @@ public class BasecallingErrorRate {
 //		
 //		System.out.println(err.getRow('T')); //2
 //	}
-	
+//	
 	
 	
 }
