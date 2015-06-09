@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import reader.*;
-
 import error.*;
 
 /**
@@ -43,8 +42,9 @@ public class Controller{
 	 * A pore is simulated, through which the sequences in from the file are sent. Basecalling errors are simulated.
 	 * @param basecalling: Basecalling type (1D=1/2D=2) as selected in the gui
 	 * @throws IOException
+	 * @throws MyException 
 	 */
-	public void run(int basecalling) throws IOException{
+	public void run(int basecalling) throws IOException, MyException{
 		
 		
 		
@@ -55,9 +55,9 @@ public class Controller{
 		
 		for(Sequence entry: f.getSequence()){
 			if(entry.getSequence() != null){
-			String simSeq = pore.simulate(entry.getSequence(),errorType,lengthType,basecalling);
+			Sequence seq = pore.simulate(entry.getSequence(),errorType,lengthType,basecalling);
 			
-			Sequence seq = new Sequence(entry.getHeader(),simSeq);
+			seq.setHeader(entry.getHeader());
 			
 			try{
 				

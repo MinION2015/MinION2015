@@ -20,6 +20,10 @@ public class Sequence {
 		return header;
 	}
 	
+	public void setHeader(String header) {
+		this.header = header;
+	}
+	
 	public String getSequence() {
 		return sequence;
 	}
