@@ -1,36 +1,40 @@
 package controller;
 
+import java.util.Random;
+
 import error.Chance;
 /**
  * 
- * @author Friederike Hanssen und Albert Langensiepen
+ * @author Friederike Hanssen und Albert Langensiepen und Daniel Dehncke
  * LengthDistribution object will return a rand length with a prob found in the lengthrate class.
  * Same as with errorbasecalling, should prob not be a class, also length rate and length distribution can be merged, thus the commented lines of code, but i'm aunable to test it right now.
  */
 public class LengthDistribution {
 
-	//private double[][] length;
+	
 	
 	public LengthDistribution(){
-//		this.length = new double[4][2];
-//		generate();
+		
 	}
-	
+	/**
+	 * @author Friederike Hanssen und Albert Langensiepen und Daniel Dehncke
+	 * generates a Random Length from the analyzed Data in LengthRate and returns it
+	 */
 	public double getRandLength(){
-		double prob = Chance.getRand();
+		
 		LengthRate l = new LengthRate();
 		
-		if(prob <= l.getProb(0)){
-			return l.getLength(0);
-		}else if (prob > l.getProb(0) && prob <= l.getProb(1)){
-			return l.getLength(1);
-		}else if (prob > l.getProb(1) && prob <= l.getProb(2)){
-			return l.getLength(2);
-		}else if (prob > l.getProb(2) && prob <= l.getProb(3)){
-			return l.getLength(3);
+		
+		Random r = new Random(); 
+		double d = r.nextDouble(); 
+		
+		int i = 0;
+		while(d > l.getProb(i))
+		{
+			i++;
 		}
 		
-		return -1;
+		return l.getLength(i);
 	}
 
 //	private void generate(){

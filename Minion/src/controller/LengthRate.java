@@ -2,40 +2,34 @@ package controller;
 
 /**
  * 
- * @author Friederike
- *
+ * @author Friederike und Daneil Dehncke
+ * saves the Sequenz Lengths from the analyzed Data and their possibilities.
  */
 public class LengthRate {
 
 	
-	private double[][] length;
+	private double[][] possibilitiesLenght;
 
-	
+	//analysed lengths. Window of 3125
 	public LengthRate(){
-		this.length = new double[4][2];
-		generate();
-	}
-	
-	private void generate(){
+		this.possibilitiesLenght = new double[][]
+				{{0.4132566348542293,0.6420447117270232,0.8364492090469342,
+					0.9405151000130736,0.9748986795659563,0.9874493397829781,
+					0.992417309452216,0.9960779186821807,0.997516015165381,
+					0.9980389593410902,0.9986926395607267,0.9989541116485814,
+					0.9993463197803634,0.999607791868218,0.9997385279121453,1.0},
+				{3125.0,6250.0,9375.0,12500.0,15625.0,18750.0,21875.0,25000.0,
+					28125.0,31250.0,34375.0,37500.0,40625.0,43750.0,46875.0,50000.0,}};
 		
-		length[0][0] = 0.2;
-		length[1][0] = 0.6;
-		length[2][0] = 0.8;
-		length[3][0] = 1;
-		
-		length[0][1] = 10;
-		length[1][1] = 20;
-		length[2][1] = 5;
-		length[3][1] = 1;
 	}
 	
 	public double getLength(int index){
-		return length[index][1];
+		return possibilitiesLenght[index][1];
 		
 	}
 	
 	public double getProb(int index){
-		return length[index][0];
+		return possibilitiesLenght[index][0];
 	}
 /**
  * Test	
