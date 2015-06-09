@@ -36,8 +36,8 @@ public class FastA implements FiletypeContainingSequences {
 	 * Gets a filename and parses each sequence.
 	 * @param inputFilename gets the inputFilename
 	 */
-	@Override
-	public void parse(String inputFilename) throws IOException, MyException {
+	public void parse(String inputFilename) throws IOException,MyException{
+	
 		File file = new File(inputFilename);
 		FileReader fileReader = new FileReader(file);
 		BufferedReader bufferReader = new BufferedReader(fileReader);
@@ -149,7 +149,7 @@ public class FastA implements FiletypeContainingSequences {
 	/**
 	 * Writes results in the given filename. Each sequence in the order: Entry\\header\\sequence\\Errors:\\(error messages||null)
 	 */
-	@Override
+
 	public void writeInFile(String outputFilename) {
 		File write_file = new File(outputFilename);
 		try
@@ -183,12 +183,12 @@ public class FastA implements FiletypeContainingSequences {
 	}
 
 
-	@Override
+	
 	public ArrayList<Sequence> getSequence() {
 		return seqList;
 	}
 
-	@Override
+
 	public ArrayList<MyException> getErrorInSequence() {
 		return errList;
 	}
