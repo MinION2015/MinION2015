@@ -77,6 +77,23 @@ public class GUI extends JFrame implements ActionListener {
 		GUI bl = new GUI();
 		bl.setVisible(true);
 	}
+	
+	/*TODO Stop Button
+	 * stop simulation keep gui open
+	 * 
+	 */
+	/*TODO make the file visible which is chosen
+	 * 
+	 */
+	/*TODO Menubar Tools/Exit
+	 * 
+	 */
+	/*TODO
+	 * Add parameters with default values: Number of Pores, Running Time, How many seconds is one tick
+	 */
+	/*
+	 * TODO Output File Setting
+	 */
 
 
 	/**
