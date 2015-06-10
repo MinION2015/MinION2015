@@ -2,7 +2,7 @@ package controller;
 
 /**
  * 
- * @author Friederike und Daneil Dehncke
+ * @author Daneil Dehncke
  * saves the Sequenz Lengths from the analyzed Data and their possibilities.
  */
 public class LengthRate {

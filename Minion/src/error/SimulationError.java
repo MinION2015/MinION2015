@@ -48,6 +48,9 @@ public class SimulationError{
 		}else if(prob > rate.getValue(row, 2) && prob <= rate.getValue(row, 3)){
 			//System.out.println(rate.getBase(3));
 			return rate.getBase(3);
+		}else if(prob > rate.getValue(row, 3) && prob <= rate.getValue(row, 4)){
+			//System.out.println(rate.getBase(4));
+			return rate.getBase(4);
 		}
 		return "";
 	}
