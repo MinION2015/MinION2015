@@ -34,7 +34,7 @@ public class LengthDistribution {
 			i++;
 		}
 		
-		return l.getLength(i);
+		return (int)l.getLength(i);
 	}
 
 	
