@@ -24,12 +24,12 @@ public class LengthRate {
 	}
 	
 	public double getLength(int index){
-		return possibilitiesLenght[index][1];
+		return possibilitiesLenght[1][index];
 		
 	}
 	
 	public double getProb(int index){
-		return possibilitiesLenght[index][0];
+		return possibilitiesLenght[0][index];
 	}
 /**
  * Test	
