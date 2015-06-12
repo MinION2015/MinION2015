@@ -1,5 +1,6 @@
-package controller;
+package LengthDistribution;
 
+import java.io.IOException;
 import java.util.Random;
 
 import error.Chance;
@@ -11,18 +12,18 @@ import error.Chance;
  */
 public class LengthDistribution {
 
+	LengthRate l;
 	
-	
-	public LengthDistribution(){
-		
+	public LengthDistribution(String filename,int window) throws IOException{
+
+		LengthRate l = new LengthRate(filename, window);
 	}
+
 	/**
 	 * @author Friederike Hanssen und Albert Langensiepen und Daniel Dehncke
 	 * generates a Random Length from the analyzed Data in LengthRate and returns it
 	 */
 	public double getRandLength(){
-		
-		LengthRate l = new LengthRate();
 		
 		
 		Random r = new Random(); 
