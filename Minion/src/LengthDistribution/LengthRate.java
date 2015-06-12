@@ -14,7 +14,10 @@ public class LengthRate {
 	
 	private double[][] possibilitiesLenght;
 	
-
+/*
+ * could add come options here, like default window sizes that a dividers of the Array which 
+ * contains the Lengths
+ */
 	public LengthRate(int window) throws IOException{
 		this.possibilitiesLenght = 	GetDefaultLengths(window);
 	}
@@ -27,7 +30,6 @@ public class LengthRate {
 	
 	public double getLength(int index){
 		return possibilitiesLenght[1][index];
-		
 	}
 	
 	public double getProb(int index){
@@ -134,7 +136,8 @@ public class LengthRate {
 	 * @author Daniel Dehncke
 	 * @input int[] ArrayLengths,int Window, int sumOfSequences
 	 * @output double[][] Array with the resulting possibilities
-	 * Generates a double Array with the given Lengths and the chosen window Size. 
+	 * Generates a double Array with the given Lengths and the chosen window Size. When window isn't a divider of 
+	 * the Length of the Array some Sequences can get lost.
 	 * 
 	 */
 	private double[][] generatePossibilities(int[] Lengths,int window,int sumOfSequences)
