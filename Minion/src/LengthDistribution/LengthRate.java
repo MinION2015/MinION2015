@@ -188,6 +188,7 @@ public class LengthRate {
 	}
 
 	
+	
 	/**
 	 * @author Daniel Dehncke
 	 * @input int[] ArrayLengths,int Window, int sumOfSequences

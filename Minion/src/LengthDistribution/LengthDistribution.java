@@ -18,6 +18,12 @@ public class LengthDistribution {
 
 		LengthRate l = new LengthRate(filename, window);
 	}
+	
+	//scond constructor for default LengthDistribution
+	public LengthDistribution(int window) throws IOException{
+
+		LengthRate l = new LengthRate(window);
+	}
 
 	/**
 	 * @author Friederike Hanssen und Albert Langensiepen und Daniel Dehncke
