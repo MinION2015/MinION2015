@@ -102,36 +102,92 @@ public class LengthRate {
 	public double[][] GetDefaultLengths(int window) throws IOException {
 		// TODO Auto-generated method stub
 		int approximationlongestSequence = 49196;
+		
 		String filename = "LengthList.txt";
 		int sumOfSequences = 0;
+		int[] savenumberofLengths = new int[approximationlongestSequence];
 		
-		int[] LengthsArraytemp = new int[approximationlongestSequence];
+		int[] saveLengths = new int[approximationlongestSequence];
 		BufferedReader br = new BufferedReader(new FileReader(filename));
 		String currLine = "";
-
+		
+		boolean writeinnumberOfLengths = false;
 		while((currLine = br.readLine()) != null)
 		{
 		String Zahl = "";
+		
+		//works through the .txt file. when the first { is detected the Array savenumberofLengths is chosen. When the second { is found 
+		//this means we are getting the Lengths out of the .txt file and we save them into Array saveLengths. After this we merge 
+		//Both Arrays together to a new Array which contains at the Length of the Sequences as index and their quantity
 		for (int j = 1; j < currLine.length()-1;j++)
-		{
+		{	//TODO { und kommast einlesen
 			String tmp = currLine.substring(j-1, j);
 			
-			if(tmp.equals(" ") && !Zahl.equals(""))
+			if(tmp.equals("{"))									//array of Number of Lengths is detected
+			{
+				writeinnumberOfLengths = !writeinnumberOfLengths;
+			}
+			if(tmp.equals("}"))
+			{
+				continue;
+			}
+			
+			if(writeinnumberOfLengths)
+			{
+				
+			if(tmp.equals(",") && !Zahl.equals(""))
 			{				
-				LengthsArraytemp[Integer.parseInt(Zahl.replaceAll(" ",""))]++;
+				savenumberofLengths[Integer.parseInt(Zahl.replaceAll(",",""))]++;
 				Zahl = "";
 				sumOfSequences++;
 			}
 			else{
 				Zahl = Zahl + tmp;
 			}
+			
+			}else
+			{
+				
+				if(tmp.equals(",") && !Zahl.equals(""))
+				{				
+					saveLengths[Integer.parseInt(Zahl.replaceAll(",",""))]++;
+					Zahl = "";
+					sumOfSequences++;
+				}
+				else{
+					Zahl = Zahl + tmp;
+				}
+				
+			}
+			int[] mergedArray = new int[approximationlongestSequence];
+			//Merge the two Arrays
+			for(int i = 0; i < saveLengths.length;i++)
+			{
+				mergedArray[saveLengths[i]] = savenumberofLengths[i];
+			}
+			
+			
+			
+			
+			
+
 		}
 		}
+		
+		int[] mergedArray = new int[approximationlongestSequence];
+		//Merge the two Arrays
+		for(int i = 0; i < saveLengths.length;i++)
+		{
+			mergedArray[saveLengths[i]] = savenumberofLengths[i];
+		}
+		
 		//window is the Size we look at
 		br.close();
-		return generatePossibilities(LengthsArraytemp, window, sumOfSequences);
+		return generatePossibilities(mergedArray, window, sumOfSequences);
 
 	}
+
+	
 	/**
 	 * @author Daniel Dehncke
 	 * @input int[] ArrayLengths,int Window, int sumOfSequences
