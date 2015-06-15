@@ -21,8 +21,9 @@ public enum ErrorCodes {
 	
 	PORE_HAS_DIED(3000,"Pore has died.",true),
 	PORE_INITIATED(3001,"The Pore has started sequencing.",true),
-	PORE_FINISHED(3002,"The Pore has finished without problems.",true);
+	PORE_FINISHED(3002,"The Pore has finished without problems.",true),
 	
+	FLOWCELL_EMPTY(4000,"Flowcell can't generate pores",true);	
 	
 	private final int identity;
 	private final String message;

@@ -14,9 +14,9 @@ import error.MyException;
 /**
  * 
  * @author Friederike Hanssen
- * A FastA object can parse a file or add existing sequences to itself.
- * It doesn't have an input. FastA contains two array lists of the same length. One stores the entry in the fastA file the other some kind of error information.
- * It outputs the data in an output file
+ * @functionality A FastA object can parse a file or add existing sequences to itself.
+ * @input It doesn't have an input. FastA contains two array lists of the same length. One stores the entry in the fastA file the other some kind of error information.
+ * @output sIt outputs the data in an output file
  */
 public class FastA implements FiletypeContainingSequences {
 

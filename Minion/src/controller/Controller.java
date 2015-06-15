@@ -3,6 +3,7 @@ package controller;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import LengthDistribution.LengthDistribution;
 import reader.*;
 import error.*;
 
