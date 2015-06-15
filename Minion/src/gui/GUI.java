@@ -17,6 +17,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import controller.Controller;
 import error.MyException;
@@ -36,9 +37,10 @@ import error.MyException;
 
 public class GUI extends JFrame implements ActionListener {
 	JMenuBar bar;
-	JMenu file, tools;
-	JMenuItem moreToCome1, moreToCome2;
-	JButton startButton, stopButton, loadButton;
+	JMenu file, tools, setting;
+	JMenuItem moreToCome1, moreToCome2,outputSetting;
+	JButton startButton, stopButton, loadButton; 
+	JTextField pores, runningTime, ticksPerSecond;
 	JLabel label;
 	JPanel panel;
 	JComboBox choice;
@@ -52,23 +54,29 @@ public class GUI extends JFrame implements ActionListener {
 	public GUI() throws IOException{
 
 		this.setTitle("MinION Simulator");
-		this.setSize(800, 600);
+		this.setSize(900, 600);
 		panel = new JPanel();
 		label = new JLabel();
 
 
 		bar = new JMenuBar();
+		
 		file = new JMenu ("File");
 		tools = new JMenu("Tools");
+		setting = new JMenu("Settings");
 		
 		moreToCome1 = new JMenuItem("Some Menu Thingy");
 		moreToCome2 = new JMenuItem("Some Menu Thingy");
+		outputSetting = new JMenuItem("Outputfile-Settings");
 		
 		bar.add(file);
 		bar.add(tools);
+		bar.add(setting);
 		
 		file.add(moreToCome2);
 		tools.add(moreToCome1);
+		setting.add(outputSetting);
+		
 		
 		this.setJMenuBar(bar);
 		add(bar,BorderLayout.NORTH);
@@ -76,11 +84,21 @@ public class GUI extends JFrame implements ActionListener {
 		startButton = new JButton("START SIMULATION");
 		stopButton = new JButton ("STOP SIMULATION");
 		loadButton = new JButton ("LOAD FILE");
+		
+		pores = new JTextField("NUMBER OF PORES");
+		runningTime = new JTextField("Running Time in Seconds");
+		ticksPerSecond = new JTextField("Ticks per Second");
 
+		//ActionListener for Buttons
 		startButton.addActionListener(this);
 		loadButton.addActionListener(this);
 		stopButton.addActionListener(this);
-
+		
+		//ActionsListener for Textfields
+		pores.addActionListener(this);
+		runningTime.addActionListener(this);
+		ticksPerSecond.addActionListener(this);
+		
 		String[] parameter = {"1D","2D"};
 		choice = new JComboBox(parameter);
 
@@ -90,6 +108,9 @@ public class GUI extends JFrame implements ActionListener {
 
 		box.add(loadButton);
 		box.add(choice);
+		box.add(pores);
+		box.add(runningTime);
+		box.add(ticksPerSecond);
 		box.add(startButton);
 		box.add(stopButton);
 
@@ -111,9 +132,6 @@ public class GUI extends JFrame implements ActionListener {
 	 * stop simulation keep gui open
 	 * 
 	 */
-	/*TODO
-	 * Add parameters with default values: Number of Pores, Running Time, How many seconds is one tick
-	 */
 	
 	/*
 	 * TODO Output File Setting
@@ -132,8 +150,21 @@ public class GUI extends JFrame implements ActionListener {
 	 */
 	@SuppressWarnings("deprecation")
 	public void actionPerformed (ActionEvent ae) {
-
+		//Set default values for input parameters
+		int numOfPores=1;
+		int runTime=10;
+		int ticksPSecond=5;
 		int returnVal =0;
+		
+		if(ae.getSource() == this.pores){
+			numOfPores = Integer.parseInt(pores.getText());
+		}
+		if(ae.getSource() == this.runningTime){
+			runTime = Integer.parseInt(runningTime.getText());
+		}
+		if(ae.getSource() == this.ticksPerSecond){
+			ticksPSecond = Integer.parseInt(ticksPerSecond.getText());
+		}
 
 		if(ae.getSource() == this.loadButton){
 			returnVal = fc.showOpenDialog(GUI.this);

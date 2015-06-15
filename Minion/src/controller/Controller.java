@@ -45,6 +45,11 @@ public class Controller{
 	 * @throws IOException
 	 * @throws MyException 
 	 */
+	
+	/*TODO
+	 * when stopButton is pushed, run should be somehow interrupted
+	 */
+	
 	public void run(int basecalling) throws IOException, MyException{
 		
 		
