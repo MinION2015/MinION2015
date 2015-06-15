@@ -1,5 +1,7 @@
 package gui;
 
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -10,6 +12,9 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -30,12 +35,14 @@ import error.MyException;
  */
 
 public class GUI extends JFrame implements ActionListener {
-	JButton startButton;
-	JButton stopButton;
-	JButton loadButton;
+	JMenuBar bar;
+	JMenu file, tools;
+	JMenuItem moreToCome1, moreToCome2;
+	JButton startButton, stopButton, loadButton;
 	JLabel label;
 	JPanel panel;
 	JComboBox choice;
+	
 	final JFileChooser fc = new JFileChooser();
 
 	/*
@@ -50,6 +57,22 @@ public class GUI extends JFrame implements ActionListener {
 		label = new JLabel();
 
 
+		bar = new JMenuBar();
+		file = new JMenu ("File");
+		tools = new JMenu("Tools");
+		
+		moreToCome1 = new JMenuItem("Some Menu Thingy");
+		moreToCome2 = new JMenuItem("Some Menu Thingy");
+		
+		bar.add(file);
+		bar.add(tools);
+		
+		file.add(moreToCome2);
+		tools.add(moreToCome1);
+		
+		this.setJMenuBar(bar);
+		add(bar,BorderLayout.NORTH);
+		
 		startButton = new JButton("START SIMULATION");
 		stopButton = new JButton ("STOP SIMULATION");
 		loadButton = new JButton ("LOAD FILE");
@@ -61,13 +84,15 @@ public class GUI extends JFrame implements ActionListener {
 		String[] parameter = {"1D","2D"};
 		choice = new JComboBox(parameter);
 
-		panel.setLayout( new java.awt.BorderLayout() );
+		panel.setLayout( new BorderLayout() );
 		JPanel box = new JPanel();
-		box.setLayout(new BoxLayout(box,BoxLayout.Y_AXIS));
+		//box.setLayout(new BoxLayout(box,BoxLayout.Y_AXIS));
+
 		box.add(loadButton);
+		box.add(choice);
 		box.add(startButton);
 		box.add(stopButton);
-		box.add(choice);
+
 
 		panel.add(box, java.awt.BorderLayout.NORTH);
 		panel.add(label, java.awt.BorderLayout.CENTER);
@@ -86,12 +111,10 @@ public class GUI extends JFrame implements ActionListener {
 	 * stop simulation keep gui open
 	 * 
 	 */
-	/*TODO Menubar Tools/Exit
-	 * 
-	 */
 	/*TODO
 	 * Add parameters with default values: Number of Pores, Running Time, How many seconds is one tick
 	 */
+	
 	/*
 	 * TODO Output File Setting
 	 */
