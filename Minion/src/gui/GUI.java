@@ -31,6 +31,7 @@ import error.MyException;
 
 public class GUI extends JFrame implements ActionListener {
 	JButton startButton;
+	JButton stopButton;
 	JButton loadButton;
 	JLabel label;
 	JPanel panel;
@@ -50,10 +51,12 @@ public class GUI extends JFrame implements ActionListener {
 
 
 		startButton = new JButton("START SIMULATION");
+		stopButton = new JButton ("STOP SIMULATION");
 		loadButton = new JButton ("LOAD FILE");
 
 		startButton.addActionListener(this);
 		loadButton.addActionListener(this);
+		stopButton.addActionListener(this);
 
 		String[] parameter = {"1D","2D"};
 		choice = new JComboBox(parameter);
@@ -63,6 +66,7 @@ public class GUI extends JFrame implements ActionListener {
 		box.setLayout(new BoxLayout(box,BoxLayout.Y_AXIS));
 		box.add(loadButton);
 		box.add(startButton);
+		box.add(stopButton);
 		box.add(choice);
 
 		panel.add(box, java.awt.BorderLayout.NORTH);
@@ -80,9 +84,6 @@ public class GUI extends JFrame implements ActionListener {
 	
 	/*TODO Stop Button
 	 * stop simulation keep gui open
-	 * 
-	 */
-	/*TODO make the file visible which is chosen
 	 * 
 	 */
 	/*TODO Menubar Tools/Exit
@@ -106,6 +107,7 @@ public class GUI extends JFrame implements ActionListener {
 	 * @param ae: a click on a button
 	 *  
 	 */
+	@SuppressWarnings("deprecation")
 	public void actionPerformed (ActionEvent ae) {
 
 		int returnVal =0;
@@ -113,9 +115,14 @@ public class GUI extends JFrame implements ActionListener {
 		if(ae.getSource() == this.loadButton){
 			returnVal = fc.showOpenDialog(GUI.this);
 		}
+		
+		//checks if loadButton has been pressed and a file has been chosen -> renames loadButton to file which has been chosen
+		if(ae.getSource()== this.loadButton && returnVal==JFileChooser.APPROVE_OPTION){
+			loadButton.setLabel(fc.getSelectedFile().getName());
+		}
 
 		if(ae.getSource() == this.startButton && returnVal==JFileChooser.APPROVE_OPTION){
-
+			
 			String message= "<html>";
 			Controller cd = null;
 			try {
