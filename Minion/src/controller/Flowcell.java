@@ -20,25 +20,55 @@ public class Flowcell{
 		try{
 			addPores(numberOfPores);
 		}catch(MyException e){
-			
+			System.out.println(e.getErrorMessage());
 		}
 	}
 	
-	private void addPores(int numberOfPores) throws MyException{
+	/**
+	 * NUmber of pore is added to the flowcell, if a number > 0 is given, else an error is thrown
+	 * @param numberOfPores
+	 * @throws MyException
+	 */
+	public void addPores(int numberOfPores) throws MyException{
+		
+		try{
+			checkAmountOfPore(numberOfPores);
+			for(int i = 0; i < numberOfPores; i++){
+				Pore p = new Pore();
+				p.fasta = "test";
+				poreList.add(p);
+			}
+		}catch(MyException e){
+			System.out.println(e.getErrorMessage());
+		}
+		
+	}
+	
+	private void checkAmountOfPore(int numberOfPores) throws MyException{
 		if(numberOfPores == 0){
 			throw new MyException(ErrorCodes.FLOWCELL_EMPTY);
 		}
-		for(int i = 0; i < numberOfPores; i++){
-			Pore p = new Pore();
-			poreList.add(p);
-		}
 	}
-	
 	public Pore getPoreAt(int index){
+		//Test
+		//System.out.println(poreList.get(index).fasta);
+		
 		return poreList.get(index);
 	}
 	
-	public void setPore(Pore p){
-		poreList.add(p);
-	}
+	
+	
+	/*
+	 * tests
+	 */
+//	public static void main(String[] args) throws MyException{
+//		Flowcell f = new Flowcell(5);
+//		f.getPoreAt(3);
+//		f.addPores(0);
+//		f.addPores(2);
+//		for(Pore e: f.poreList){
+//			System.out.println(e.fasta);
+//			
+//		}
+//	}
 }
