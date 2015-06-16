@@ -56,10 +56,10 @@ public class LengthRate {
 		String currLine = "";
 		
 		boolean firstLine = true;
-
+		String fastA = "";
 		while((currLine = br.readLine()) != null)
 		{
-		String fastA = "";
+		fastA = "";
 		String tmp = currLine.substring(0, 1);
 		
 		if(tmp.equals(">"))									//skips the line if it starts with an ">" and adds the length to LengthsArraytemp
@@ -82,6 +82,8 @@ public class LengthRate {
 		}
 		
 		}
+		LengthsArraytemp[fastA.length()]++;					//adds the last FastA Length
+		sumOfSequences++;
 		
 		//window is the Size we look at
 		br.close();
@@ -120,7 +122,7 @@ public class LengthRate {
 		//this means we are getting the Lengths out of the .txt file and we save them into Array saveLengths. After this we merge 
 		//Both Arrays together to a new Array which contains at the Length of the Sequences as index and their quantity
 		for (int j = 1; j < currLine.length()-1;j++)
-		{	//TODO { und kommast einlesen
+		{	
 			String tmp = currLine.substring(j-1, j);
 			
 			if(tmp.equals("{"))									//array of Number of Lengths is detected
