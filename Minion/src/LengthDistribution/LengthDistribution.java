@@ -14,12 +14,23 @@ public class LengthDistribution {
 
 	LengthRate l;
 	
+	/**
+	 * 
+	 * @param filename	input Filename for own Length Possibilities for fasta files. needs .fasta
+	 * @param window	the sequences from this windows size get one possibilities. So for window size 1000 u get a possibility for 1*1000, for 2*1000 and so on
+	 * @throws IOException
+	 */
 	public LengthDistribution(String filename,int window) throws IOException{
-
+		
 		LengthRate l = new LengthRate(filename, window);
 	}
 	
 	//scond constructor for default LengthDistribution
+	/**
+	 * Only needs the Windowsize, gets the lengths from default file
+	 * @param window the sequences from this windows size get one possibilities. So for window size 1000 u get a possibility for 1*1000, for 2*1000 and so on
+	 * @throws IOException
+	 */
 	public LengthDistribution(int window) throws IOException{
 
 		LengthRate l = new LengthRate(window);
