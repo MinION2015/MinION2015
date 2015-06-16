@@ -133,13 +133,15 @@ public class LengthRate {
 			if(tmp.equals("{"))									//array of Number of Lengths is detected
 			{
 				writeinnumberOfLengths = !writeinnumberOfLengths;
+				continue;
+				
 			}
 			if(tmp.equals("}"))
 			{
 				continue;
 			}
 			
-			if(writeinnumberOfLengths)
+			if(writeinnumberOfLengths)							//if true we write into the array which saves the Lengths
 			{
 				
 			if(tmp.equals(",") && !Zahl.equals(""))
@@ -153,7 +155,7 @@ public class LengthRate {
 			}
 			
 			}else
-			{
+			{													//if false we save the number of Lengths
 				
 				if(tmp.equals(",") && !Zahl.equals(""))
 				{				
