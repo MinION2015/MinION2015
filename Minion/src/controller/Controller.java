@@ -22,12 +22,20 @@ public class Controller{
 	
 	private String filename;
 	private FastA f;
+	//TODO
+	private int runTime;
+	private int ticksPerSecond;
+	private String storePath;
+	
+	//Variable which determines status of simulation, e.g. Paused, Stopped.
+	public int simStatus;
 	
 	/**
 	 * controller gets source filename, creates a fasta object and parses the filename saving it as the fasta object
 	 * @param sourceFilename
 	 * @throws IOException
 	 */
+	
 	public Controller(String sourceFilename) throws IOException{
 		this.filename = sourceFilename;
 		this.f = new FastA();

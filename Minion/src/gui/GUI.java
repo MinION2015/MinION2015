@@ -156,19 +156,19 @@ public class GUI extends JFrame implements ActionListener {
 		int ticksPSecond=5;
 		int returnVal =0;
 		
-		if(ae.getSource() == this.pores){
-			numOfPores = Integer.parseInt(pores.getText());
+		/*if(ae.getSource() == this.pores){
+			
 		}
 		if(ae.getSource() == this.runningTime){
-			runTime = Integer.parseInt(runningTime.getText());
+			
 		}
 		if(ae.getSource() == this.ticksPerSecond){
-			ticksPSecond = Integer.parseInt(ticksPerSecond.getText());
+			
 		}
 
 		if(ae.getSource() == this.loadButton){
 			returnVal = fc.showOpenDialog(GUI.this);
-		}
+		}*/
 		
 		//checks if loadButton has been pressed and a file has been chosen -> renames loadButton to file which has been chosen
 		if(ae.getSource()== this.loadButton && returnVal==JFileChooser.APPROVE_OPTION){
@@ -176,7 +176,9 @@ public class GUI extends JFrame implements ActionListener {
 		}
 
 		if(ae.getSource() == this.startButton && returnVal==JFileChooser.APPROVE_OPTION){
-			
+			numOfPores = Integer.parseInt(pores.getText());
+			runTime = Integer.parseInt(runningTime.getText());
+			ticksPSecond = Integer.parseInt(ticksPerSecond.getText());
 			String message= "<html>";
 			Controller cd = null;
 			try {
@@ -199,7 +201,7 @@ public class GUI extends JFrame implements ActionListener {
 				
 				
 				cd = new Controller(fc.getSelectedFile().getName());
-		
+				System.out.println(numOfPores+" "+runTime+" "+ticksPSecond);
 				cd.run(basecalling);
 				
 				
@@ -226,7 +228,6 @@ public class GUI extends JFrame implements ActionListener {
 			message=message+"</html>";
 
 			label.setText(message);  
-
 			//	        	 if (ae.getSource() == this.choice) {
 			//		            	
 			//		            	String chosen = (String) choice.getSelectedItem();
