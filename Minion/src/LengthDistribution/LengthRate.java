@@ -62,6 +62,11 @@ public class LengthRate {
 		fastA = "";
 		String tmp = currLine.substring(0, 1);
 		
+		if(tmp.equals(";"))									//skips comments
+		{
+			continue;
+		}
+		
 		if(tmp.equals(">"))									//skips the line if it starts with an ">" and adds the length to LengthsArraytemp
 		{
 			if(!firstLine)									//skips the firstLine
