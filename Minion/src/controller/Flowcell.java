@@ -3,8 +3,11 @@ package controller;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import reader.Sequence;
+import LengthDistribution.LengthDistribution;
 import error.ErrorCodes;
 import error.MyException;
+import error.SimulationError;
 
 /**
  * 
@@ -16,17 +19,6 @@ import error.MyException;
 public class Flowcell{
 
 	private ArrayList<Pore> poreList = new ArrayList<Pore>();
-	/**
-	 * Empty flowcell
-	 * @throws MyException
-	 */
-	public Flowcell() throws MyException{
-		try{
-			checkFlowcellState();
-		}catch(MyException e){
-			System.err.println(e.getErrorMessage());
-		}
-	}
 	
 	public Flowcell(int numberOfPores) throws MyException{
 		try{
@@ -35,21 +27,19 @@ public class Flowcell{
 			System.err.println(e.getErrorMessage());
 		}
 	}
-	
-//	public Flowcell(int numberOfPores, FastA genome) throws MyException{
-//		try{
-//			addPores(numberOfPores);
-//			checkFlowcellState();
-//		}catch(MyException e){
-//			System.err.println(e.getErrorMessage());
-//		}
-//	}
+	 
+	public void startFlowcell(Sequence seq,SimulationError err, int basecalling, LengthDistribution length) throws MyException{
+		for(Pore p : poreList){
+			
+			p.simulate(seq.getSequence(), err, length, basecalling);
+		}
+	}
 	/**
 	 * NUmber of pore is added to the flowcell, if a number > 0 is given, else an error is thrown. So far we haven't set an upper boundary(512?) so theoretically we could add more pores.
 	 * @param numberOfPores
 	 * @throws MyException
 	 */
-	public void addPores(int numberOfPores) throws MyException{
+	private void addPores(int numberOfPores) throws MyException{
 	
 		try{
 			checkNumberOfAddingPores(numberOfPores);
@@ -110,25 +100,10 @@ public class Flowcell{
 	 * tests
 	 */
 	public static void main(String[] args) throws MyException{
-		// for quicker testing for adding different numbers of pores
-		Scanner sc = new Scanner(System.in);
-//		//Flowcell f = new Flowcell();
-		Flowcell g = new Flowcell();
-//		boolean r = true;
-//		while(true){
-//			int j = sc.nextInt();
-//			Flowcell f = new Flowcell(j);			
-//		}
-		while(true){
-			int i = sc.nextInt();
-			g.addPores(i);
-		}
 		
-//		Flowcell f = new Flowcell(); //Flowcell is empty err expected
-//		Flowcell g = new Flowcell(1); //1 pore added, Flowcell contains 1 pore expected
-//		g.addPores(3); //3 pores added, flowcell contains 4 pores expected
-//		g.addPores(0); //0 pores added, flowcell contains 4 pores expected
-//		g.getPoreAt(3);//"test2" expected
+		Flowcell g = new Flowcell(5);
+	
+		g.getPoreAt(3);//"test2" expected
 		
 		
 	}
