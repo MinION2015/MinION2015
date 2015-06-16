@@ -57,7 +57,7 @@ public class Controller{
 		Pore pore = new Pore();
 		SimulationError errorType = new SimulationError();
 		FastA porePassed = new FastA();
-		LengthDistribution lengthType = new LengthDistribution();
+		LengthDistribution lengthType = new LengthDistribution(1000);
 		
 		for(Sequence entry: f.getSequence()){
 			if(entry.getSequence() != null){

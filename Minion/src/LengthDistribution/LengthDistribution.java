@@ -47,6 +47,7 @@ public class LengthDistribution {
 		double d = r.nextDouble(); 
 		
 		int i = 0;
+
 		while(d > l.getProb(i))
 		{
 			i++;

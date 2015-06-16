@@ -12,28 +12,28 @@ import java.io.IOException;
 public class LengthRate {
 
 	
-	private double[][] possibilitiesLenght;
+	private double[][] possibilitiesLength;
 	
 /*
  * could add come options here, like default window sizes that a dividers of the Array which 
  * contains the Lengths
  */
 	public LengthRate(int window) throws IOException{
-		this.possibilitiesLenght = 	GetDefaultLengths(window);
+		this.possibilitiesLength = 	GetDefaultLengths(window);
 	}
 	
 	public LengthRate(String filename, int window) throws IOException{
-		this.possibilitiesLenght = 	GetSelectedLengths(filename, window);
+		this.possibilitiesLength = 	GetSelectedLengths(filename, window);
 	}
 	
 	
 	
 	public double getLength(int index){
-		return possibilitiesLenght[1][index];
+		return possibilitiesLength[1][index];
 	}
 	
 	public double getProb(int index){
-		return possibilitiesLenght[0][index];
+		return possibilitiesLength[0][index];
 	}
 	
 	/**
@@ -112,11 +112,14 @@ public class LengthRate {
 		
 		String filename = "LengthList.txt";
 		int sumOfSequences = 0;
-		int[] savenumberofLengths = new int[approximationlongestSequence];
+		int[] savenumberofLengths = new int[5364];
 		
-		int[] saveLengths = new int[approximationlongestSequence];
+		int[] saveLengths = new int[5364];
 		BufferedReader br = new BufferedReader(new FileReader(filename));
 		String currLine = "";
+		
+		int currentArrayindex = 0;
+		int currentArrayindex2 = 0;
 		
 		boolean writeinnumberOfLengths = false;
 		while((currLine = br.readLine()) != null)
@@ -126,7 +129,8 @@ public class LengthRate {
 		//works through the .txt file. when the first { is detected the Array savenumberofLengths is chosen. When the second { is found 
 		//this means we are getting the Lengths out of the .txt file and we save them into Array saveLengths. After this we merge 
 		//Both Arrays together to a new Array which contains at the Length of the Sequences as index and their quantity
-		for (int j = 1; j < currLine.length()-1;j++)
+		
+		for (int j = 1; j < currLine.length();j++)
 		{	
 			String tmp = currLine.substring(j-1, j);
 			
@@ -142,13 +146,17 @@ public class LengthRate {
 			}
 			
 			if(writeinnumberOfLengths)							//if true we write into the array which saves the Lengths
-			{
+			{													//gets the first array from .txt file
 				
 			if(tmp.equals(",") && !Zahl.equals(""))
 			{				
-				savenumberofLengths[Integer.parseInt(Zahl.replaceAll(",",""))]++;
+				int tempZahl = Integer.parseInt(Zahl.replaceAll(",",""));
+				savenumberofLengths[currentArrayindex] = tempZahl;
+				sumOfSequences += tempZahl;
 				Zahl = "";
-				sumOfSequences++;
+				currentArrayindex++;
+				
+				
 			}
 			else{
 				Zahl = Zahl + tmp;
@@ -159,21 +167,19 @@ public class LengthRate {
 				
 				if(tmp.equals(",") && !Zahl.equals(""))
 				{				
-					saveLengths[Integer.parseInt(Zahl.replaceAll(",",""))]++;
+					saveLengths[currentArrayindex2] = Integer.parseInt(Zahl.replaceAll(",",""));
+//					System.out.println(currentArrayindex+" "+Integer.parseInt(Zahl.replaceAll(",","")));
+					currentArrayindex2++;
 					Zahl = "";
-					sumOfSequences++;
+
+
 				}
 				else{
 					Zahl = Zahl + tmp;
 				}
 				
 			}
-			int[] mergedArray = new int[approximationlongestSequence];
-			//Merge the two Arrays
-			for(int i = 0; i < saveLengths.length;i++)
-			{
-				mergedArray[saveLengths[i]] = savenumberofLengths[i];
-			}
+			
 			
 			
 			
@@ -182,16 +188,21 @@ public class LengthRate {
 
 		}
 		}
+		System.out.println(sumOfSequences);
+		
 		
 		int[] mergedArray = new int[approximationlongestSequence];
 		//Merge the two Arrays
-		for(int i = 0; i < saveLengths.length;i++)
+		for(int i = 0; i < savenumberofLengths.length;i++)
 		{
+//			System.out.println(saveLengths[i] +" "+ savenumberofLengths[i]);
 			mergedArray[saveLengths[i]] = savenumberofLengths[i];
+			
 		}
-		
+
 		//window is the Size we look at
 		br.close();
+		
 		return generatePossibilities(mergedArray, window, sumOfSequences);
 
 	}
@@ -208,8 +219,9 @@ public class LengthRate {
 	 */
 	private double[][] generatePossibilities(int[] Lengths,int window,int sumOfSequences)
 	{
-		int[] SolutionArray = new int[Lengths.length/window];
 		
+		int[] SolutionArray = new int[Lengths.length/window];
+				
 		for(int h = 0; h < Lengths.length;h++)
 		{	
 			if(Lengths[h] != 0)
@@ -217,8 +229,8 @@ public class LengthRate {
 				
 			int i = 0;
 			
-			while(h > ((i+1) * window) && (i < SolutionArray.length-1))		//runs until the specified window is found or the solutionArray ends
-			{																//when window isn't a divider of approximationlongestSequence some Sequences maybe erased
+			while(h > ((i+1) * window) && (i < SolutionArray.length-1))				//runs until the specified window is found or the solutionArray ends
+			{																		//when windw isn´t a divider of approximationlongestSequence some Sequences maybe erased
 				i++;
 			}
 			
@@ -227,17 +239,22 @@ public class LengthRate {
 			}
 			
 		}
+		
 		double[][] possibilities = new double[2][SolutionArray.length];
 		double temp = 0;
-		for(int i = 0; i < SolutionArray.length;i++)
+		for(int i = 0; i < SolutionArray.length;i++)			//different lengths?
 		{
+			
 			temp += (double)SolutionArray[i]/(double)sumOfSequences;
 			possibilities[0][i] = temp;
+
+			
 			possibilities[1][i] = (i+1)*window;
+			
 		}
 		
 		
-		
+
 		
 		return possibilities;
 	}
