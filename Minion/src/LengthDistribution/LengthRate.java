@@ -59,11 +59,12 @@ public class LengthRate {
 		String fastA = "";
 		while((currLine = br.readLine()) != null)
 		{
-		fastA = "";
+		
 		String tmp = currLine.substring(0, 1);
 		
 		if(tmp.equals(";"))									//skips comments
 		{
+			
 			continue;
 		}
 		
@@ -73,6 +74,7 @@ public class LengthRate {
 			{
 				LengthsArraytemp[fastA.length()]++;	
 				sumOfSequences++;
+				fastA = "";
 			}
 			firstLine = false;
 			continue;
