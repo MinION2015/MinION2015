@@ -6,6 +6,7 @@ import reader.*;
 
 import java.util.Random;
 
+import Basecalling.SimulationError;
 import LengthDistribution.LengthDistribution;
 
 /**
@@ -63,11 +64,14 @@ public class Pore {
 		
 		
 		try{
-			fasta = errorModel.applyErrorBasecalling(subseq, basecalling);
+			fasta = errorModel.applyErrorBasecalling(subseq, basecalling,"setting/default.setting");
 			throw new MyException(ErrorCodes.PORE_INITIATED);
 			
 		}catch(MyException e){
 			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		
