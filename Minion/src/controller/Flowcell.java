@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import reader.Sequence;
+import Basecalling.SimulationError;
 import LengthDistribution.LengthDistribution;
 import error.*;
 

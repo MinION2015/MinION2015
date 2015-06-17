@@ -3,6 +3,7 @@ package controller;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import Basecalling.*;
 import LengthDistribution.LengthDistribution;
 import reader.*;
 import error.*;
@@ -59,9 +60,6 @@ public class Controller{
 	 */
 	
 	public void run(int basecalling) throws IOException, MyException{
-		
-		
-		
 		Pore pore = new Pore();
 		SimulationError errorType = new SimulationError();
 		FastA porePassed = new FastA();
