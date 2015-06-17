@@ -83,8 +83,10 @@ public class Controller{
 			}
 		}
 		
-		//porePassed.writeInFile("C:/Users/Friederike/Desktop/MinionTestParser/Test.txt");
-		porePassed.writeInFile("C:/Users/Friederike/Desktop/MinionTestParser/MinionTestParser.txt");
+		/**
+		 * TODO Add variable for output file name
+		 */
+		porePassed.writeInFile("Test.txt");
 	}
 	
 	/**

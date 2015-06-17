@@ -37,7 +37,7 @@ public class LengthDistribution {
 	}
 
 	/**
-	 * @author Friederike Hanssen und Albert Langensiepen und Daniel Dehncke
+	 * @author Daniel Dehncke
 	 * generates a Random Length from the analyzed Data in LengthRate and returns it
 	 */
 	public double getRandLength(){
