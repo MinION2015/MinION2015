@@ -30,7 +30,7 @@ public class Flowcell{
 	public void startFlowcell(Sequence seq,SimulationError err, int basecalling, LengthDistribution length) throws MyException{
 		for(Pore p : poreList){
 			//commented since sth with the length distribution is not working
-			//p.simulate(seq.getSequence(), err, length, basecalling);
+			p.simulate(seq.getSequence(), err, length, basecalling);
 			System.out.println("pore is simulated");
 		}
 		try{
@@ -96,18 +96,18 @@ public class Flowcell{
 	/*
 	 * tests
 	 */
-	public static void main(String[] args) throws MyException,IOException{
-		
-	Flowcell g = new Flowcell(5);
-	Flowcell f = new Flowcell(0);
-	Flowcell t = new Flowcell(-10);
-	Flowcell d = new Flowcell(10);
-	Sequence seq = new Sequence("me","ACTGTGA");
-	SimulationError err = new SimulationError();
-	
-	System.out.print("Sum of sequences:" );
-	LengthDistribution length = new LengthDistribution(1);
-	
-	g.startFlowcell(seq, err, 1, length);
-	}
+//	public static void main(String[] args) throws MyException,IOException{
+//		
+//	Flowcell g = new Flowcell(5);
+//	Flowcell f = new Flowcell(0);
+//	Flowcell t = new Flowcell(-10);
+//	Flowcell d = new Flowcell(10);
+//	Sequence seq = new Sequence("me","ACTGTGA");
+//	SimulationError err = new SimulationError();
+//	
+//	System.out.print("Sum of sequences:" );
+//	LengthDistribution length = new LengthDistribution(1);
+//	
+//	g.startFlowcell(seq, err, 1, length);
+//	}
 }
