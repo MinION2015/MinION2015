@@ -152,7 +152,7 @@ public class FastA implements FiletypeContainingSequences {
 		File write_file = new File(outputFilename);
 		try
 		{
-			FileWriter fw = new FileWriter(write_file);
+			FileWriter fw = new FileWriter("./" + write_file,true);
 			BufferedWriter bw = new BufferedWriter(fw);
 			for (int i = 0; i < seqList.size();i++) {
 				bw.append("Entry:");
@@ -208,12 +208,12 @@ public class FastA implements FiletypeContainingSequences {
 //		}else{
 //			FastA pfastA = new FastA();
 //			pfastA.parse(args[0]);
-//			pfastA.writeInFile("C:/Users/Friederike/Desktop/MinionTestParser/Test2.txt");
+//			pfastA.writeInFile("Test.txt");
 //			
-//		}
-		/**
-		 * TEsts	
-		 */
+//		
+//		/**
+//		 * TEsts	
+//		 */
 //			FastA pfastA = new FastA();
 //			Sequence seq = new Sequence ("me", "ACTG");
 //			pfastA.addSeq (seq);
@@ -233,9 +233,9 @@ public class FastA implements FiletypeContainingSequences {
 //			System.out.println(pfastA.getSequence().get(1).getSequence());
 //			
 //			pfastA.parse("TestFile.fasta");
-			
-		//}
-
+////			
+//		}
+//
 //	}
 
 }

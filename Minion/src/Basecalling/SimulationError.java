@@ -1,9 +1,11 @@
-package error;
+package Basecalling;
+
+import error.Chance;
 
 
 /**
  * 
- * @author Friederike Hanssen
+ * @author Kevin Lindner & Friederike Hanssen
  * A SimulationError object is used to apply a given error rate to a sequence. So far it contains an applyErrorBasecalling function. It will apply base calling errors on a given sequence
  * Input: SimulationError has an empty constructor
  * Output: a new sequence with an applied error model
@@ -14,10 +16,11 @@ public class SimulationError{
 		
 	}
 
-	public String applyErrorBasecalling(String seq, int basecalling) {
-		BasecallingErrorRate rate = new BasecallingErrorRate(basecalling);
+	public String applyErrorBasecalling(String seq, int basecalling, String settingFilename) throws Exception {
+		BasecallingErrorRate rate = new BasecallingErrorRate(basecalling, settingFilename);
 		String err = "";
 		for(int i = 0; i < seq.length();i++){
+			
 			err = err.concat(callBase(seq.charAt(i),rate));	
 			//Test: expected: t
 			//err = err.concat("t");

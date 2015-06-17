@@ -24,8 +24,7 @@ public enum ErrorCodes {
 	PORE_FINISHED(3002,"The Pore has finished without problems.",true),
 	
 	FLOWCELL_EMPTY(4000,"Flowcell is empty.",true),
-	FLOWCELL_CONTAINS_PORES(4001,"Current number of pores in flowcell: ",false),
-	FLOWCELL_NEGATIVE_AMOUNT_PORES_ADDED (4002,"You can't subtract pores.",true);
+	FLOWCELL_CONTAINS_PORES(4001,"Current number of pores in flowcell: ",false);
 	
 	private final int identity;
 	private final String message;
