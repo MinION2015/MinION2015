@@ -41,7 +41,9 @@ public class LengthRate {
 	 * @param filename		user selected Filename
 	 * @param window		selected window
 	 * @return	double[][] Array with the computed possibilities
-	 * gets called by the constructor which gets a filename from the user. returns a double[][] Array with the possibilities
+	 * gets called by the constructor which gets a filename from the user. returns a double[][] Array with the possibilities. works through the Lines and 
+	 * adds a Length to the LengthsArraytemp everytime it reaches a Sequence identifier. After this it uses the generatePossibilities to check get an double[][]
+	 * Array and return it to the constructor
 	 * @throws IOException
 	 */
 	public double[][] GetSelectedLengths(String filename,int window) throws IOException {
@@ -257,7 +259,7 @@ public class LengthRate {
 		
 		
 
-		
+		//here´s the problem. possibilities[][] contains data but after returning it to the constructor the data is gone.
 		return possibilities;
 	}
 /**
