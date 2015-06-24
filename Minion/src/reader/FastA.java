@@ -4,6 +4,8 @@ package reader;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -149,33 +151,41 @@ public class FastA implements FiletypeContainingSequences {
 	 */
 
 	public void writeInFile(String outputFilename) {
-		File write_file = new File(outputFilename);
-		try
-		{
-			FileWriter fw = new FileWriter("./" + write_file,true);
-			BufferedWriter bw = new BufferedWriter(fw);
-			for (int i = 0; i < seqList.size();i++) {
-				bw.append("Entry:");
-				bw.newLine();
-				bw.append(seqList.get(i).getHeader());
-				bw.newLine();
-				bw.append(seqList.get(i).getSequence());
-				bw.newLine();
-				bw.append("Errors found:");
-				bw.newLine();
-				bw.append(errList.get(i).getErrorMessage());
-				bw.newLine();
-				bw.newLine();
+		File writeInFile = new File(outputFilename);
+		try {
+			new FileOutputStream(writeInFile,true);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+			try
+			{
+				FileWriter fw = new FileWriter("./" + writeInFile,true);
+				BufferedWriter bw = new BufferedWriter(fw);
+				for (int i = 0; i < seqList.size();i++) {
+					bw.append("Entry:");
+					bw.newLine();
+					bw.append(seqList.get(i).getHeader());
+					bw.newLine();
+					bw.append(seqList.get(i).getSequence());
+					bw.newLine();
+					bw.append("Errors found:");
+					bw.newLine();
+					bw.append(errList.get(i).getErrorMessage());
+					bw.newLine();
+					bw.newLine();
+				}
+
+
+				bw.close();
+				fw.close();
+			}
+			catch(Exception e)
+			{
+				System.out.println(e);
 			}
 
-			
-			bw.close();
-			fw.close();
-		}
-		catch(Exception e)
-		{
-			System.out.println(e);
-		}
+//			//TODO check if user should be informed about the fact that the filename already exists, so far new content gets appended to old one
+
 	}
 
 
@@ -208,7 +218,7 @@ public class FastA implements FiletypeContainingSequences {
 //		}else{
 //			FastA pfastA = new FastA();
 //			pfastA.parse(args[0]);
-//			pfastA.writeInFile("Test.txt");
+//			pfastA.writeInFile("hallo1.txt");
 //			
 //		
 //		/**
@@ -232,8 +242,9 @@ public class FastA implements FiletypeContainingSequences {
 //			System.out.println(pfastA.getSequence().get(1).getHeader());
 //			System.out.println(pfastA.getSequence().get(1).getSequence());
 //			
-//			pfastA.parse("TestFile.fasta");
-////			
+//			pfastA.parse("example4.fasta");
+//			pfastA.writeInFile("Test.txt");
+//			
 //		}
 //
 //	}
