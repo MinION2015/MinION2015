@@ -41,7 +41,9 @@ public class Flowcell{
 		}
 	}
 	/**
+	 * The integer gives the number of pores that should be added. They are stored in a Arraylist, thus they are just added as a new object to the flowcell array list 
 	 * Since the flowcell won't get any more pores after being initiated I made the method private
+	 * 
 	 */
 	private void addPores(int numberOfPores) throws MyException{
 	
@@ -65,27 +67,26 @@ public class Flowcell{
 	
 	/**
 	 * Checks how many pores the flowcell contains momentarily.
-	 * We weren't quite sure, if the pores get a boolean flagging them as being alive or if the flowcell somehow carries flags for all of them. 
-	 * If the pores get a boolean alive and a getter for it, then we could check here 
-	 * if there are any alive pores left and either return some kind of message if all of them are not functioning anymore at a tick or keep sequencing.
+	 * The pores carry flags about being alive, dead, bored or finished. If pores are flagged as dead they will be removed from the flowcell. If then the flowcell is empty
+	 * (meaning all pores are dead) the controller needs to somehow recieve a message about this and inform the user.
 	 * @throws MyException
 	 */
 	private void checkFlowcellState()throws MyException{
 		if(poreList.isEmpty()){
 			throw new MyException(ErrorCodes.FLOWCELL_EMPTY);
 		}else{
-			//suggestion/idea of how to incoperate  dying pores
-//			boolean hasAlivePores = false;
-//			for(Pore p : poreList){
-//				if(p.isAlive()){
-//					hasAlivePores = true;
-//				}
-//			}
-			//if(hasAlivePores){
-			throw new MyException(ErrorCodes.FLOWCELL_CONTAINS_PORES);
-//			}else{
-//				throw new MyException(ErrorCodes.FLOWCELL_ALL_PORES_DEAD);
-//			}
+			boolean hasAlivePores = false;
+			for(Pore p : poreList){
+				if(p.isAlive()){
+					hasAlivePores = true;
+					break;
+				}
+			}
+			if(hasAlivePores){
+				throw new MyException(ErrorCodes.FLOWCELL_CONTAINS_PORES);
+			}else{
+				throw new MyException(ErrorCodes.FLOWCELL_EMPTY);
+			}
 		}
 	}
 
