@@ -18,6 +18,7 @@ public enum ErrorCodes {
 	
 	
 	NO_SEQUENCE_NAME(2010, "There is no sequence name.", false),
+	StringIndexOutOfBoundsException(2010, "There are paragraphs in the LengthDistributionFile!", true),
 	
 	PORE_HAS_DIED(3000,"Pore has died.",true),
 	PORE_INITIATED(3001,"The Pore has started sequencing.",true),
