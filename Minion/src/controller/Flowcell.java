@@ -67,7 +67,7 @@ public class Flowcell{
 	
 	/**
 	 * Checks how many pores the flowcell contains momentarily.
-	 * The pores carry flags about being alive, dead, bored or finished. If pores are flagged as dead they will be removed from the flowcell. If then the flowcell is empty
+	 * The pores carry flags about being working, dead, bored or finished. If pores are flagged as dead they will be removed from the flowcell. If then the flowcell is empty
 	 * (meaning all pores are dead) the controller needs to somehow recieve a message about this and inform the user.
 	 * @throws MyException
 	 */
@@ -77,7 +77,8 @@ public class Flowcell{
 		}else{
 			boolean hasAlivePores = false;
 			for(Pore p : poreList){
-				if(p.isAlive()){
+				//TODO get method name from albert/daniel
+				if(!p.isDead()){
 					hasAlivePores = true;
 					break;
 				}
