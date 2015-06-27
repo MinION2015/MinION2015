@@ -4,8 +4,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-import error.MyException;
-
 /**
  * 
  * @author Daniel Dehncke
@@ -24,7 +22,7 @@ public class LengthRate {
 	public LengthRate(int window) throws IOException{
 		
 		this.possibilitiesLength = 	GetDefaultLengths(window);
-		int dummy = 0;
+
 	}
 	
 	public LengthRate(String filename, int window) throws IOException{
@@ -51,7 +49,7 @@ public class LengthRate {
 	 * Array and return it to the constructor
 	 * @throws IOException
 	 */
-	public double[][] GetSelectedLengths(String filename,int window) throws MyException {
+	public double[][] GetSelectedLengths(String filename,int window) throws IOException {
 		// TODO Auto-generated method stub
 		int approximationlongestSequence = 50000;		//just the longest Sequence i found, dont know if it is enough
 		int sumOfSequences = 0;
@@ -67,14 +65,8 @@ public class LengthRate {
 		while((currLine = br.readLine()) != null)
 		{
 			
-		try
-		{
-			String tmp = currLine.substring(0, 1);
-		}catch (StringIndexOutOfBoundsException e)
-		{
-			System.err.println(e.getErrorMessage());
-		}
-		
+			
+		String tmp = currLine.substring(0, 1);
 
 		
 		if(tmp.equals(";"))									//skips comments
