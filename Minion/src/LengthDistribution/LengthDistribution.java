@@ -12,7 +12,7 @@ import error.Chance;
  */
 public class LengthDistribution {
 
-	LengthRate l;
+	private LengthRate l;
 	
 	/**
 	 * 
@@ -22,7 +22,7 @@ public class LengthDistribution {
 	 */
 	public LengthDistribution(String filename,int window) throws IOException{
 		
-		LengthRate l = new LengthRate(filename, window);
+		this.l = new LengthRate(filename, window);
 	}
 	
 	//scond constructor for default LengthDistribution
@@ -33,7 +33,7 @@ public class LengthDistribution {
 	 */
 	public LengthDistribution(int window) throws IOException{
 
-		LengthRate l = new LengthRate(window);
+		this.l = new LengthRate(window);
 	}
 
 	/**
@@ -59,10 +59,11 @@ public class LengthDistribution {
 	
 /**
  * Test	
+ * @throws IOException 
  */
-//	public static void main(String args[]){
-//		LengthDistribution l = new LengthDistribution();
-//		double rand = l.getRandLength();
-//		System.out.println(rand);
-//	}
+	public static void main(String args[]) throws IOException{
+		LengthDistribution l = new LengthDistribution(1000);
+		double rand = l.getRandLength();
+		System.out.println(rand);
+	}
 }

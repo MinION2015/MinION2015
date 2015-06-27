@@ -18,8 +18,11 @@ public class LengthRate {
  * could add come options here, like default window sizes that a dividers of the Array which 
  * contains the Lengths
  */
+	
 	public LengthRate(int window) throws IOException{
+		
 		this.possibilitiesLength = 	GetDefaultLengths(window);
+		int dummy = 0;
 	}
 	
 	public LengthRate(String filename, int window) throws IOException{
@@ -192,7 +195,7 @@ public class LengthRate {
 
 		}
 		}
-		System.out.println(sumOfSequences);
+//		System.out.println(sumOfSequences);
 		
 		
 		int[] mergedArray = new int[approximationlongestSequence];
@@ -206,9 +209,9 @@ public class LengthRate {
 
 		//window is the Size we look at
 		br.close();
+		double[][] returnpossibilities = generatePossibilities(mergedArray, window, sumOfSequences);
+		return returnpossibilities;
 		
-		return generatePossibilities(mergedArray, window, sumOfSequences);
-
 	}
 
 	
