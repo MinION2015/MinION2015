@@ -1,110 +1,80 @@
 package controller;
 
+import error.ErrorCodes;
+import error.MyException;
+import gui.GUIOptions;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
-import Basecalling.*;
-import LengthDistribution.LengthDistribution;
 import reader.*;
-import error.*;
-
+import Basecalling.BasecallingErrorRate;
+import LengthDistribution.LengthDistribution;
 /**
  * 
  * @author Friederike Hanssen
- * Gets a filename, parses the content in a FastA object. Sofar the gui is not able to display if we have an invalid filename.
- * Then a pore is simulated and the content of the file will be 'sent' through the pore and according to the parameters 1D/2D and
- * the error type(in our case only basecalling errors are relevant, time and length-basecalling has not been implemented,)will be applied.
- * The results are written in a file.
- * 
- * Should prob be redone with adding things like chosing the filename the results get written into and considering for the gui that the controller now holds a fasta object
- * Was just a quick solution to get our code to work together.
+ *@Functionality Controllers runs the program. First, the file ending is checked, if it is approved, the program should be run//TODO implement stop. 
+ *It sets up the Error model and the length distribution so they can be used everywhere in the program, initilaizes the flowcell and applies some kind of time //TODO email
+ *between the controller and the flowcell still need to figure out loggin of results.
+ *@input GUIOptions object containing all necessary information
+ *@output file with results
  */
-public class Controller{
+public class Controller {
 	
-	private String filename;
-	private FastA f;
-	//TODO
-	private int runTime;
-	private int ticksPerSecond;
-	private String storePath;
+	private GUIOptions options;
+	private FiletypeContainingSequences fastA;
 	
-	//Variable which determines status of simulation, e.g. Paused, Stopped.
-	public int simStatus;
+	public Controller(GUIOptions options){
+		this.options = options;
+	}
 	
-	/**
-	 * controller gets source filename, creates a fasta object and parses the filename saving it as the fasta object
-	 * @param sourceFilename
-	 * @throws IOException
-	 */
-	
-	public Controller(String sourceFilename) throws IOException{
-		this.filename = sourceFilename;
-		this.f = new FastA();
+	public void run(){
+		
 		try{
-			f.parse(sourceFilename);
+			checkFileEnding(options.getInputFilename());
+			this.fastA = new FastA();
+			fastA.parse(options.getInputFilename());
+		}catch(MyException e){
+			System.out.println(e.getErrorMessage());
+			//TODO tell gui
+			//TODO don't run programm; stop
 		}catch(Exception e){
 			
 		}
-	}
-
-	
-	/**
-	 * A pore is simulated, through which the sequences in from the file are sent. Basecalling errors are simulated.
-	 * @param basecalling: Basecalling type (1D=1/2D=2) as selected in the gui
-	 * @throws Exception 
-	 */
-	
-	/*TODO
-	 * when stopButton is pushed, run should be somehow interrupted
-	 */
-	
-	public void run(int basecalling) throws Exception{
-		Pore pore = new Pore();
-		SimulationError errorType = new SimulationError();
-		FastA porePassed = new FastA();
-		LengthDistribution lengthType = new LengthDistribution(1000);
-		
-		for(Sequence entry: f.getSequence()){
-			if(entry.getSequence() != null){
-			Sequence seq = pore.simulate(entry.getSequence(),errorType,lengthType,basecalling);
-			
-			seq.setHeader(entry.getHeader());
-			
-			try{
+		//TODO some kind of pause stop method
+		try{
+			setupModel(options.getBasecalling(),options.getWindowSizeForLengthDistribution());
+			Flowcell flowcell = new Flowcell(options.getNumberOfPores());
+			int overallNumberOfTicks = options.getTicksPerSecond()*options.getRunningTime();
+			//TODO still trying to understand how to implement time
+			for(int i =0; i < overallNumberOfTicks;i++){
 				
-				porePassed.addSeq(seq);
+				flowcell.tick();
+				wait(1);
 			
-			}catch(MyException e){
-				
 			}
-			}
+		}catch(MyException e){
+			
+		}catch(Exception e){
+			
 		}
+				
+	}
+	
+	private static void setupModel(int basecalling,int windowSize) throws Exception{
+		//TODO initilaize Basecalling Error setupFile, get more from kevin about how
+		BasecallingErrorRate basecallingError = new BasecallingErrorRate(basecalling,"blub");
+		LengthDistribution lengthDistribution = new LengthDistribution(windowSize);
 		
-		/**
-		 * TODO Add variable for output file name
-		 */
-		porePassed.writeInFile("Test.txt");
+	}
+	private void checkFileEnding(String filename) throws MyException{
+		if(!filename.endsWith(".fasta")){
+			throw new MyException(ErrorCodes.BAD_FILETYPE);
+		}
 	}
 	
-	/**
-	 * MEthod for the gui to get the Error messages. Can't see incorrect filename or such.
-	 * @return
-	 */
-	public ArrayList<MyException> getincorrectfastAList() {
-		return this.f.getErrorInSequence();
+	public ArrayList<MyException> getFastAErrors() {
+		return fastA.getErrorInSequence();
 	}
-	
-//	public static void main(String[] args) throws IOException, MyException{
-//		
-//		if(args.length != 1){
-//			System.err.println("You should specify a FastA file as input!");
-//			System.exit(1);
-//		}else{
-//			Controller c = new Controller(args[0]);
-//			c.run(1);
-//		}
-//	}
+
 }
-
-
-

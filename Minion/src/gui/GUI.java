@@ -181,7 +181,7 @@ public class GUI extends JFrame implements ActionListener {
 			ticksPSecond = Integer.parseInt(ticksPerSecond.getText());
 			String message= "<html>";
 			Controller cd = null;
-			try {
+			
 				int basecalling = 0;
 				// moved the if clause to safe the choice 1D/2D and run the controller with that choice
 				//TODO reassigned basecalling doesn't work
@@ -199,47 +199,28 @@ public class GUI extends JFrame implements ActionListener {
 
 				
 				
-				
-				cd = new Controller(fc.getSelectedFile().getName());
+				GUIOptions options = new GUIOptions("test","test",1,1,1,1,1);
+				cd = new Controller(options);
 				System.out.println(numOfPores+" "+runTime+" "+ticksPSecond);
-				cd.run(basecalling);
+				cd.run();
 				
-				
-			} catch (IOException e) {
-				//TODO
-				e.printStackTrace();
-			} catch (MyException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} 
+			
 
 
-			int length= cd.getincorrectfastAList().size();
+			int length= cd.getFastAErrors().size();
 
 			for(int i=0; i<length;i++)
 			{
-				if(cd.getincorrectfastAList().get(i).isCriticalError()) {
-					JOptionPane.showMessageDialog(null, cd.getincorrectfastAList().get(i).getErrorMessage(), "Critical Error", JOptionPane.ERROR_MESSAGE);
+				if(cd.getFastAErrors().get(i).isCriticalError()) {
+					JOptionPane.showMessageDialog(null, cd.getFastAErrors().get(i).getErrorMessage(), "Critical Error", JOptionPane.ERROR_MESSAGE);
 				} else {
-					message= message + " " + cd.getincorrectfastAList().get(i).getErrorMessage()+"<br>";
+					message= message + " " + cd.getFastAErrors().get(i).getErrorMessage()+"<br>";
 				}
 			}
 
 			message=message+"</html>";
 
 			label.setText(message);  
-			//	        	 if (ae.getSource() == this.choice) {
-			//		            	
-			//		            	String chosen = (String) choice.getSelectedItem();
-			//		            	
-			//		            	if (chosen.equals("1D")) {
-			//		            		//TODO
-			//		      
-			//		            	} else if (chosen.equals("2D")) {
-			//		            		//TODO
-			//		            	}    	
-			//		            	}
-
 		}
 	}
 

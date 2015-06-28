@@ -109,7 +109,7 @@ public class Pore {
 		
 		if(this.numbersOfTimeAsked > this.sequenceLength)
 		{
-			setState("Finished");
+			setStatus("Finished");
 			return "Finished";
 		}else
 		{
@@ -118,13 +118,13 @@ public class Pore {
 			
 			if(age>ageDead)
 			{
-				setState("Dead");
+				setStatus("Dead");
 				return "Dead";
 			}
 			
 			else if(this.state.equals("Finished"))
 			{
-				setState("Bored");
+				setStatus("Bored");
 				return "Bored";
 			}
 			else return "Running";
@@ -132,7 +132,7 @@ public class Pore {
 		
 	}
 	
-	private void setState(String state)
+	public void setStatus(String state)
 	{
 		this.state = state;
 	}

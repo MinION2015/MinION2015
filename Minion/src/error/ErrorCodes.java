@@ -8,7 +8,6 @@ public enum ErrorCodes {
 	//definition of all Errors
 	
 	NO_ERROR(-1,null,false),
-	BAD_FILENAME(1000, "The filename is not legit!", true),
 	BAD_FILETYPE(1001, "The filetype is wrong!", true),
 	
 	NO_SEQUENCE(2000, "There is no sequence!", true),
