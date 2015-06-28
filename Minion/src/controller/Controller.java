@@ -51,15 +51,14 @@ public class Controller{
 	/**
 	 * A pore is simulated, through which the sequences in from the file are sent. Basecalling errors are simulated.
 	 * @param basecalling: Basecalling type (1D=1/2D=2) as selected in the gui
-	 * @throws IOException
-	 * @throws MyException 
+	 * @throws Exception 
 	 */
 	
 	/*TODO
 	 * when stopButton is pushed, run should be somehow interrupted
 	 */
 	
-	public void run(int basecalling) throws IOException, MyException{
+	public void run(int basecalling) throws Exception{
 		Pore pore = new Pore();
 		SimulationError errorType = new SimulationError();
 		FastA porePassed = new FastA();
