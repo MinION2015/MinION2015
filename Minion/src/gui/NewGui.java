@@ -21,13 +21,7 @@ import controller.Controller;
 public class NewGui extends javax.swing.JFrame {
     
     javax.swing.JFileChooser fileChooser = new javax.swing.JFileChooser();
-    private String inputFilename;
-	private String outputFilename;
-	private int basecalling;
-	private int ticksPerSecond;
-	private int numberOfPores;
-	private int runningTime;
-	private int windowSizeForLengthDistribution;
+
     /**
      * Creates new form NewJFrame
      */
@@ -109,21 +103,13 @@ public class NewGui extends javax.swing.JFrame {
         windowSizeForLengthDistributionLabel.setText("Window size:");
 
         outputFileTextField.setText("Result");
-        outputFileTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                outputFileTextFieldActionPerformed(evt);
-            }
-        });
+
 
         outputFilenameLabel.setText("Outputfile-name:");
 
         numberOfPoresFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
         numberOfPoresFormattedTextField.setText("5");
-        numberOfPoresFormattedTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                numberOfPoresFormattedTextFieldActionPerformed(evt);
-            }
-        });
+
 
         numberOfTicksTextField.setText("5");
 
@@ -298,27 +284,25 @@ public class NewGui extends javax.swing.JFrame {
 
 			String message= "<html>";
 			Controller cd = null;
-			
-				int basecalling = 0;
-				// moved the if clause to safe the choice 1D/2D and run the controller with that choice
-				//TODO reassigned basecalling doesn't work
-			
+			int basecalling = 0;
+		
+			String chosen = (String) dimComboBox.getSelectedItem();
 
-//					String chosen = (String) choice.getSelectedItem();
-//
-//					if (chosen.equals("1D")) {
-//						//TODO
-//						basecalling =1;
-//					} else if (chosen.equals("2D")) {
-//						//TODO
-//						basecalling=2;
-//					}
+					if (chosen.equals("1D")) {
+						//TODO
+						basecalling =1;
+					} else if (chosen.equals("2D")) {
+					//TODO
+						basecalling=2;
+						}
 
 				
 				
-				GUIOptions options = new GUIOptions("test","test",1,1,1,1,1);
+				GUIOptions options = new GUIOptions(sourceField.getName(),outputFileTextField.getName(),
+						basecalling,Integer.parseInt(numberOfPoresFormattedTextField.getText()),Integer.parseInt(durationPerTickFormattedTextField.getText()),
+						Integer.parseInt(numberOfTicksTextField.getText()),Integer.parseInt(windowSizeFormattedTextField.getText()));
 				cd = new Controller(options);
-				System.out.println();
+				System.out.println(Integer.parseInt(numberOfPoresFormattedTextField.getText()));
 				cd.run();
 				
 			
@@ -337,22 +321,14 @@ public class NewGui extends javax.swing.JFrame {
 
 			message=message+"</html>";
 
-			label.setText(message);  
+			outputTextField.setText(message);  
 		
     }                                           
 
     private void pauseButtonActionPerformed(java.awt.event.ActionEvent evt) {                                            
         // TODO add your handling code here:
     }                                           
-
-    private void outputFileTextFieldActionPerformed(java.awt.event.ActionEvent evt) {                                                    
-
-    }                                                   
-
-    private void numberOfPoresFormattedTextFieldActionPerformed(java.awt.event.ActionEvent evt) {                                                                
-        // TODO add your handling code here:
-    }                                                               
-
+                                                                          
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {                                             
     System.exit(0);
     }                                            
@@ -388,6 +364,10 @@ public class NewGui extends javax.swing.JFrame {
     private javax.swing.JLabel totalNumberOfTicksLabel;
     private javax.swing.JLabel windowSizeForLengthDistributionLabel;
     private javax.swing.JFormattedTextField windowSizeFormattedTextField;
-    // End of variables declaration                   
+    // End of variables declaration   
+    public static void main(String[] args) {
+        NewGui sim = new NewGui();
+        sim.setVisible(true);
+    }
 }
 
