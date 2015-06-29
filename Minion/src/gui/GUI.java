@@ -165,10 +165,10 @@ public class GUI extends JFrame implements ActionListener {
 		if(ae.getSource() == this.ticksPerSecond){
 			
 		}
-
+*/
 		if(ae.getSource() == this.loadButton){
 			returnVal = fc.showOpenDialog(GUI.this);
-		}*/
+		}
 		
 		//checks if loadButton has been pressed and a file has been chosen -> renames loadButton to file which has been chosen
 		if(ae.getSource()== this.loadButton && returnVal==JFileChooser.APPROVE_OPTION){
