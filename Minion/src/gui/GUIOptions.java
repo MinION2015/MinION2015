@@ -17,7 +17,7 @@ public class GUIOptions {
 	private int totalNumberOfTicks;
 	private int windowSizeForLengthDistribution;
 	
-	public GUIOptions(String inputFilename, String outputFilename, int basecalling, int durationOfTick, int numberOfPores,int totalNumberOfTicks,int windowSizeForLengthDistribution){
+	public GUIOptions(String inputFilename, String outputFilename, int basecalling, int numberOfPores,int durationOfTick, int totalNumberOfTicks,int windowSizeForLengthDistribution){
 		this.inputFilename = inputFilename;
 		this.outputFilename = outputFilename;
 		this.basecalling = basecalling;

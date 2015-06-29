@@ -39,10 +39,7 @@ public class Flowcell{
 	  */
 	public void startFlowcell(Sequence seq) throws MyException{
 		for(Pore p : poreList){
-			//since LEngth distribution and simualtion error are supposed to be static they do not need to be passed over anymore
-			//TODO check with albert if he has changed his method parameters
-			//which sequence
-			p.simulate();
+			//p.simulate(seq);
 			System.out.println("Pore is simulated");
 		}
 		try{
@@ -62,6 +59,7 @@ public class Flowcell{
 			for(int i = 0; i < numberOfPores; i++){
 				Pore p = new Pore();
 				poreList.add(p);
+				System.out.println(i);
 			}
 			checkFlowcellState();
 		
@@ -92,9 +90,9 @@ public class Flowcell{
 		}
 		else{
 				//for testing purposes
-//				for(Pore p :poreList){
-//					System.out.println("I'm alive");
-//				}
+				for(Pore p :poreList){
+					System.out.println("I'm alive");
+				}
 				throw new MyException(ErrorCodes.FLOWCELL_CONTAINS_PORES);
 		}
 	}
@@ -123,20 +121,25 @@ public class Flowcell{
 	/**
 	 * In each tick all pores are checked and either given work , if their are bored, else they are left alone. If on is finished the output is added the FastA object, so later it can be printed to a file
 	 */
-	public void tick(){
+	public void tick(Sequence seq){
 		for(Pore p : poreList){
-			String statusOfPore = p.checkStatus();
+			String statusOfPore = "Finished";//p.checkStatus();//"Running"//"Bored"//"Finished"
 			
 			if(statusOfPore.equals("Running") || statusOfPore.equals("Dead")){
+				//System.out.println("Busy with running or being dead");
 				continue;
 			}else if(statusOfPore.equals("Bored")){
-				//TODO which sequence
-				p.simulate();
+				//System.out.println("I am bored");
+				//p.simulate(seq);
 			}else if(statusOfPore.equals("Finished")){
-				//method is missing in Pore
-				Sequence seq = p.getSequenceFromPore();
-				//TODO figure out how to write stuff to a file, without transfering everything back and forth between the contoller and the flowcell
-				sequence.addSeq(seq);
+				//collecting output
+				System.out.println("I am done.");
+				try{
+					//Sequence test = new Sequence("ME","ACTGAT");
+					sequence.addSeq(p.getSequenceFromPore());//
+				}catch(MyException e){
+					
+				}
 			}
 		}	
 	}
@@ -144,7 +147,7 @@ public class Flowcell{
 	public FastA getFlowcellOutput(){
 		return sequence;
 	}
-	private int getNumberOfPores(){
+	public int getNumberOfPores(){
 		return poreList.size();
 	}
 	
@@ -152,16 +155,18 @@ public class Flowcell{
 	/*
 	 * tests
 	 */
-	public static void main(String[] args) throws MyException,IOException{
-		
-	Flowcell g = new Flowcell(5);
-	//Flowcell f = new Flowcell(0);
-	//Flowcell t = new Flowcell(-10);
-	//Flowcell d = new Flowcell(10);
-	Sequence seq = new Sequence("me","ACTGTGA");
-	SimulationError err = new SimulationError();
-	//Length Distribution throws nullpointers, thus I can't retest the startFlowcellmethod right now
-	
-	
-	}
+//	public static void main(String[] args) throws MyException,IOException{
+//		
+//	Flowcell g = new Flowcell(5);
+//	//Flowcell f = new Flowcell(0);
+//	//Flowcell t = new Flowcell(-10);
+//	//Flowcell d = new Flowcell(10);
+//	Sequence seq = new Sequence("me","ACTGTGA");
+//	SimulationError err = new SimulationError();
+////	g.tick();
+////	g.getFlowcellOutput().writeInFile("Test.txt");;
+//	//Length Distribution throws nullpointers, thus I can't retest the startFlowcellmethod right now
+//	
+//	
+//	}
 }
