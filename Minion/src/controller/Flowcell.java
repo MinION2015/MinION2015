@@ -22,7 +22,7 @@ import error.MyException;
 public class Flowcell{
 	
 	private ArrayList<Pore> poreList = new ArrayList<Pore>();
-	private FiletypeContainingSequences sequence;
+	private FastA sequence;
 	
 	public Flowcell(int numberOfPores) throws MyException{
 		try{
@@ -30,6 +30,7 @@ public class Flowcell{
 		}catch(MyException e){
 			System.err.println(e.getErrorMessage());
 		}
+		sequence = new FastA();
 	}
 	 /**
 	  * Since Length Distribution and Simulation are supposedly static I removed them as parameters
@@ -131,17 +132,18 @@ public class Flowcell{
 			}else if(statusOfPore.equals("Bored")){
 				//TODO which sequence
 				p.simulate();
-				p.setStatus("Working");
 			}else if(statusOfPore.equals("Finished")){
 				//method is missing in Pore
-				Sequence seq = p.getSequence();
-				p.setStatus("Bored");
+				Sequence seq = p.getSequenceFromPore();
 				//TODO figure out how to write stuff to a file, without transfering everything back and forth between the contoller and the flowcell
-				newSeq.add(seq)
+				sequence.addSeq(seq);
 			}
 		}	
 	}
 	
+	public FastA getFlowcellOutput(){
+		return sequence;
+	}
 	private int getNumberOfPores(){
 		return poreList.size();
 	}

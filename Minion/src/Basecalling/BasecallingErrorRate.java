@@ -21,8 +21,8 @@ import error.MyException;
 public class BasecallingErrorRate {
 
 
-	private double[][] transProb;
-	private char[] base = {'A','T','G','C','-'};
+	private static double[][] transProb;
+	private static char[] base = {'A','T','G','C','-'};
 	
 	public BasecallingErrorRate(int basecalling,String settingFilename) throws Exception{
 		
@@ -32,7 +32,7 @@ public class BasecallingErrorRate {
 		
 	}
 	
-	private void generate(int basecalling,String settingFilename) throws Exception{
+	private static void generate(int basecalling,String settingFilename) throws Exception{
 		BufferedReader Input = new BufferedReader(new FileReader(settingFilename));
 			if(basecalling == 1){
 				Input.readLine();
@@ -66,15 +66,15 @@ public class BasecallingErrorRate {
 				transProb[3][4] = transProb[3][3]+Integer.parseInt(Input.readLine());
 	}
 	
-	public double getValue(int i, int j){
+	public static double getValue(int i, int j){
 		return transProb[i][j];
 	}
 	
-	public String getBase(int i){
+	public static String getBase(int i){
 		return Character.toString(base[i]);
 	}
 	
-	public int getRow(char a){
+	public static  int getRow(char a){
 		for(int i = 0; i < base.length;i++){
 			if(a == base[i])
 				return i;

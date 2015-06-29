@@ -23,6 +23,7 @@ public class Controller {
 	
 	private GUIOptions options;
 	private FiletypeContainingSequences fastA;
+	private FiletypeContainingSequences outputFastA;
 	
 	public Controller(GUIOptions options){
 		this.options = options;
@@ -33,6 +34,7 @@ public class Controller {
 		try{
 			checkFileEnding(options.getInputFilename());
 			this.fastA = new FastA();
+			this.outputFastA = new FastA();
 			fastA.parse(options.getInputFilename());
 		}catch(MyException e){
 			System.out.println(e.getErrorMessage());
@@ -45,19 +47,22 @@ public class Controller {
 		try{
 			setupModel(options.getBasecalling(),options.getWindowSizeForLengthDistribution());
 			Flowcell flowcell = new Flowcell(options.getNumberOfPores());
-			int overallNumberOfTicks = options.getTicksPerSecond()*options.getRunningTime();
-			//TODO still trying to understand how to implement time
-			for(int i =0; i < overallNumberOfTicks;i++){
-				
+			int currentNumberOfTicks = 0;
+			//TODO like this?
+			while(currentNumberOfTicks < options.getTotalNumberOfTicks()){
 				flowcell.tick();
-				wait(1);
-			
+				Thread.sleep(options.getDurationOfTick());
 			}
+			
+			outputFastA = flowcell.getFlowcellOutput();
+			outputFastA.writeInFile(options.getOutputFilename());
 		}catch(MyException e){
 			
 		}catch(Exception e){
 			
 		}
+		
+		
 				
 	}
 	
