@@ -21,7 +21,7 @@ import controller.Controller;
 public class NewGui extends javax.swing.JFrame {
     
     javax.swing.JFileChooser fileChooser = new javax.swing.JFileChooser();
-    	private String inputFilename;
+    private String inputFilename;
 	private String outputFilename;
 	private int basecalling;
 	private int ticksPerSecond;
@@ -304,21 +304,21 @@ public class NewGui extends javax.swing.JFrame {
 				//TODO reassigned basecalling doesn't work
 			
 
-					String chosen = (String) choice.getSelectedItem();
-
-					if (chosen.equals("1D")) {
-						//TODO
-						basecalling =1;
-					} else if (chosen.equals("2D")) {
-						//TODO
-						basecalling=2;
-					}
+//					String chosen = (String) choice.getSelectedItem();
+//
+//					if (chosen.equals("1D")) {
+//						//TODO
+//						basecalling =1;
+//					} else if (chosen.equals("2D")) {
+//						//TODO
+//						basecalling=2;
+//					}
 
 				
 				
 				GUIOptions options = new GUIOptions("test","test",1,1,1,1,1);
 				cd = new Controller(options);
-				System.out.println(numOfPores+" "+runTime+" "+ticksPSecond);
+				System.out.println();
 				cd.run();
 				
 			

@@ -45,16 +45,18 @@ public class Controller {
 		}catch(Exception e){
 			
 		}
+		
+		
 		//TODO some kind of pause stop method
 		
 		
 		try{
 			//?
 			//setupModel(options.getBasecalling(),options.getWindowSizeForLengthDistribution());
-			//?
+			
 			Flowcell flowcell = new Flowcell(options.getNumberOfPores());
 			int currentNumberOfTicks = 0;
-			//TODO like this?, not sure if this works, not sure how i am able to test it
+			//TODO like this?, not sure if this works, not sure how i am able to test thread.sleep
 			
 			while(currentNumberOfTicks < options.getTotalNumberOfTicks()){
 				
@@ -77,10 +79,11 @@ public class Controller {
 		}
 		
 		
+		
 				
 	}
 	
-	//? 
+	//not sure how to test, kevin needs to provide more information to me first
 	private static void setupModel(int basecalling,int windowSize) throws Exception{
 		BasecallingErrorRate basecallingError = new BasecallingErrorRate(basecalling,"blub");
 		LengthDistribution lengthDistribution = new LengthDistribution(windowSize);

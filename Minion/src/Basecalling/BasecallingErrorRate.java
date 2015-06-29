@@ -12,6 +12,7 @@ import error.MyException;
 /**
  * 
  * @author Kevin Lindner & Friederike Hanssen
+ * started  to make class static, not sure how to test, as the whole class is not functioning for me with the settingFilename etc.(Friederike)
  *@functionailty For a certain base and a basecalling type the transformation rate can becalled here
  * @Input: basecalling type
  * @Output: getters for the value, base and row
@@ -25,8 +26,6 @@ public class BasecallingErrorRate {
 	private static char[] base = {'A','T','G','C','-'};
 	
 	public BasecallingErrorRate(int basecalling,String settingFilename) throws Exception{
-		
-		
 		this.transProb = new double[4][5];
 		generate(basecalling, settingFilename);
 		
@@ -87,10 +86,16 @@ public class BasecallingErrorRate {
 	 */
 
 //	public static void main(String args[]){
-//		BasecallingErrorRate err = new BasecallingErrorRate(2);
+//		BasecallingErrorRate err;
+//		try {
+//			err = new BasecallingErrorRate(2,"blub");
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 //		for(int i = 0; i < 4;i++){
 //			for(int j = 0; j < 4;j++){
-//				System.out.print(err.getValue(i,j) + " ");
+//				System.out.print(BasecallingErrorRate.getValue(i,j) + " ");
 //			}
 //		System.out.println();
 //		}
@@ -99,7 +104,7 @@ public class BasecallingErrorRate {
 //		
 //		System.out.println(err.getRow('T')); //2
 //	}
-//	
+	
 	
 	
 }

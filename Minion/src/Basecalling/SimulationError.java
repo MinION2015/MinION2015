@@ -6,6 +6,7 @@ import error.Chance;
 /**
  * 
  * @author Kevin Lindner & Friederike Hanssen
+ * S started  to make class static, not sure how to test, as the whole class is not functioning for me with the settingFilename etc.(Friederike)
  * @Functionailty A SimulationError object is used to apply a given error rate to a sequence. So far it contains an applyErrorBasecalling function. It will apply base calling errors on a given sequence
  * @Input: SimulationError has an empty constructor
  * @Output: a new sequence with an applied error model
@@ -16,8 +17,8 @@ public class SimulationError{
 		
 	}
 
-	public String applyErrorBasecalling(String seq, int basecalling) throws Exception {
-		//String settingFilename
+	public static String applyErrorBasecalling(String seq, int basecalling,String settingFilename) throws Exception {
+		
 		String err = "";
 		for(int i = 0; i < seq.length();i++){
 			
@@ -30,7 +31,7 @@ public class SimulationError{
 	}
 
 	
-	private String callBase(char letter){
+	private static String callBase(char letter){
 		
 		double prob = Chance.getRand();
 		int row = BasecallingErrorRate.getRow(letter);
@@ -61,23 +62,23 @@ public class SimulationError{
 	/**
 	 * Tests
 	 */
-	public static void main(String args[]){
-		
-		SimulationError base = new SimulationError();
-		
-		base.callBase('A');
-		//use 0.45 as prob, expected : A stays A 
-		//use 0.8 as prob, expected: A mutates to C
-		String output="";
-		try {
-			output = base.applyErrorBasecalling("A",1);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println(output);
-
-	}
+//	public static void main(String args[]){
+//		
+//		SimulationError base = new SimulationError();
+//		
+//		base.callBase('A');
+//		//use 0.45 as prob, expected : A stays A 
+//		//use 0.8 as prob, expected: A mutates to C
+//		String output="";
+//		try {
+//			output = base.applyErrorBasecalling("A",1,"");
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		System.out.println(output);
+//
+//	}
 	
 
 }
