@@ -300,15 +300,22 @@ public class NewGui extends javax.swing.JFrame {
 					//TODO
 						basecalling=2;
 						}
-
-				
-				
-				GUIOptions options = new GUIOptions(sourceField.getName(),outputFileTextField.getName(),
+					/* Tests for Gui Input
+					System.out.println("Number of Pores: "+ Integer.parseInt(numberOfPoresFormattedTextField.getText()));
+					System.out.println("Duration per Tick: "+ Integer.parseInt(durationPerTickFormattedTextField.getText()));
+					System.out.println("Number of Ticks: "+Integer.parseInt(numberOfTicksTextField.getText()));
+					System.out.println("Window Size: "+Integer.parseInt(windowSizeFormattedTextField.getText()));
+					System.out.println("Basecalling: "+basecalling);
+					System.out.println("Basecalling: "+basecalling);
+					System.out.println("Input directory: "+sourceField.getText());
+					System.out.println("Output: "+outputFileTextField.getText());
+				*/
+				GUIOptions options = new GUIOptions(sourceField.getText(),outputFileTextField.getText(),
 						basecalling,Integer.parseInt(numberOfPoresFormattedTextField.getText()),Integer.parseInt(durationPerTickFormattedTextField.getText()),
 						Integer.parseInt(numberOfTicksTextField.getText()),Integer.parseInt(windowSizeFormattedTextField.getText()));
+
 				cd = new Controller(options);
-				System.out.println(Integer.parseInt(numberOfPoresFormattedTextField.getText()));
-				System.out.println("Basecalling: "+basecalling);
+
 				cd.run();
 				
 			
