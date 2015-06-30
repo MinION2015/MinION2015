@@ -12,7 +12,7 @@ import error.Chance;
  */
 public class LengthDistribution {
 
-	private LengthRate l;
+	private static LengthRate l;
 	
 	/**
 	 * 
@@ -22,7 +22,7 @@ public class LengthDistribution {
 	 */
 	public LengthDistribution(String filename,int window) throws IOException{
 		
-		this.l = new LengthRate(filename, window);
+		l = new LengthRate(filename, window);
 	}
 	
 	//scond constructor for default LengthDistribution
@@ -33,14 +33,14 @@ public class LengthDistribution {
 	 */
 	public LengthDistribution(int window) throws IOException{
 
-		this.l = new LengthRate(window);
+		l = new LengthRate(window);
 	}
 
 	/**
 	 * @author Daniel Dehncke
 	 * generates a Random Length from the analyzed Data in LengthRate and returns it
 	 */
-	public double getRandLength(){
+	public static double getRandLength(){
 		
 		
 		Random r = new Random(); 

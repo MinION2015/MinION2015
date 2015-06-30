@@ -12,7 +12,7 @@ import java.io.IOException;
 public class LengthRate {
 
 	
-	private double[][] possibilitiesLength;
+	private static double[][] possibilitiesLength;
 	
 /*
  * could add come options here, like default window sizes that a dividers of the Array which 
@@ -21,12 +21,12 @@ public class LengthRate {
 	
 	public LengthRate(int window) throws IOException{
 		
-		this.possibilitiesLength = 	GetDefaultLengths(window);
+		possibilitiesLength = 	GetDefaultLengths(window);
 
 	}
 	
 	public LengthRate(String filename, int window) throws IOException{
-		this.possibilitiesLength = 	GetSelectedLengths(filename, window);
+		possibilitiesLength = 	GetSelectedLengths(filename, window);
 	}
 	
 	
@@ -35,7 +35,7 @@ public class LengthRate {
 		return possibilitiesLength[1][index];
 	}
 	
-	public double getProb(int index){
+	public  static double getProb(int index){
 		return possibilitiesLength[0][index];
 	}
 	
@@ -49,7 +49,7 @@ public class LengthRate {
 	 * Array and return it to the constructor
 	 * @throws IOException
 	 */
-	public double[][] GetSelectedLengths(String filename,int window) throws IOException {
+	public static double[][] GetSelectedLengths(String filename,int window) throws IOException {
 		// TODO Auto-generated method stub
 		int approximationlongestSequence = 50000;		//just the longest Sequence i found, dont know if it is enough
 		int sumOfSequences = 0;
@@ -115,7 +115,7 @@ public class LengthRate {
 	 * @throws IOException
 	 * this is the Default Lengths generator. Takes Lengths from LengthList.txt
 	 */
-	public double[][] GetDefaultLengths(int window) throws IOException {
+	public static double[][] GetDefaultLengths(int window) throws IOException {
 		// TODO Auto-generated method stub
 		int approximationlongestSequence = 49196;
 		
@@ -226,7 +226,7 @@ public class LengthRate {
 	 * the Length of the Array some Sequences can get lost.
 	 * 
 	 */
-	private double[][] generatePossibilities(int[] Lengths,int window,int sumOfSequences)
+	private static double[][] generatePossibilities(int[] Lengths,int window,int sumOfSequences)
 	{
 		
 		int[] SolutionArray = new int[Lengths.length/window];
