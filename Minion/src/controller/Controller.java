@@ -23,7 +23,7 @@ public class Controller {
 	
 	private GUIOptions options;
 	private FastA fastA;
-	private FiletypeContainingSequences outputFastA;
+	private FastA outputFastA;
 	
 	public Controller(GUIOptions options){
 		this.options = options;
@@ -33,7 +33,6 @@ public class Controller {
 			checkFileEnding(options.getInputFilename());
 			this.fastA = new FastA();
 			this.outputFastA = new FastA();
-			run();
 		}catch(MyException e){
 			System.err.println(e.getErrorMessage());
 			//TODO tell gui
@@ -45,7 +44,7 @@ public class Controller {
 	
 	public void run(){
 		
-		//didn't put the right file path for testing, work now
+		//didn't put the right file path for testing, works now
 		try{
 			fastA.parse(options.getInputFilename());
 		}catch(Exception e){
@@ -60,7 +59,7 @@ public class Controller {
 		
 		try{
 			//?
-			//setupModel(options.getBasecalling(),options.getWindowSizeForLengthDistribution());
+			setupModel(options.getBasecalling(),options.getWindowSizeForLengthDistribution());
 			
 			Flowcell flowcell = new Flowcell(options.getNumberOfPores());
 			int currentNumberOfTicks = 0;
@@ -108,15 +107,17 @@ public class Controller {
 	
 	//NUllpointer not sure why
 	public ArrayList<MyException> getFastAErrors() {
+		System.out.println(fastA.getErrorInSequence().get(0).getErrorMessage());
 		return fastA.getErrorInSequence();
 	}
 	
-	public static void main(String[] args){
-		
-		GUIOptions op = new GUIOptions("C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/src/example4.fasta","C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/src/TestController.txt",1,1,1,10,2);
-		Controller cd = new Controller(op);
-		//cd.run();
-		//cd.getFastAErrors();
-	}
+//	public static void main(String[] args){
+//		
+//		GUIOptions op = new GUIOptions("C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/src/example4.fasta","C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/src/TestController.txt",1,1,1,10,2);
+//		Controller cd = new Controller(op);
+//		cd.run();
+//		
+//		cd.getFastAErrors();
+//	}
 
 }
