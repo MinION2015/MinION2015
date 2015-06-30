@@ -49,7 +49,7 @@ public class Pore {
 	 * @input a DNA sequence, an error model chosen by the user, a random sequence length from the Length Distribution and a basecalling code
 	 * @output a Sequence object
 	 */
-	public Sequence simulate(String sequence) throws Exception
+	public Sequence simulate(Sequence sequence) throws Exception
 	{
 		Random rand = new Random();
 
