@@ -13,6 +13,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import java.io.File;
+
 
 import controller.Controller;
 /**
@@ -276,7 +278,10 @@ public class NewGui extends javax.swing.JFrame {
 
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
         fileChooser.showOpenDialog(NewGui.this);
-        sourceField.setText(fileChooser.getSelectedFile().getName());     
+        String filename=fileChooser.getSelectedFile().getName();
+        File directory=fileChooser.getCurrentDirectory();
+        
+        sourceField.setText(fileChooser.getSelectedFile().getAbsolutePath());     
     }                                            
 
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {                                            
@@ -303,12 +308,13 @@ public class NewGui extends javax.swing.JFrame {
 						Integer.parseInt(numberOfTicksTextField.getText()),Integer.parseInt(windowSizeFormattedTextField.getText()));
 				cd = new Controller(options);
 				System.out.println(Integer.parseInt(numberOfPoresFormattedTextField.getText()));
+				System.out.println("Basecalling: "+basecalling);
 				cd.run();
 				
 			
 
 
-			int length= cd.getFastAErrors().size();
+			/*int length= cd.getFastAErrors().size();
 
 			for(int i=0; i<length;i++)
 			{
@@ -321,7 +327,7 @@ public class NewGui extends javax.swing.JFrame {
 
 			message=message+"</html>";
 
-			outputTextField.setText(message);  
+			outputTextField.setText(message);  */
 		
     }                                           
 
