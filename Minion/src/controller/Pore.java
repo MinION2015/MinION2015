@@ -58,7 +58,7 @@ public class Pore {
 		//checks if the random lengths are feasible
 		for(int i=0;i<10;i++)
 		{
-			if(length>=sequence.length())
+			if(length>=sequence.lengthOfSequence())
 			{
 				length =(int) LengthDistribution.getRandLength();
 			}
@@ -69,7 +69,7 @@ public class Pore {
 			}
 		}
 		//random number between 0 and sequenceLength-lenght is created
-		int start = rand.nextInt(sequence.length()-length);
+		int start = rand.nextInt(sequence.lengthOfSequence()-length);
 		
 		
 		/*
@@ -78,7 +78,7 @@ public class Pore {
 		sequenceLength = length;
 	
 
-		String subseq = sequence.substring(start, start+length);
+		String subseq = sequence.getSequence().substring(start, start+length);
 
 		fasta = SimulationError.applyErrorBasecalling(subseq, "setting/default.setting");
 		
