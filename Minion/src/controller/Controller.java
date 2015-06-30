@@ -63,15 +63,16 @@ public class Controller {
 				if(flowcell.getNumberOfPores() > 0){
 					//TODO impelemt how to get all sequences from the arrylist and maybe flag uf they already have been simulated
 					flowcell.tick(fastA.getSequence().get(0));
-					//Thread.sleep(options.getDurationOfTick());
+					Thread.sleep(options.getDurationOfTick());
+					outputFastA = flowcell.getFlowcellOutput();
+					outputFastA.writeInFile(options.getOutputFilename());
 				}else{
 					//TODO stop run, inform user
 				}
 				currentNumberOfTicks++;
 			}
 			
-			outputFastA = flowcell.getFlowcellOutput();
-			outputFastA.writeInFile(options.getOutputFilename());
+			
 		}catch(MyException e){
 			
 		}catch(Exception e){
