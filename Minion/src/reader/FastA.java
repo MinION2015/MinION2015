@@ -39,7 +39,7 @@ public class FastA implements FiletypeContainingSequences {
 	 * @param inputFilename gets the inputFilename
 	 */
 	public void parse(String inputFilename) throws IOException,MyException{
-	
+		System.out.println("parse is called");
 		File file = new File(inputFilename);
 		FileReader fileReader = new FileReader(file);
 		BufferedReader bufferReader = new BufferedReader(fileReader);

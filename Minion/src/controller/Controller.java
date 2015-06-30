@@ -22,7 +22,7 @@ import LengthDistribution.LengthDistribution;
 public class Controller {
 	
 	private GUIOptions options;
-	private FiletypeContainingSequences fastA;
+	private FastA fastA;
 	private FiletypeContainingSequences outputFastA;
 	
 	public Controller(GUIOptions options){
@@ -31,7 +31,7 @@ public class Controller {
 	}
 	
 	public void run(){
-		
+		System.out.println("run is called");
 		//wrong filetype works
 		try{
 			checkFileEnding(options.getInputFilename());
@@ -44,6 +44,15 @@ public class Controller {
 			//TODO don't run programm; stop
 		}catch(Exception e){
 			
+		}
+//		for(int i =0; i < 3; i++){
+//			System.out.println(i);
+//		}
+		//somehow this doesnt work
+		System.out.println(fastA.getSequence().get(0).getSequence());
+		for(Sequence e : fastA.getSequence()){
+			
+			System.out.println(e.getHeader());
 		}
 		
 		
@@ -97,15 +106,17 @@ public class Controller {
 		}
 	}
 	
+	//NUllpointer not sure why
 	public ArrayList<MyException> getFastAErrors() {
 		return fastA.getErrorInSequence();
 	}
 	
-//	public static void main(String[] args){
-//		
-//		GUIOptions op = new GUIOptions("example4.txt","TestController.txt",1,1,1,10,2);
-//		Controller cd = new Controller(op);
-//		cd.run();
-//	}
+	public static void main(String[] args){
+		
+		GUIOptions op = new GUIOptions("TestFile.fasta","TestController.txt",1,1,1,10,2);
+		Controller cd = new Controller(op);
+		cd.run();
+		//cd.getFastAErrors();
+	}
 
 }
