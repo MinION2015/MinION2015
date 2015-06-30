@@ -28,16 +28,12 @@ public class Controller {
 	public Controller(GUIOptions options){
 		this.options = options;
 		System.out.println("New Controller");
-	}
-	
-	public void run(){
-		System.out.println("run is called");
 		//wrong filetype works
 		try{
 			checkFileEnding(options.getInputFilename());
 			this.fastA = new FastA();
 			this.outputFastA = new FastA();
-			fastA.parse(options.getInputFilename());
+			run();
 		}catch(MyException e){
 			System.err.println(e.getErrorMessage());
 			//TODO tell gui
@@ -45,17 +41,20 @@ public class Controller {
 		}catch(Exception e){
 			
 		}
-//		for(int i =0; i < 3; i++){
-//			System.out.println(i);
-//		}
-		//somehow this doesnt work
-		System.out.println(fastA.getSequence().get(0).getSequence());
-		for(Sequence e : fastA.getSequence()){
-			
-			System.out.println(e.getHeader());
+	}
+	
+	public void run(){
+		
+		//didn't put the right file path for testing, work now
+		try{
+			fastA.parse(options.getInputFilename());
+		}catch(Exception e){
+			System.out.println(e.getMessage());
 		}
 		
-		
+		for(Sequence s : fastA.getSequence()){
+			System.out.println(s.getHeader());
+		}
 		//TODO some kind of pause stop method
 		
 		
@@ -71,14 +70,15 @@ public class Controller {
 				
 				if(flowcell.getNumberOfPores() > 0){
 					//TODO impelemt how to get all sequences from the arrylist and maybe flag uf they already have been simulated
-					flowcell.tick(fastA.getSequence().get(0));
+					flowcell.tick(fastA.getSequence().get(1));
 					Thread.sleep(options.getDurationOfTick());
-					outputFastA = flowcell.getFlowcellOutput();
-					outputFastA.writeInFile(options.getOutputFilename());
+					
 				}else{
 					//TODO stop run, inform user
 				}
 				currentNumberOfTicks++;
+				outputFastA = flowcell.getFlowcellOutput();
+				outputFastA.writeInFile(options.getOutputFilename());
 			}
 			
 			
@@ -113,9 +113,9 @@ public class Controller {
 	
 	public static void main(String[] args){
 		
-		GUIOptions op = new GUIOptions("TestFile.fasta","TestController.txt",1,1,1,10,2);
+		GUIOptions op = new GUIOptions("C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/src/example4.fasta","C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/src/TestController.txt",1,1,1,10,2);
 		Controller cd = new Controller(op);
-		cd.run();
+		//cd.run();
 		//cd.getFastAErrors();
 	}
 
