@@ -51,32 +51,37 @@ public class Controller {
 			System.out.println(e.getMessage());
 		}
 		
-		for(Sequence s : fastA.getSequence()){
-			System.out.println(s.getHeader());
-		}
 		//TODO some kind of pause stop method
 		
 		
 		try{
-			//?
-			setupModel(options.getBasecalling(),options.getWindowSizeForLengthDistribution());
+			//something is going wrong here
+			//setupModel(options.getBasecalling(),options.getWindowSizeForLengthDistribution());
 			
 			Flowcell flowcell = new Flowcell(options.getNumberOfPores());
 			int currentNumberOfTicks = 0;
 			//TODO like this?, not sure if this works, not sure how i am able to test thread.sleep
 			
 			while(currentNumberOfTicks < options.getTotalNumberOfTicks()){
-				
+				System.out.println("while reached "+flowcell.getNumberOfPores());
 				if(flowcell.getNumberOfPores() > 0){
 					//TODO impelemt how to get all sequences from the arrylist and maybe flag uf they already have been simulated
-					flowcell.tick(fastA.getSequence().get(1));
+					//reached
+					flowcell.tick(fastA.getSequence().get(0));
+					//not reached
+					outputFastA = flowcell.getFlowcellOutput();
+					outputFastA.writeInFile(options.getOutputFilename());
+					System.out.println("blub");
 					Thread.sleep(options.getDurationOfTick());
 					
 				}else{
 					//TODO stop run, inform user
 				}
+				//this is never reached
+				System.out.println("blub");
 				currentNumberOfTicks++;
 				outputFastA = flowcell.getFlowcellOutput();
+				System.out.println(options.getOutputFilename());
 				outputFastA.writeInFile(options.getOutputFilename());
 			}
 			
@@ -111,13 +116,13 @@ public class Controller {
 		return fastA.getErrorInSequence();
 	}
 	
-//	public static void main(String[] args){
-//		
-//		GUIOptions op = new GUIOptions("C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/src/example4.fasta","C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/src/TestController.txt",1,1,1,10,2);
-//		Controller cd = new Controller(op);
-//		cd.run();
-//		
-//		cd.getFastAErrors();
-//	}
+	public static void main(String[] args){
+		
+		GUIOptions op = new GUIOptions("C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/src/example4.fasta","TestController.txt",1,5,1,10,2);
+		Controller cd = new Controller(op);
+		cd.run();
+		
+		cd.getFastAErrors();
+	}
 
 }
