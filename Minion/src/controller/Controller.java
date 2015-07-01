@@ -99,6 +99,12 @@ public class Controller {
 				
 	}
 	
+	/**
+	 * pls dont delete the function its necessary for the create new Setting file  button
+	 * @param fastafile
+	 * @param settingname
+	 * @param dimension
+	 */
 	public void createSettingfile(String fastafile, String settingname, int dimension){
 		try {
 			createSetting newSetting = new createSetting(fastafile, settingname, dimension);
