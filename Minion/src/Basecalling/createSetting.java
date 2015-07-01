@@ -9,20 +9,23 @@ import java.io.IOException;
 /**
  * 
  * @author kevinlindner
- *
+ * @Functionality the function creates a new settings file with a given blast file 
+ * @Input as inout u need the sourcepath of the blast file, the name of the created setting file and the dimension of the blast file
+ * @Ouput the function itself doesnt give a value back, but generates a .setting file
  */
 public class createSetting {
+	
 	
 	double percentageMatrix[][] = new double[5][5];
 	
 	public createSetting(String sourcepath, String outputName, int dimension) throws IOException{
 		this.percentageMatrix=calculate(sourcepath);
-		print(this.percentageMatrix,outputName,dimension);
+		print(percentageMatrix,outputName,dimension);
 	}
 	
-	private double[][] calculate(String sourcePath) throws IOException{
+	private double[][] calculate(String sourcepath) throws IOException{
 
-		BufferedReader Input = new BufferedReader(new FileReader(sourcePath));
+		BufferedReader Input = new BufferedReader(new FileReader(sourcepath));
 		
 		char cacheChar;
 		int end=0;
@@ -173,10 +176,10 @@ public class createSetting {
 	
 	private void print(double matrix[][], String outputName, int dimension) throws IOException{
 		
-		BufferedWriter Output = new BufferedWriter(new FileWriter("setting/"+outputName+".setting"));
+		BufferedWriter Output = new BufferedWriter(new FileWriter("src/settingFiles/"+outputName+".setting"));
 		Output.write("1D");
 		if(dimension==1){
-			for(int i=0;i<5;i++){
+			for(int i=0;i<4;i++){
 				switch(i){
 				case 0:
 					Output.newLine();
@@ -196,14 +199,6 @@ public class createSetting {
 					break;
 				}
 				for(int j=0;j<5;j++){
-					Output.newLine();
-					Output.write(Double.toString(matrix[i][j]));
-					Output.newLine();
-					Output.write(Double.toString(matrix[i][j]));
-					Output.newLine();
-					Output.write(Double.toString(matrix[i][j]));
-					Output.newLine();
-					Output.write(Double.toString(matrix[i][j]));
 					Output.newLine();
 					Output.write(Double.toString(matrix[i][j]));
 				}
@@ -295,6 +290,14 @@ public class createSetting {
 			}
 			
 		}
+		Output.close();
 			
 	}
+	/* works
+	public static void main(String args[]) throws IOException{
+
+	createSetting create = new createSetting("run09_4_-5_5_5.txt","settingname",1);
+	}
+	*/
+	
 }

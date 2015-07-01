@@ -28,6 +28,10 @@ public class Sequence {
 		return sequence;
 	}
 	
+	public int lengthOfSequence(){
+		return sequence.length();
+	}
+	
 	
 	/**
 	 * Test

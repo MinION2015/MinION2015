@@ -39,7 +39,6 @@ public class FastA implements FiletypeContainingSequences {
 	 * @param inputFilename gets the inputFilename
 	 */
 	public void parse(String inputFilename) throws IOException,MyException{
-	
 		File file = new File(inputFilename);
 		FileReader fileReader = new FileReader(file);
 		BufferedReader bufferReader = new BufferedReader(fileReader);
@@ -242,7 +241,7 @@ public class FastA implements FiletypeContainingSequences {
 //			System.out.println(pfastA.getSequence().get(1).getHeader());
 //			System.out.println(pfastA.getSequence().get(1).getSequence());
 //			
-//			pfastA.parse("example4.fasta");
+//			pfastA.parse("C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/src/example4.fasta");
 //			pfastA.writeInFile("Test.txt");
 //			
 //		}

@@ -18,6 +18,10 @@ import LengthDistribution.LengthDistribution;
  */
 public class Pore {
 	
+
+	String fasta ="";
+	private Sequence seq;
+
 	
 	
 	private String state = "Bored";
@@ -48,18 +52,18 @@ public class Pore {
 	 * @input a DNA sequence, an error model chosen by the user, a random sequence length from the Length Distribution and a basecalling code
 	 * @output a Sequence object
 	 */
-	public Sequence simulate(String sequence, SimulationError errorModel, LengthDistribution l, int basecalling) throws Exception
+	public Sequence simulate(Sequence sequence) throws Exception
 	{
 		Random rand = new Random();
 
-		int length =(int) l.getRandLength();
+		int length =(int) LengthDistribution.getRandLength();
 		
 		//checks if the random lengths are feasible
 		for(int i=0;i<10;i++)
 		{
-			if(length>=sequence.length())
+			if(length>=sequence.lengthOfSequence())
 			{
-				length =(int) l.getRandLength();
+				length =(int) LengthDistribution.getRandLength();
 			}
 			else break;
 			if(i==9)
@@ -68,7 +72,7 @@ public class Pore {
 			}
 		}
 		//random number between 0 and sequenceLength-lenght is created
-		int start = rand.nextInt(sequence.length()-length);
+		int start = rand.nextInt(sequence.lengthOfSequence()-length);
 		
 		
 		/*
@@ -77,13 +81,17 @@ public class Pore {
 		sequenceLength = length;
 	
 
-		String subseq = sequence.substring(start, start+length);
+		String subseq = sequence.getSequence().substring(start, start+length);
 
-		String fasta = errorModel.applyErrorBasecalling(subseq, basecalling,"setting/default.setting");
+
+		//String fasta = errorModel.applyErrorBasecalling(subseq, basecalling,"setting/default.setting");
+
+		fasta = SimulationError.applyErrorBasecalling(subseq);
 		
 		if(fasta.isEmpty()) System.out.println("Sequence is empty");
 
-		Sequence seq = new Sequence(sequence.,fasta);
+		//Sequence seq = new Sequence(sequence.,fasta);
+		seq = new Sequence(sequence.getHeader(),fasta);
 	
 		
 		
@@ -91,6 +99,14 @@ public class Pore {
 
 	}
 	
+	public Sequence getSequenceFromPore(){
+		return seq;
+	}
+	/**
+	 * @author Daniel Dehncke und Albert Langensiepen
+	 * @return String state
+	 * checks ths state of the pore and returns the fitting state. Depending on the state some values are changed
+	 */
 	public String checkStatus()
 	{
 		if(this.state.equals("Dead"))
@@ -108,7 +124,7 @@ public class Pore {
 		
 		if(this.numbersOfTimeAsked > this.sequenceLength)
 		{
-			setState("Finished");
+			setStatus("Finished");
 			return "Finished";
 		}else
 		{
@@ -128,13 +144,13 @@ public class Pore {
 			
 			if(age==ageDead)
 			{
-				setState("Dead");
+				setStatus("Dead");
 				return "Dead";
 			}
 			
 			else if(this.state.equals("Finished"))
 			{
-				setState("Bored");
+				setStatus("Bored");
 				return "Bored";
 			}
 			else return "Running";
@@ -142,7 +158,7 @@ public class Pore {
 		
 	}
 	
-	private void setState(String state)
+	public void setStatus(String state)
 	{
 		this.state = state;
 	}
