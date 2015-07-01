@@ -13,10 +13,12 @@ import error.MyException;
  * 
  * @author Kevin Lindner & Friederike Hanssen
  * started  to make class static, not sure how to test, as the whole class is not functioning for me with the settingFilename etc.(Friederike)
+ * above is fixed
  *@functionailty For a certain base and a basecalling type the transformation rate can becalled here
- * @Input: basecalling type
+ * @Input: basecalling type and the settingFilename
  * @Output: getters for the value, base and row
- *Hardcoded error rates for basecalling, calculated from the data. So far only dummy values are written. 
+ * default values of the lambda_phage are in the default.setting
+ *
  *To generate the values for each position each letter gets a window. For example if a A switches to a G the value wirtten down is 1, but the prob is 0.1(->1-0.9).
  */
 public class BasecallingErrorRate {

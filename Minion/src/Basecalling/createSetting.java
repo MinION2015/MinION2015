@@ -9,7 +9,9 @@ import java.io.IOException;
 /**
  * 
  * @author kevinlindner
- *
+ * @Functionality the function creates a new settings file with a given blast file 
+ * @Input as inout u need the sourcepath of the blast file, the name of the created setting file and the dimension of the blast file
+ * @Ouput the function itself doesnt give a value back, but generates a .setting file
  */
 public class createSetting {
 	
