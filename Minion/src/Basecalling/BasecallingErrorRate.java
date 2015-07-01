@@ -32,7 +32,7 @@ public class BasecallingErrorRate {
 	}
 	
 	private static void generate(int basecalling,String settingFilename) throws Exception{
-		BufferedReader Input = new BufferedReader(new FileReader(settingFilename));
+		BufferedReader Input = new BufferedReader(new FileReader("src/settingFiles/"+settingFilename+".setting"));
 			if(basecalling == 1){
 				Input.readLine();
 				Input.readLine();
@@ -40,29 +40,29 @@ public class BasecallingErrorRate {
 				for(int i=0;i<27;i++)
 					Input.readLine();
 			}
-				transProb[0][0] = Integer.parseInt(Input.readLine());
-				transProb[0][1] = transProb[0][0]+Integer.parseInt(Input.readLine());
-				transProb[0][2] = transProb[0][1]+Integer.parseInt(Input.readLine());
-				transProb[0][3] = transProb[0][2]+Integer.parseInt(Input.readLine());
-				transProb[0][4] = transProb[0][3]+Integer.parseInt(Input.readLine());
+				transProb[0][0] = Double.parseDouble(Input.readLine());
+				transProb[0][1] = transProb[0][0]+Double.parseDouble(Input.readLine());
+				transProb[0][2] = transProb[0][1]+Double.parseDouble(Input.readLine());
+				transProb[0][3] = transProb[0][2]+Double.parseDouble(Input.readLine());
+				transProb[0][4] = transProb[0][3]+Double.parseDouble(Input.readLine());
 				Input.readLine();
-				transProb[1][0] = Integer.parseInt(Input.readLine());
-				transProb[1][1] = transProb[1][0]+Integer.parseInt(Input.readLine());
-				transProb[1][2] = transProb[1][1]+Integer.parseInt(Input.readLine());
-				transProb[1][3] = transProb[1][2]+Integer.parseInt(Input.readLine());
-				transProb[1][4] = transProb[1][3]+Integer.parseInt(Input.readLine());
+				transProb[1][0] = Double.parseDouble(Input.readLine());
+				transProb[1][1] = transProb[1][0]+Double.parseDouble(Input.readLine());
+				transProb[1][2] = transProb[1][1]+Double.parseDouble(Input.readLine());
+				transProb[1][3] = transProb[1][2]+Double.parseDouble(Input.readLine());
+				transProb[1][4] = transProb[1][3]+Double.parseDouble(Input.readLine());
 				Input.readLine();
-				transProb[2][0] = Integer.parseInt(Input.readLine());
-				transProb[2][1] = transProb[2][0]+Integer.parseInt(Input.readLine());
-				transProb[2][2] = transProb[2][1]+Integer.parseInt(Input.readLine());
-				transProb[2][3] = transProb[2][2]+Integer.parseInt(Input.readLine());
-				transProb[2][4] = transProb[2][3]+Integer.parseInt(Input.readLine());
+				transProb[2][0] = Double.parseDouble(Input.readLine());
+				transProb[2][1] = transProb[2][0]+Double.parseDouble(Input.readLine());
+				transProb[2][2] = transProb[2][1]+Double.parseDouble(Input.readLine());
+				transProb[2][3] = transProb[2][2]+Double.parseDouble(Input.readLine());
+				transProb[2][4] = transProb[2][3]+Double.parseDouble(Input.readLine());
 				Input.readLine();
-				transProb[3][0] = Integer.parseInt(Input.readLine());
-				transProb[3][1] = transProb[3][0] +Integer.parseInt(Input.readLine());
-				transProb[3][2] = transProb[3][1] +Integer.parseInt(Input.readLine());
-				transProb[3][3] = transProb[3][2] +Integer.parseInt(Input.readLine());
-				transProb[3][4] = transProb[3][3]+Integer.parseInt(Input.readLine());
+				transProb[3][0] = Double.parseDouble(Input.readLine());
+				transProb[3][1] = transProb[3][0] +Double.parseDouble(Input.readLine());
+				transProb[3][2] = transProb[3][1] +Double.parseDouble(Input.readLine());
+				transProb[3][3] = transProb[3][2] +Double.parseDouble(Input.readLine());
+				transProb[3][4] = transProb[3][3]+Double.parseDouble(Input.readLine());
 	}
 	
 	public static double getValue(int i, int j){
@@ -84,26 +84,26 @@ public class BasecallingErrorRate {
 	/**
 	 * Test
 	 */
-
-//	public static void main(String args[]){
-//		BasecallingErrorRate err;
-//		try {
-//			err = new BasecallingErrorRate(2,"blub");
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		for(int i = 0; i < 4;i++){
-//			for(int j = 0; j < 4;j++){
-//				System.out.print(BasecallingErrorRate.getValue(i,j) + " ");
-//			}
-//		System.out.println();
-//		}
-//		
+/* test works
+	public static void main(String args[]){
+		BasecallingErrorRate err;
+		try {
+			err = new BasecallingErrorRate(2,"default");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		for(int i = 0; i < 4;i++){
+			for(int j = 0; j < 5;j++){
+				System.out.print(BasecallingErrorRate.getValue(i,j) + " ");
+		}
+		System.out.println();
+		}
+		
 //		System.out.println(err.getBase(2)); //T
-//		
-//		System.out.println(err.getRow('T')); //2
-//	}
+		
+	//	System.out.println(err.getRow('T')); //2
+	}*/
 	
 	
 	
