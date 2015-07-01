@@ -101,13 +101,13 @@ public class Controller {
 	
 	/**
 	 * pls dont delete the function its necessary for the create new Setting file  button
-	 * @param fastafile
+	 * @param blastfilePath
 	 * @param settingname
 	 * @param dimension
 	 */
-	public void createSettingfile(String fastafile, String settingname, int dimension){
+	public void createSettingfile(String blastfilePath, String settingname, int dimension){
 		try {
-			createSetting newSetting = new createSetting(fastafile, settingname, dimension);
+			createSetting newSetting = new createSetting(blastfilePath, settingname, dimension);
 		} catch (IOException e) {
 			// TODO catch needs to be done
 			e.printStackTrace();
