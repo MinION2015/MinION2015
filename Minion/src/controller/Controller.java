@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import reader.*;
 import Basecalling.BasecallingErrorRate;
+import Basecalling.createSetting;
 import LengthDistribution.LengthDistribution;
 /**
  * 
@@ -41,6 +42,7 @@ public class Controller {
 			
 		}
 	}
+
 	
 	public void run(){
 		
@@ -55,8 +57,8 @@ public class Controller {
 		
 		
 		try{
-			//something is going wrong here
-			//setupModel(options.getBasecalling(),options.getWindowSizeForLengthDistribution());
+		
+			//setupModel(options.getBasecalling(),options.getSettingfile(),options.getWindowSizeForLengthDistribution());
 			
 			Flowcell flowcell = new Flowcell(options.getNumberOfPores());
 			int currentNumberOfTicks = 0;
@@ -97,11 +99,19 @@ public class Controller {
 				
 	}
 	
-	//not sure how to test, kevin needs to provide more information to me first
-	private static void setupModel(int basecalling,int windowSize) throws Exception{
-		BasecallingErrorRate basecallingError = new BasecallingErrorRate(basecalling,"blub");
-		LengthDistribution lengthDistribution = new LengthDistribution(windowSize);
-		
+	public void createSettingfile(String fastafile, String settingname, int dimension){
+		try {
+			createSetting newSetting = new createSetting(fastafile, settingname, dimension);
+		} catch (IOException e) {
+			// TODO catch needs to be done
+			e.printStackTrace();
+		}
+	}
+	
+	
+	private static void setupModel(int basecalling, String settingfile, int windowSize) throws Exception{
+		BasecallingErrorRate basecallingError = new BasecallingErrorRate(basecalling,settingfile);
+		LengthDistribution lengthDistribution = new LengthDistribution(windowSize);	
 	}
 	//works
 	private void checkFileEnding(String filename) throws MyException{

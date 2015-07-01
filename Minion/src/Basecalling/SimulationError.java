@@ -17,7 +17,7 @@ public class SimulationError{
 		
 	}
 
-	public static String applyErrorBasecalling(String seq,String settingFilename) throws Exception {
+	public static String applyErrorBasecalling(String seq) throws Exception {
 		
 		String err = "";
 		for(int i = 0; i < seq.length();i++){

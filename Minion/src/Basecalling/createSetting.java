@@ -15,14 +15,14 @@ public class createSetting {
 	
 	double percentageMatrix[][] = new double[5][5];
 	
-	public createSetting(String sourcepath, String outputName, int dimension) throws IOException{
-		this.percentageMatrix=calculate(sourcepath);
+	public createSetting(String sourcepathFasta, String outputName, int dimension) throws IOException{
+		this.percentageMatrix=calculate(sourcepathFasta);
 		print(this.percentageMatrix,outputName,dimension);
 	}
 	
-	private double[][] calculate(String sourcePath) throws IOException{
+	private double[][] calculate(String sourcepathFasta) throws IOException{
 
-		BufferedReader Input = new BufferedReader(new FileReader(sourcePath));
+		BufferedReader Input = new BufferedReader(new FileReader(sourcepathFasta));
 		
 		char cacheChar;
 		int end=0;
@@ -173,7 +173,7 @@ public class createSetting {
 	
 	private void print(double matrix[][], String outputName, int dimension) throws IOException{
 		
-		BufferedWriter Output = new BufferedWriter(new FileWriter("setting/"+outputName+".setting"));
+		BufferedWriter Output = new BufferedWriter(new FileWriter("settingFiles/"+outputName+".setting"));
 		Output.write("1D");
 		if(dimension==1){
 			for(int i=0;i<5;i++){

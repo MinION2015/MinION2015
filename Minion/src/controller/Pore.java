@@ -80,7 +80,7 @@ public class Pore {
 
 		String subseq = sequence.getSequence().substring(start, start+length);
 
-		fasta = SimulationError.applyErrorBasecalling(subseq, "setting/default.setting");
+		fasta = SimulationError.applyErrorBasecalling(subseq);
 		
 		if(fasta.isEmpty()) System.out.println("Sequence is empty");
 
