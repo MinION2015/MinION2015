@@ -58,9 +58,8 @@ public class LengthRate {
 
 		
 		int approximationlongestSequence = 50000;		//just the longest Sequence i found, dont know if it is enough
-		int sumOfSequences = 0;
 		
-		int t = 0;
+
 		
 		int[] LengthsArraytemp = new int[approximationlongestSequence];
 		BufferedReader br = new BufferedReader(new FileReader(filename));
@@ -86,7 +85,6 @@ public class LengthRate {
 			if(!firstLine)									//skips the firstLine
 			{
 				LengthsArraytemp[fastA.length()]++;	
-				sumOfSequences++;
 				fastA = "";
 			}
 			firstLine = false;
@@ -103,7 +101,6 @@ public class LengthRate {
 		
 		}
 		LengthsArraytemp[fastA.length()]++;					//adds the last FastA Length
-		sumOfSequences++;
 		
 		//window is the Size we look at
 		br.close();
@@ -164,7 +161,6 @@ public class LengthRate {
 		int approximationlongestSequence = 50000;		//just the longest Sequence i found, dont know if it is enough
 		int sumOfSequences = 0;
 		
-		int t = 0;
 		
 		int[] LengthsArraytemp = new int[approximationlongestSequence];
 		BufferedReader br = new BufferedReader(new FileReader(filename));
