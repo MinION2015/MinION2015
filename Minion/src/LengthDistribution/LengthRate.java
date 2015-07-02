@@ -1,8 +1,15 @@
 package LengthDistribution;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import jdk.nashorn.internal.runtime.QuotedStringTokenizer;
 
 /**
  * 
@@ -37,6 +44,109 @@ public class LengthRate {
 	
 	public  static double getProb(int index){
 		return possibilitiesLength[0][index];
+	}
+	
+	/**
+	 * @author Dnaiel Dehncke
+	 * @functionality Gets a file.fasta and records the containing Lengths in the Array LengthsArraytemp. Gives the data to the print method which print it into filename.distribution
+	 * @param filename	.fasta file which contains Lengths to be analysed
+	 * @param outputName	Name of the file in which the Lengthdistribution is stored
+	 * @throws IOException
+	 */
+	public static void saveSelectedLengths(String filename, String outputName) throws IOException
+	{
+
+		
+		int approximationlongestSequence = 50000;		//just the longest Sequence i found, dont know if it is enough
+		int sumOfSequences = 0;
+		
+		int t = 0;
+		
+		int[] LengthsArraytemp = new int[approximationlongestSequence];
+		BufferedReader br = new BufferedReader(new FileReader(filename));
+		String currLine = "";
+		
+		boolean firstLine = true;
+		String fastA = "";
+		while((currLine = br.readLine()) != null)
+		{
+			
+			
+		String tmp = currLine.substring(0, 1);
+
+		
+		if(tmp.equals(";"))									//skips comments
+		{
+			
+			continue;
+		}
+		
+		if(tmp.equals(">"))									//skips the line if it starts with an ">" and adds the length to LengthsArraytemp
+		{
+			if(!firstLine)									//skips the firstLine
+			{
+				LengthsArraytemp[fastA.length()]++;	
+				sumOfSequences++;
+				fastA = "";
+			}
+			firstLine = false;
+			continue;
+		}
+			
+		
+		for (int j = 1; j < currLine.length()-1;j++)
+		{
+			tmp = currLine.substring(j-1, j);
+
+			fastA = fastA + tmp;
+		}
+		
+		}
+		LengthsArraytemp[fastA.length()]++;					//adds the last FastA Length
+		sumOfSequences++;
+		
+		//window is the Size we look at
+		br.close();
+		
+		print(LengthsArraytemp, outputName);	
+	}
+	/**
+	 * @author Daniel Dehncke 
+	 * @functionality Prints 	LengthsArray to the outputName.distribution
+	 * @param LengthsArray	 contains the stored Lengths
+	 * @param outputName	name of the output file
+	 * @throws IOException
+	 */
+	public static void print(int[] LengthsArray, String outputName) throws IOException
+	{
+		BufferedWriter Output = new BufferedWriter(new FileWriter("src/lengthDistribution/"+outputName+".distribution"));
+		List<Integer> saveLengths = new ArrayList<Integer>();
+		Output.write("{");
+		for(int i = 0; i < LengthsArray.length; i++)
+		{
+			if(LengthsArray[i] != 0)
+			{
+				Output.write(LengthsArray[i]+",");
+				saveLengths.add(LengthsArray.length);			//use list to store the lengths. 
+			}
+			
+		}
+		
+		Output.write("}");
+		
+		Output.newLine();
+		Iterator it = saveLengths.iterator();					//create Iterator to run over the the List
+		Output.write("{");
+		while(it.hasNext())
+		{
+			Object o = it.next();
+			Output.write((Integer) o + ",");
+		}
+		
+		Output.write("}");
+		Output.newLine();
+		Output.close();
+		
 	}
 	
 	/**
