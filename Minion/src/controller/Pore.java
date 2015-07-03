@@ -52,7 +52,7 @@ public class Pore {
 	 * @input a DNA sequence, an error model chosen by the user, a random sequence length from the Length Distribution and a basecalling code
 	 * @output a Sequence object
 	 */
-	public Sequence simulate(Sequence sequence) throws Exception,MyException
+	public Sequence simulate(Sequence sequence) throws MyException
 	{
 		Random rand = new Random();
 
@@ -85,14 +85,17 @@ public class Pore {
 
 
 		//String fasta = errorModel.applyErrorBasecalling(subseq, basecalling,"setting/default.setting");
-
-		fasta = SimulationError.applyErrorBasecalling(subseq);
+		try{
+			fasta = SimulationError.applyErrorBasecalling(subseq);
+		}catch(Exception e){
+			System.err.println("Error occurs in pore class");
+		}
 		
 		if(fasta.isEmpty()) System.out.println("Sequence is empty");
 
 		//Sequence seq = new Sequence(sequence.,fasta);
 		seq = new Sequence(sequence.getHeader(),fasta);
-	
+		this.state = "Running";
 		
 		
 		return seq;

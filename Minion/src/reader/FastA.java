@@ -92,7 +92,11 @@ public class FastA implements FiletypeContainingSequences {
 			errList.add(err);
 
 		} catch (MyException e){
-			
+			if(e.getErrorCode() == 2003){//gapped seq
+				Sequence seq = new Sequence(header, sequence);
+				seqList.add(seq);
+				errList.add(e);
+			}
 			Sequence seq = new Sequence(null,null);
 			seqList.add(seq);
 			errList.add(e);

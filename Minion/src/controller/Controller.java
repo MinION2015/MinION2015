@@ -28,7 +28,6 @@ public class Controller {
 	
 	public Controller(GUIOptions options){
 		this.options = options;
-		System.out.println("New Controller");
 		//wrong filetype works
 		try{
 			checkFileEnding(options.getInputFilename());
@@ -46,45 +45,40 @@ public class Controller {
 	
 	public void run(){
 		
-		//didn't put the right file path for testing, works now
 		try{
 			fastA.parse(options.getInputFilename());
 		}catch(Exception e){
-			System.out.println(e.getMessage());
+			System.err.println(e.getMessage());
 		}
 		
 		//TODO some kind of pause stop method
 		
-		
+		FastA tempOutput = new FastA();
 		try{
 		
-			//setupModel(options.getBasecalling(),options.getSettingfile(),options.getWindowSizeForLengthDistribution());
+			setupModel(options.getBasecalling(),"default",options.getWindowSizeForLengthDistribution());
 			
 			Flowcell flowcell = new Flowcell(options.getNumberOfPores());
-			int currentNumberOfTicks = 0;
-			//TODO like this?, not sure if this works, not sure how i am able to test thread.sleep
 			
+			int currentNumberOfTicks = 0;
+			Sequence seq = new Sequence("me","GGTTAAGCGACTAAGCGTACACGGTGGATGCCTAGGCAGTCAGAGGCGATGAAGGGCGTGCTAATCTGCGAAAAGCGTCGGTAAGCTGATATGAAGCGTTATAACCGACGATACCCGAATGGGGAAACCCAGTGCAATACGTTGCACTATCGTTAGATGAATACATAGTCTAACGAGGCGAACCGGGGGAACTGAAACATCTAAGTACCCCGAGGAAAAGAAATCAACCGAGATTCCCCCAGTAGCGGCGAGCGAACGGGGAGGAGCCCAGAGTCTGAATCAGTTTGTGTGTTAGTGGAAGCGTCTGGAAAGTCGCACGGTACAGGGTGATAGTCCCGTACACCAAAATGCACAGGCTGTGAACTCGATGAGTAGGGCGGGACACGTGACATCCTGTCTGAATATGGGGGGACCATCCTCCAAGGCTAAATACTCCTGACTGACCGATAGTGAACCAGTACCGTGAGGGAAAGGCGAAAAGAACCCCGGCGAGGGGAGTGAAATAGAACCTGAAACCGTGTACGTACAAGCAGTGGGAGCACCTTCGTGGTGTGACTGCGTACCTTTTGTATAATGGGTCAGCGACTTATATTTTGTAGCAAGGTTAACCGAATAGGGGAGCCGTAGGGAAACCGAGTCTTAACTAGGCGTCTAGTTGCAAGGTATAGACCCGAAACCCGGTGATCTAGCCATGGGCAGGTTGAAGGTTGGGTAACACTAACTGGAGGACCGAACCGACTAATGTTGAAAAATTAGCGGATGACTTGTGGTGGGGGTGAAAGGCCAATCAAACCGGGAGATAGCTGGTTCTCCCCGAAAGCTATTTAGGTAGCGCCTCGTGAACTCATCTTCGGGGGTAGAGCACTGTTTCGGCTAGGGGGCCATCCCGGCTTACCAAACCGATGCAAAGGTTAAGCGACTAAGCGTACACGGTGGATGCCTAGGCAGTCAGAGGCGATGAAGGGCGTGCTAATCTGCGAAAAGCGTCGGTAAGCTGATATGAAGCGTTATAACCGACGATACCCGAATGGGGAAACCCAGTGCAATACGTTGCACTATCGTTAGATGAATACATAGTCTAACGAGGCGAACCGGGGGAACTGAAACATCTAAGTACCCCGAGGAAAAGAAATCAACCGAGATTCCCCCAGTAGCGGCGAGCGAACGGGGAGGAGCCCAGAGTCTGAATCAGTTTGTGTGTTAGTGGAAGCGTCTGGAAAGTCGCACGGTACAGGGTGATAGTCCCGTACACCAAAATGCACAGGCTGTGAACTCGATGAGTAGGGCGGGACACGTGACATCCTGTCTGAATATGGGGGGACCATCCTCCAAGGCTAAATACTCCTGACTGACCGATAGTGAACCAGTACCGTGAGGGAAAGGCGAAAAGAACCCCGGCGAGGGGAGTGAAATAGAACCTGAAACCGTGTACGTACAAGCAGTGGGAGCACCTTCGTGGTGTGACTGCGTACCTTTTGTATAATGGGTCAGCGACTTATATTTTGTAGCAAGGTTAACCGAATAGGGGAGCCGTAGGGAAACCGAGTCTTAACTAGGCGTCTAGTTGCAAGGTATAGACCCGAAACCCGGTGATCTAGCCATGGGCAGGTTGAAGGTTGGGTAACACTAACTGGAGGACCGAACCGACTAATGTTGAAAAATTAGCGGATGACTTGTGGTGGGGGTGAAAGGCCAATCAAACCGGGAGATAGCTGGTTCTCCCCGAAAGCTATTTAGGTAGCGCCTCGTGAACTCATCTTCGGGGGTAGAGCACTGTTTCGGCTAGGGGGCCATCCCGGCTTACCAAACCGATGCAAA");
+			flowcell.startFlowcell(seq);
+
 			while(currentNumberOfTicks < options.getTotalNumberOfTicks()){
-				System.out.println("while reached "+flowcell.getNumberOfPores());
 				if(flowcell.getNumberOfPores() > 0){
-					//TODO impelemt how to get all sequences from the arrylist and maybe flag uf they already have been simulated
-					//reached
-					flowcell.tick(fastA.getSequence().get(0));
-					//not reached
-					outputFastA = flowcell.getFlowcellOutput();
-					outputFastA.writeInFile(options.getOutputFilename());
-					System.out.println("blub");
-					Thread.sleep(options.getDurationOfTick());
-					
-				}else{
-					//TODO stop run, inform user
-				}
-				//this is never reached
-				System.out.println("blub");
+//					//TODO impelemt how to get all sequences from the arrylist and maybe flag uf they already have been simulated
+					try{
+						flowcell.tick(seq);
+						flowcell.getFlowcellOutput().writeInFile(options.getOutputFilename());
+						Thread.sleep(options.getDurationOfTick());
+					}catch(Exception e){
+						System.out.println(e.getMessage());
+					}
+//					
+				}//else{
+//					//TODO stop run, inform user
+//				}
 				currentNumberOfTicks++;
-				outputFastA = flowcell.getFlowcellOutput();
-				System.out.println(options.getOutputFilename());
-				outputFastA.writeInFile(options.getOutputFilename());
 			}
 			
 			
@@ -93,6 +87,8 @@ public class Controller {
 		}catch(Exception e){
 			
 		}
+		System.out.println("while ende");
+		
 		
 		
 		
@@ -105,14 +101,14 @@ public class Controller {
 	 * @param settingname
 	 * @param dimension
 	 */
-	public void createSettingfile(String blastfilePath, String settingname, int dimension){
-		try {
-			createSetting newSetting = new createSetting(blastfilePath, settingname, dimension);
-		} catch (IOException e) {
-			// TODO catch needs to be done
-			e.printStackTrace();
-		}
-	}
+//	public void createSettingfile(String blastfilePath, String settingname, int dimension){
+//		try {
+//			createSetting newSetting = new createSetting(blastfilePath, settingname, dimension);
+//		} catch (IOException e) {
+//			// TODO catch needs to be done
+//			e.printStackTrace();
+//		}
+//	}
 	
 	
 	private static void setupModel(int basecalling, String settingfile, int windowSize) throws Exception{
@@ -128,17 +124,16 @@ public class Controller {
 	
 	//NUllpointer not sure why
 	public ArrayList<MyException> getFastAErrors() {
-		System.out.println(fastA.getErrorInSequence().get(0).getErrorMessage());
 		return fastA.getErrorInSequence();
 	}
 	
 	public static void main(String[] args){
 		
-		GUIOptions op = new GUIOptions("C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/src/example4.fasta","TestController.txt",1,5,1,10,2);
+		GUIOptions op = new GUIOptions("C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/src/example4.fasta","TestController.txt",1,5,1,100,10);
 		Controller cd = new Controller(op);
 		cd.run();
-		
-		cd.getFastAErrors();
+	
 	}
 
 }
+
