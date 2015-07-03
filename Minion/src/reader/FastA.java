@@ -96,10 +96,11 @@ public class FastA implements FiletypeContainingSequences {
 				Sequence seq = new Sequence(header, sequence);
 				seqList.add(seq);
 				errList.add(e);
-			}
+			}else{
 			Sequence seq = new Sequence(null,null);
 			seqList.add(seq);
 			errList.add(e);
+			}
 		}
 
 	}
@@ -210,25 +211,25 @@ public class FastA implements FiletypeContainingSequences {
 		processRead(seq.getHeader(),seq.getSequence());
 	}
 
-	/**
-	 * Test
-	 */
-
+//	/**
+//	 * Test
+//	 */
+//
 //	public static void main(String[] args) throws IOException, MyException{
-//		if(args.length != 1){
-//			System.err.println("You should specify a FastA file as input!");
-//			System.exit(1);
-//		}else{
-//			FastA pfastA = new FastA();
-//			pfastA.parse(args[0]);
-//			pfastA.writeInFile("hallo1.txt");
-//			
+////		if(args.length != 1){
+////			System.err.println("You should specify a FastA file as input!");
+////			System.exit(1);
+////		}else{
+////			FastA pfastA = new FastA();
+////			pfastA.parse(args[0]);
+////			pfastA.writeInFile("hallo1.txt");
+////			
 //		
 //		/**
 //		 * TEsts	
 //		 */
 //			FastA pfastA = new FastA();
-//			Sequence seq = new Sequence ("me", "ACTG");
+//			Sequence seq = new Sequence ("me", "ACTG-");
 //			pfastA.addSeq (seq);
 //			ArrayList<Sequence> arr = pfastA.getSequence();
 //			ArrayList<MyException> err = pfastA.getErrorInSequence();
@@ -241,14 +242,14 @@ public class FastA implements FiletypeContainingSequences {
 //				//expected: sequence contains gaps
 //				System.out.println(e.getErrorMessage());
 //			}
-//			pfastA.processRead("me", "ACTGGA");
+//			pfastA.processRead("me", "ACT-GA");
 //			System.out.println(pfastA.getSequence().get(1).getHeader());
 //			System.out.println(pfastA.getSequence().get(1).getSequence());
 //			
-//			pfastA.parse("C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/src/example4.fasta");
+//			//pfastA.parse("C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/src/example4.fasta");
 //			pfastA.writeInFile("Test.txt");
 //			
-//		}
+//	//	}
 //
 //	}
 
