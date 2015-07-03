@@ -52,7 +52,7 @@ public class Pore {
 	 * @input a DNA sequence, an error model chosen by the user, a random sequence length from the Length Distribution and a basecalling code
 	 * @output a Sequence object
 	 */
-	public Sequence simulate(Sequence sequence) throws Exception
+	public Sequence simulate(Sequence sequence) throws Exception,MyException
 	{
 		Random rand = new Random();
 
@@ -68,7 +68,7 @@ public class Pore {
 			else break;
 			if(i==9)
 			{
-				System.out.println("Die Sequenz ist zu kurz!");
+				throw new MyException(ErrorCodes.Pore_NOCAPABLESEQUENCELENGTH);
 			}
 		}
 		//random number between 0 and sequenceLength-lenght is created

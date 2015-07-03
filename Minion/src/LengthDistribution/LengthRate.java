@@ -185,7 +185,8 @@ public class LengthRate {
 		{
 			if(!firstLine)									//skips the firstLine
 			{
-				LengthsArraytemp[fastA.length()]++;	
+					LengthsArraytemp[fastA.length()]++;	
+
 				sumOfSequences++;
 				fastA = "";
 			}
