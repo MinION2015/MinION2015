@@ -141,6 +141,15 @@ public class Flowcell{
 			/******************************/
 			String statusOfPore = "Finished";//p.checkStatus();//"Running"//"Bored"//"Finished"
 			/*******************************/
+			//just for playing around with the status;
+//			double rand = Chance.getRand();
+//			if(rand<0.3){
+//				statusOfPore = "Running";
+//			}else if(rand < 0.6){
+//				statusOfPore= "Bored";
+//			}else{
+//				statusOfPore = "Finished";
+//			}
 			
 			if(statusOfPore.equals("Running") || statusOfPore.equals("Dead")){
 				System.out.println("Busy with running or being dead");
