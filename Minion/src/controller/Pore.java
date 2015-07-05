@@ -303,10 +303,10 @@ public class Pore {
 	}
 	
 	
-	public static void main(String[] args){
-		Pore p = new Pore(10);
-		System.out.println(p.checkStatus());
-	}
+//	public static void main(String[] args){
+//		Pore p = new Pore(10);
+//		System.out.println(p.checkStatus());
+//	}
 
 
 

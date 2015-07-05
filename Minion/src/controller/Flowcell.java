@@ -24,13 +24,15 @@ public class Flowcell{
 	
 	private ArrayList<Pore> poreList = new ArrayList<Pore>();
 	private FastA fastA;
+	private int maxAgeOfPores;
 	
-	public Flowcell(int numberOfPores) throws MyException{
+	public Flowcell(int numberOfPores,int maxAgeOfPores) throws MyException{
 		try{
 			addPores(numberOfPores);
 		}catch(MyException e){
 			System.err.println(e.getErrorMessage());
 		}
+		this.maxAgeOfPores = maxAgeOfPores;
 		fastA = new FastA();
 	}
 	
@@ -66,6 +68,7 @@ public class Flowcell{
 	
 		try{
 			for(int i = 0; i < numberOfPores; i++){
+				//TODO change constructor as soon as pore is fixed
 				Pore p = new Pore();
 				poreList.add(p);
 			}
@@ -133,7 +136,7 @@ public class Flowcell{
 	public void tick(Sequence seq){
 		for(Pore p : poreList){
 			
-			
+			//TODO apparently never changes it state, thus still only hard coded version works
 			/******************************/
 			String statusOfPore = "Finished";//p.checkStatus();//"Running"//"Bored"//"Finished"
 			/*******************************/
@@ -150,13 +153,15 @@ public class Flowcell{
 				}
 			}else if(statusOfPore.equals("Finished")){
 				//collecting output
+				//for testing to see if different sequences are written to file
 				double rand = Chance.getRand();
 				if(rand< 0.5){
 					seq = new Sequence("test", "ACTG");
 				}else{
-					seq = p.getSequenceFromPore();//returns me a sequence; for testing purposes 'seq'nothing is applied on this sequence;
+					seq = p.getSequenceFromPore();//returns me a sequence; 
 				}
 				System.out.println("I am done.");
+				//only newest sequence is written to file
 				fastA = new FastA();
 				try{
 					fastA.addSeq(seq);
