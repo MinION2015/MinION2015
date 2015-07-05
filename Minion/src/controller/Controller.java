@@ -58,17 +58,18 @@ public class Controller {
 		
 			setupModel(options.getBasecalling(),"default",options.getWindowSizeForLengthDistribution());
 			
-			Flowcell flowcell = new Flowcell(options.getNumberOfPores());
+			Flowcell flowcell = new Flowcell(options.getNumberOfPores(),options.getMaxAgeOfPores());
 			
 			int currentNumberOfTicks = 0;
 			Sequence seq = new Sequence("me","GGTTAAGCGACTAAGCGTACACGGTGGATGCCTAGGCAGTCAGAGGCGATGAAGGGCGTGCTAATCTGCGAAAAGCGTCGGTAAGCTGATATGAAGCGTTATAACCGACGATACCCGAATGGGGAAACCCAGTGCAATACGTTGCACTATCGTTAGATGAATACATAGTCTAACGAGGCGAACCGGGGGAACTGAAACATCTAAGTACCCCGAGGAAAAGAAATCAACCGAGATTCCCCCAGTAGCGGCGAGCGAACGGGGAGGAGCCCAGAGTCTGAATCAGTTTGTGTGTTAGTGGAAGCGTCTGGAAAGTCGCACGGTACAGGGTGATAGTCCCGTACACCAAAATGCACAGGCTGTGAACTCGATGAGTAGGGCGGGACACGTGACATCCTGTCTGAATATGGGGGGACCATCCTCCAAGGCTAAATACTCCTGACTGACCGATAGTGAACCAGTACCGTGAGGGAAAGGCGAAAAGAACCCCGGCGAGGGGAGTGAAATAGAACCTGAAACCGTGTACGTACAAGCAGTGGGAGCACCTTCGTGGTGTGACTGCGTACCTTTTGTATAATGGGTCAGCGACTTATATTTTGTAGCAAGGTTAACCGAATAGGGGAGCCGTAGGGAAACCGAGTCTTAACTAGGCGTCTAGTTGCAAGGTATAGACCCGAAACCCGGTGATCTAGCCATGGGCAGGTTGAAGGTTGGGTAACACTAACTGGAGGACCGAACCGACTAATGTTGAAAAATTAGCGGATGACTTGTGGTGGGGGTGAAAGGCCAATCAAACCGGGAGATAGCTGGTTCTCCCCGAAAGCTATTTAGGTAGCGCCTCGTGAACTCATCTTCGGGGGTAGAGCACTGTTTCGGCTAGGGGGCCATCCCGGCTTACCAAACCGATGCAAAGGTTAAGCGACTAAGCGTACACGGTGGATGCCTAGGCAGTCAGAGGCGATGAAGGGCGTGCTAATCTGCGAAAAGCGTCGGTAAGCTGATATGAAGCGTTATAACCGACGATACCCGAATGGGGAAACCCAGTGCAATACGTTGCACTATCGTTAGATGAATACATAGTCTAACGAGGCGAACCGGGGGAACTGAAACATCTAAGTACCCCGAGGAAAAGAAATCAACCGAGATTCCCCCAGTAGCGGCGAGCGAACGGGGAGGAGCCCAGAGTCTGAATCAGTTTGTGTGTTAGTGGAAGCGTCTGGAAAGTCGCACGGTACAGGGTGATAGTCCCGTACACCAAAATGCACAGGCTGTGAACTCGATGAGTAGGGCGGGACACGTGACATCCTGTCTGAATATGGGGGGACCATCCTCCAAGGCTAAATACTCCTGACTGACCGATAGTGAACCAGTACCGTGAGGGAAAGGCGAAAAGAACCCCGGCGAGGGGAGTGAAATAGAACCTGAAACCGTGTACGTACAAGCAGTGGGAGCACCTTCGTGGTGTGACTGCGTACCTTTTGTATAATGGGTCAGCGACTTATATTTTGTAGCAAGGTTAACCGAATAGGGGAGCCGTAGGGAAACCGAGTCTTAACTAGGCGTCTAGTTGCAAGGTATAGACCCGAAACCCGGTGATCTAGCCATGGGCAGGTTGAAGGTTGGGTAACACTAACTGGAGGACCGAACCGACTAATGTTGAAAAATTAGCGGATGACTTGTGGTGGGGGTGAAAGGCCAATCAAACCGGGAGATAGCTGGTTCTCCCCGAAAGCTATTTAGGTAGCGCCTCGTGAACTCATCTTCGGGGGTAGAGCACTGTTTCGGCTAGGGGGCCATCCCGGCTTACCAAACCGATGCAAA");
-			flowcell.startFlowcell(fastA.getSequence().get(0));
+			flowcell.startFlowcell(seq);
 
 			while(currentNumberOfTicks < options.getTotalNumberOfTicks()){
 				if(flowcell.getNumberOfPores() > 0){
 //					//TODO impelemt how to get all sequences from the arrylist and maybe flag uf they already have been simulated
 					try{
-						flowcell.tick(fastA.getSequence().get(1));
+						
+						flowcell.tick(seq);
 						flowcell.getFlowcellOutput().writeInFile(options.getOutputFilename());
 						Thread.sleep(options.getDurationOfTick());
 					}catch(Exception e){
@@ -101,14 +102,14 @@ public class Controller {
 	 * @param settingname
 	 * @param dimension
 	 */
-//	public void createSettingfile(String blastfilePath, String settingname, int dimension){
-//		try {
-//			createSetting newSetting = new createSetting(blastfilePath, settingname, dimension);
-//		} catch (IOException e) {
-//			// TODO catch needs to be done
-//			e.printStackTrace();
-//		}
-//	}
+	public void createSettingfile(String blastfilePath, String settingname, int dimension){
+		try {
+			createSetting newSetting = new createSetting(blastfilePath, settingname, dimension);
+		} catch (IOException e) {
+			// TODO catch needs to be done
+			e.printStackTrace();
+		}
+	}
 	
 	
 	private static void setupModel(int basecalling, String settingfile, int windowSize) throws Exception{
@@ -126,14 +127,14 @@ public class Controller {
 	public ArrayList<MyException> getFastAErrors() {
 		return fastA.getErrorInSequence();
 	}
+
+	public static void main(String[] args){
+		
+		GUIOptions op = new GUIOptions("C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/src/example4.fasta","TestController.txt","Write all",1,3,10,1,10,10);
+		Controller cd = new Controller(op);
+		cd.run();
 	
-//	public static void main(String[] args){
-//		
-//		GUIOptions op = new GUIOptions("C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/src/example4.fasta","TestController.txt",1,5,1,100,10);
-//		Controller cd = new Controller(op);
-//		cd.run();
-//	
-//	}
+	}
 
 }
 

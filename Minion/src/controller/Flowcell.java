@@ -134,40 +134,33 @@ public class Flowcell{
 	 * In each tick all pores are checked and either given work , if their are bored, else they are left alone. If one is finished the output is added to the FastA object, so later it can be printed to a file
 	 */
 	public void tick(Sequence seq){
+		fastA =new FastA();
 		for(Pore p : poreList){
-			
 			//TODO apparently never changes it state, thus still only hard coded version works
 			/******************************/
 			String statusOfPore = "Finished";//p.checkStatus();//"Running"//"Bored"//"Finished"
 			/*******************************/
 			
 			if(statusOfPore.equals("Running") || statusOfPore.equals("Dead")){
-				//System.out.println("Busy with running or being dead");
+				System.out.println("Busy with running or being dead");
 				continue;
 			}else if(statusOfPore.equals("Bored")){
-				//System.out.println("I am bored");
+				System.out.println("I am bored");
 				try{
 					p.simulate(seq);
-				}catch(Exception e){
-					//System.err.println(e.getMessage());
+				}catch(MyException e){
+					System.err.println(e.getErrorMessage());
 				}
 			}else if(statusOfPore.equals("Finished")){
 				//collecting output
-				//for testing to see if different sequences are written to file
-				double rand = Chance.getRand();
-				if(rand< 0.5){
-					seq = new Sequence("test", "ACTG");
-				}else{
-					seq = p.getSequenceFromPore();//returns me a sequence; 
-				}
 				System.out.println("I am done.");
-				//only newest sequence is written to file
-				fastA = new FastA();
+				
+				seq = p.getSequenceFromPore();
 				try{
-					fastA.addSeq(seq);
-					//p.getSequenceFromPore());//
+					//TODO each pore gives me the excact same output x-times
+					fastA.addSeq(p.getSequenceFromPore());
 				}catch(Exception e){
-					//System.err.println(e.getMessage());
+					System.err.println(e.getMessage());
 				}
 			}
 		}	
