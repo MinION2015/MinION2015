@@ -210,7 +210,7 @@ public class FastA implements FiletypeContainingSequences {
 		
 		processRead(seq.getHeader(),seq.getSequence());
 	}
-
+	
 //	/**
 //	 * Test
 //	 */

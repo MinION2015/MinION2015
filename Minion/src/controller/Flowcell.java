@@ -137,6 +137,7 @@ public class Flowcell{
 		fastA =new FastA();
 		for(Pore p : poreList){
 			//TODO apparently never changes it state, thus still only hard coded version works
+			//also prob the reason why the output doesn't change as no pore gets resimulated
 			/******************************/
 			String statusOfPore = "Finished";//p.checkStatus();//"Running"//"Bored"//"Finished"
 			/*******************************/

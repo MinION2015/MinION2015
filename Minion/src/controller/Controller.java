@@ -67,13 +67,27 @@ public class Controller {
 			while(currentNumberOfTicks < options.getTotalNumberOfTicks()){
 				if(flowcell.getNumberOfPores() > 0){
 //					//TODO impelemt how to get all sequences from the arrylist and maybe flag uf they already have been simulated
-					try{
-						
-						flowcell.tick(seq);
-						flowcell.getFlowcellOutput().writeInFile(options.getOutputFilename());
-						Thread.sleep(options.getDurationOfTick());
-					}catch(Exception e){
-						System.out.println(e.getMessage());
+					if(options.getWriteInFileOption() == "Real-Time"){
+						try{
+
+							flowcell.tick(seq);
+							flowcell.getFlowcellOutput().writeInFile(options.getOutputFilename());
+							Thread.sleep(options.getDurationOfTick());
+						}catch(Exception e){
+							System.err.println(e.getMessage());
+						}
+					}else if(options.getWriteInFileOption() == "Write all"){
+						try{
+							System.out.println("Write all");
+							flowcell.tick(seq);
+							for(Sequence s : flowcell.getFlowcellOutput().getSequence()){
+								outputFastA.addSeq(s);
+							}
+
+							Thread.sleep(options.getDurationOfTick());
+						}catch(Exception e){
+							System.err.println(e.getMessage());
+						}
 					}
 //					
 				}//else{
@@ -81,6 +95,12 @@ public class Controller {
 //				}
 				currentNumberOfTicks++;
 			}
+			System.out.println("while ends");
+			if(options.getWriteInFileOption() == "Write all"){
+				System.out.println("Write all");
+				outputFastA.writeInFile(options.getOutputFilename());
+			}
+			
 			
 			
 		}catch(MyException e){
@@ -88,7 +108,7 @@ public class Controller {
 		}catch(Exception e){
 			
 		}
-		System.out.println("while ende");
+		
 		
 		
 		
@@ -130,7 +150,7 @@ public class Controller {
 
 	public static void main(String[] args){
 		
-		GUIOptions op = new GUIOptions("C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/src/example4.fasta","TestController.txt","Write all",1,3,10,1,10,10);
+		GUIOptions op = new GUIOptions("C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/src/example4.fasta","TestController.txt","Write all",1,3,10,1,1000,10);
 		Controller cd = new Controller(op);
 		cd.run();
 	
