@@ -30,6 +30,9 @@ public class Pore {
 	private int [] probs = new int[ageLimit];// the probabilities if the pore dies depending on ageLimit
 	private int [] sleepProbs = new int[500];// the probabilities if the pore goes to sleep depending on the time it last slept
 	private int [] wakeProbs = new int[100];
+	private boolean beenAsleepOnce=false;
+	private int timeBetweenLastSlumber=0;
+	private int sleepTime=0; //time it has been sleeping
 	
 	/**
 	 * @author Albert Langensiepen
@@ -126,8 +129,51 @@ public class Pore {
 			return "Running";
 		}
 		
+		
+		
+		if(this.state.equals("Sleeping"))
+		{
+			boolean wake= tryToWake(this.sleepTime);
+			if(wake)
+			{
+				this.timeBetweenLastSlumber++;
+				setStatus("Bored");
+				return "Bored";
+			}
+			else this.sleepTime++;
+			
+		}
+		
 		if(this.state.equals("Bored"))
-			return "Bored";
+		{
+			if(beenAsleepOnce=false)
+			{	
+			boolean asleep=tryToSleep(age);
+			
+			if(asleep)
+			{
+				setStatus("Sleeping");
+				this.timeBetweenLastSlumber=0;
+				beenAsleepOnce=true;
+				return "Sleeping";
+			}
+			else return "Bored";
+			}
+			
+			else
+			{	
+			boolean asleep=tryToSleep2(timeBetweenLastSlumber);
+			
+			if(asleep)
+			{
+				setStatus("Sleeping");
+				this.timeBetweenLastSlumber=0;
+				return "Sleeping";
+			}
+			else return "Bored";
+			}
+		}
+
 		
 		if(this.numbersOfTimeAsked > this.sequenceLength)
 		{
