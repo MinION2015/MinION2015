@@ -22,22 +22,26 @@ public class Pore {
 	String fasta ="";
 	private Sequence seq;
 
-	
-	
 	private String state = "Bored";
 	private int age = 0;
 	private int numbersOfTimeAsked = 0;
 	private int sequenceLength = 0; //for checking if more ticks are are done then sequence length
-	
+	private int  ageLimit=0;
+	private int [] probs = new int[ageLimit];// the probabilities if the pore dies depending on ageLimit
+	private int [] sleepProbs = new int[500];// the probabilities if the pore goes to sleep depending on the time it last slept
+	private int [] wakeProbs = new int[100];
 	
 	/**
 	 * @author Albert Langensiepen
-	 * @functionality empty constructor for Pore
+	 * @functionality constructor for Pore
 	 * @output a pore object
 	 */
-	public Pore()
+	public Pore(int ageLimit)
 	{
-		
+		this.ageLimit=ageLimit;
+		this.probs =setProbs(ageLimit);
+		this.sleepProbs=setProbs(500); // for now after 500 ticks the Pore will definitely go to sleep
+		this.wakeProbs=setProbs(100);
 	}
 
 	/**
@@ -132,24 +136,16 @@ public class Pore {
 		}else
 		{
 			
-/*
- * Another option			
- */
-//			boolean dead=tryToDie(age);
-//			
-//			if(dead)
-//			{
-//				setState("Dead");
-//				return "Dead";
-//			}
+
+			boolean dead=tryToDie(age);
 			
-			int ageDead=tryToDie(age);
-			
-			if(age==ageDead)
+			if(dead)
 			{
 				setStatus("Dead");
 				return "Dead";
 			}
+			
+
 			
 			else if(this.state.equals("Finished"))
 			{
@@ -168,52 +164,97 @@ public class Pore {
 	
 	/**
 	 * @author: Albert Langensiepen
-	 * @input: age of a Pore
-	 * @output: the age at which the Pore shall die
-	 * @functionality: depending on the age of a pore the probability that it dies increases
-	 * 					a random double between 0 and 1 is generated and depending on the age the interval for dying grows
-	 * 					if the number is in this interval the pore dies
+	 * @input: age of a Pore 
+	 * @output: boolean if the pore dies
+	 * @functionality:  a random integer between 1 and 100 is generated and depending on the age of the Pore the possibility
+	 * 					at this index in the array is taken and if the number is less or equal to this number the pore dies 
+	 * 					
 	 */
-	private int tryToDie(int age)
+	private boolean tryToDie(int age)
+	{
+		boolean dead=false;
+		Random rand = new Random();
+		int r = rand.nextInt(100)+1; 
+		
+		if(r<=probs[age]) return dead=true;
+		else return dead=false;
+	}
+	
+	/**
+	 * @author: Albert Langensiepen
+	 * @input: age of a Pore 
+	 * @output: boolean if the pore goes to sleep
+	 * @functionality:  a random integer between 1 and 100 is generated and depending on the age of the Pore the possibility
+	 * 					at this index in the array is taken and if the number is less or equal to this number the pore goes to sleep  					
+	 */
+	private boolean tryToSleep(int age)
+	{
+		boolean sleep=false;
+		Random rand = new Random();
+		int r = rand.nextInt(100)+1; 
+		
+		if(r<=probs[age]) return sleep=true;
+		else return sleep=false;
+	}
+	
+	/**
+	 * @author: Albert Langensiepen
+	 * @input: time between last time the Pore was asleep  
+	 * @output: boolean if the pore goes to sleep
+	 * @functionality:  a random integer between 1 and 100 is generated and depending on the last time the Pore was asleep, the possibility
+	 * 					at this index in the array is taken and if the number is less or equal to this number the pore goes to sleep  					
+	 */
+	private boolean tryToSleep2(int timeBetweenLastSlumber)
 	{
 		
-		int ageDead=1000000000;
-		
+		boolean sleep=false;
 		Random rand = new Random();
-		double d = rand.nextDouble(); 
-		
-		// for now identical distribution
-		//double sup= age/49194; //longest length thus biggest age?
-		double sup= age/100;
-		if(d<sup)
-		{
-			ageDead=age;
-		}
-		
-		return ageDead;
-		
+		int r = rand.nextInt(100)+1; 
+		if(r<=sleepProbs[timeBetweenLastSlumber]) return sleep=true;
+		else return sleep=false;
 	}
+	
+	private boolean tryToWake(int sleepTime)
+	{
+		
+		boolean wake=false;
+		Random rand = new Random();
+		int r = rand.nextInt(100)+1; 
+		if(r<=wakeProbs[sleepTime]) return wake=true;
+		else return wake=false;
+	}
+	
+	
+	
+	/**
+	 * @author: Albert Langensiepen
+	 * @input:  age Limit of a Pore 
+	 * @output: array of death probabilities depending on age Limit or sleep probs depending on last time the Pore slept
+	 * @functionality: depending on the age of a pore the probability that it dies increases
+	 * 					an array is generated where with 5-10%-intervals of AgeLimit the Probability to die increases
+	**/
+	private int[] setProbs(int ageLimit)
+	{
+		for(int i=0; i<ageLimit;i++)
+		{
+			if(i<ageLimit*0.1) probs[i]=0;
+			if(ageLimit*0.1<=i && i <ageLimit*0.2) probs[i]=1;
+			if(ageLimit*0.2<=i && i<ageLimit*0.3) probs[i]=3;
+			if(ageLimit*0.3<=i &&i<ageLimit*0.4) probs[i]=4;
+			if(ageLimit*0.4<=i &&i<ageLimit*0.5) probs[i]=5;
+			if(ageLimit*0.5<=i &&i<ageLimit*0.6) probs[i]=10;
+			if(ageLimit*0.6<=i &&i<ageLimit*0.7) probs[i]=20;
+			if(ageLimit*0.7<=i &&i<ageLimit*0.8) probs[i]=40;
+			if(ageLimit*0.8<=i &&i<ageLimit*0.9) probs[i]=60;
+			if(ageLimit*0.9<=i &&i<ageLimit*0.95) probs[i]=90;
+			if(ageLimit*0.95<=i &&i<ageLimit) probs[i]=100;
+		}
+		return probs;
+	}
+	
+	
+		
 
-/*
- * Another option
- */
-//	private boolean tryToDie(int age)
-//	{
-//		double ageDead = 0.9;
-//		boolean dead=false;
-//		
-//		Random rand = new Random();
-//		double d = rand.nextDouble(); 
-//		
-//		for(int i=0;i<age/100;i++)
-//		{
-//			if(d >= ageDead){
-//				return dead=true;
-//			}
-//		}
-//		
-//		return dead=false;	
-//	}
 
 
 }
