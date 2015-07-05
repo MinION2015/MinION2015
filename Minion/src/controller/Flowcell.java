@@ -8,6 +8,7 @@ import reader.FastA;
 import reader.Sequence;
 import Basecalling.BasecallingErrorRate;
 import LengthDistribution.LengthDistribution;
+import error.Chance;
 import error.ErrorCodes;
 import error.MyException;
 
@@ -149,8 +150,14 @@ public class Flowcell{
 				}
 			}else if(statusOfPore.equals("Finished")){
 				//collecting output
-				seq = p.getSequenceFromPore();//returns me a sequence; for testing purposes 'seq'nothing is applied on this sequence;
+				double rand = Chance.getRand();
+				if(rand< 0.5){
+					seq = new Sequence("test", "ACTG");
+				}else{
+					seq = p.getSequenceFromPore();//returns me a sequence; for testing purposes 'seq'nothing is applied on this sequence;
+				}
 				System.out.println("I am done.");
+				fastA = new FastA();
 				try{
 					fastA.addSeq(seq);
 					//p.getSequenceFromPore());//
