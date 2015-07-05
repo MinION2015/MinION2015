@@ -26,6 +26,9 @@ public class Controller {
 	private GUIOptions options;
 	private FastA fastA;
 	private FastA outputFastA;
+	private Flowcell flowcell;
+	private String status; //"Ready","Running","Paused","Stopped","NotAbleToPerform"."NoAlivePoresLeft"
+	
 	
 	public Controller(GUIOptions options){
 		this.options = options;
@@ -34,73 +37,81 @@ public class Controller {
 			checkFileEnding(options.getInputFilename());
 			this.fastA = new FastA();
 			this.outputFastA = new FastA();
+			fastA.parse(options.getInputFilename());
+			this.flowcell = new Flowcell(options.getNumberOfPores(),options.getMaxAgeOfPores());
+			//TODO options.getSetting or sth like that
+			setupModel(options.getBasecalling(),"default",options.getWindowSizeForLengthDistribution());
+			status = "Ready";
 		}catch(MyException e){
 			System.err.println(e.getErrorMessage());
-			//TODO tell gui
-			//TODO don't run programm; stop
+			status = "NotAbleToPerform";
 		}catch(Exception e){
-			
+			System.out.println(e.getMessage());
+			status = "NotAbleToPerform";
 		}
 	}
 
 	
+	public String getStatus() {
+		return status;
+	}
+
+
 	public void run(){
 		
-		try{
-			fastA.parse(options.getInputFilename());
-		}catch(Exception e){
-			System.err.println(e.getMessage());
-		}
+//		try{
+//			fastA.parse(options.getInputFilename());
+//		}catch(Exception e){
+//			System.err.println(e.getMessage());
+//		}
 		
-		//TODO some kind of pause stop method
 		
-		FastA tempOutput = new FastA();
-		try{
-		
-			setupModel(options.getBasecalling(),"default",options.getWindowSizeForLengthDistribution());
-			
-			Flowcell flowcell = new Flowcell(options.getNumberOfPores(),options.getMaxAgeOfPores());
+		status = "Running";
+		try{	
 			
 			int currentNumberOfTicks = 0;
 			//Sequence seq = new Sequence("me","GGTTAAGCGACTAAGCGTACACGGTGGATGCCTAGGCAGTCAGAGGCGATGAAGGGCGTGCTAATCTGCGAAAAGCGTCGGTAAGCTGATATGAAGCGTTATAACCGACGATACCCGAATGGGGAAACCCAGTGCAATACGTTGCACTATCGTTAGATGAATACATAGTCTAACGAGGCGAACCGGGGGAACTGAAACATCTAAGTACCCCGAGGAAAAGAAATCAACCGAGATTCCCCCAGTAGCGGCGAGCGAACGGGGAGGAGCCCAGAGTCTGAATCAGTTTGTGTGTTAGTGGAAGCGTCTGGAAAGTCGCACGGTACAGGGTGATAGTCCCGTACACCAAAATGCACAGGCTGTGAACTCGATGAGTAGGGCGGGACACGTGACATCCTGTCTGAATATGGGGGGACCATCCTCCAAGGCTAAATACTCCTGACTGACCGATAGTGAACCAGTACCGTGAGGGAAAGGCGAAAAGAACCCCGGCGAGGGGAGTGAAATAGAACCTGAAACCGTGTACGTACAAGCAGTGGGAGCACCTTCGTGGTGTGACTGCGTACCTTTTGTATAATGGGTCAGCGACTTATATTTTGTAGCAAGGTTAACCGAATAGGGGAGCCGTAGGGAAACCGAGTCTTAACTAGGCGTCTAGTTGCAAGGTATAGACCCGAAACCCGGTGATCTAGCCATGGGCAGGTTGAAGGTTGGGTAACACTAACTGGAGGACCGAACCGACTAATGTTGAAAAATTAGCGGATGACTTGTGGTGGGGGTGAAAGGCCAATCAAACCGGGAGATAGCTGGTTCTCCCCGAAAGCTATTTAGGTAGCGCCTCGTGAACTCATCTTCGGGGGTAGAGCACTGTTTCGGCTAGGGGGCCATCCCGGCTTACCAAACCGATGCAAAGGTTAAGCGACTAAGCGTACACGGTGGATGCCTAGGCAGTCAGAGGCGATGAAGGGCGTGCTAATCTGCGAAAAGCGTCGGTAAGCTGATATGAAGCGTTATAACCGACGATACCCGAATGGGGAAACCCAGTGCAATACGTTGCACTATCGTTAGATGAATACATAGTCTAACGAGGCGAACCGGGGGAACTGAAACATCTAAGTACCCCGAGGAAAAGAAATCAACCGAGATTCCCCCAGTAGCGGCGAGCGAACGGGGAGGAGCCCAGAGTCTGAATCAGTTTGTGTGTTAGTGGAAGCGTCTGGAAAGTCGCACGGTACAGGGTGATAGTCCCGTACACCAAAATGCACAGGCTGTGAACTCGATGAGTAGGGCGGGACACGTGACATCCTGTCTGAATATGGGGGGACCATCCTCCAAGGCTAAATACTCCTGACTGACCGATAGTGAACCAGTACCGTGAGGGAAAGGCGAAAAGAACCCCGGCGAGGGGAGTGAAATAGAACCTGAAACCGTGTACGTACAAGCAGTGGGAGCACCTTCGTGGTGTGACTGCGTACCTTTTGTATAATGGGTCAGCGACTTATATTTTGTAGCAAGGTTAACCGAATAGGGGAGCCGTAGGGAAACCGAGTCTTAACTAGGCGTCTAGTTGCAAGGTATAGACCCGAAACCCGGTGATCTAGCCATGGGCAGGTTGAAGGTTGGGTAACACTAACTGGAGGACCGAACCGACTAATGTTGAAAAATTAGCGGATGACTTGTGGTGGGGGTGAAAGGCCAATCAAACCGGGAGATAGCTGGTTCTCCCCGAAAGCTATTTAGGTAGCGCCTCGTGAACTCATCTTCGGGGGTAGAGCACTGTTTCGGCTAGGGGGCCATCCCGGCTTACCAAACCGATGCAAA");
 			int pos = Chance.getRandInt(0, fastA.getSequence().size()-1);
 			flowcell.startFlowcell(fastA.getSequence().get(pos));
 
-			while(currentNumberOfTicks < options.getTotalNumberOfTicks()){
-				if(flowcell.getNumberOfPores() > 0){
-//					//TODO impelemt how to get all sequences from the arrylist and maybe flag uf they already have been simulated
-					if(options.getWriteInFileOption() == "Real-Time"){
-						try{
-							pos = Chance.getRandInt(0, fastA.getSequence().size()-1);
-							//System.out.println(fastA.getSequence().get(pos).getSequence());
-							flowcell.tick(fastA.getSequence().get(pos));
-							flowcell.getFlowcellOutput().writeInFile(options.getOutputFilename());
-							Thread.sleep(options.getDurationOfTick());
-						}catch(Exception e){
-							System.err.println(e.getMessage());
-						}
-					}else if(options.getWriteInFileOption() == "Write all"){
-						try{
-							
-							pos = Chance.getRandInt(0, fastA.getSequence().size()-1);
-							flowcell.tick(fastA.getSequence().get(pos));
-							for(Sequence s : flowcell.getFlowcellOutput().getSequence()){
-								outputFastA.addSeq(s);
-							}
 
-							Thread.sleep(options.getDurationOfTick());
-						}catch(Exception e){
-							System.err.println(e.getMessage());
+			while(currentNumberOfTicks < options.getTotalNumberOfTicks()){
+				if(status.equals("Running")){
+					if(flowcell.getNumberOfPores() > 0){
+
+						if(options.getWriteInFileOption().equals("Real-Time")){
+							try{
+								pos = Chance.getRandInt(0, fastA.getSequence().size()-1);
+								//System.out.println(fastA.getSequence().get(pos).getSequence());
+								flowcell.tick(fastA.getSequence().get(pos));
+								flowcell.getFlowcellOutput().writeInFile(options.getOutputFilename());
+								Thread.sleep(options.getDurationOfTick());
+							}catch(Exception e){
+								System.err.println(e.getMessage());
+							}
+						}else if(options.getWriteInFileOption().equals("Write all")){
+							try{
+
+								pos = Chance.getRandInt(0, fastA.getSequence().size()-1);
+								flowcell.tick(fastA.getSequence().get(pos));
+								for(Sequence s : flowcell.getFlowcellOutput().getSequence()){
+									outputFastA.addSeq(s);
+								}
+
+								Thread.sleep(options.getDurationOfTick());
+							}catch(Exception e){
+								System.err.println(e.getMessage());
+							}
 						}
+
+					}else{
+						status= "NoAlivePoresLeft";
 					}
-//					
-				}//else{
-//					//TODO stop run, inform user
-//				}
-				currentNumberOfTicks++;
+					currentNumberOfTicks++;
+				}
 			}
 			System.out.println("while ends");
-			if(options.getWriteInFileOption() == "Write all"){
+			if(options.getWriteInFileOption().equals("Write all")){
 				System.out.println("Write all");
 				outputFastA.writeInFile(options.getOutputFilename());
 			}
@@ -108,16 +119,26 @@ public class Controller {
 			
 			
 		}catch(MyException e){
-			
+			System.err.println(e.getErrorMessage());
 		}catch(Exception e){
-			
+			System.err.println(e.getMessage());
+		}	
+	}
+	
+	public void pause(){
+		status = "Paused";
+		
+		try {
+			wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 		
 		
-		
-		
-		
-				
+	}
+	
+	public void stop(){
+		status = "Stopped";
 	}
 	
 	/**
