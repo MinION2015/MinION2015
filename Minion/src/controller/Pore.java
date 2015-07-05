@@ -39,6 +39,10 @@ public class Pore {
 	 * @functionality constructor for Pore
 	 * @output a pore object
 	 */
+	
+	public Pore(){
+		
+	}
 	public Pore(int ageLimit)
 	{
 		this.ageLimit=ageLimit;
@@ -299,7 +303,10 @@ public class Pore {
 	}
 	
 	
-		
+	public static void main(String[] args){
+		Pore p = new Pore(10);
+		System.out.println(p.checkStatus());
+	}
 
 
 
