@@ -123,32 +123,32 @@ public class Pore {
 	 */
 	public String checkStatus()
 	{
-		if(this.state.equals("Dead"))
+		if(state.equals("Dead"))
 			return "Dead";
 		
-		if(this.state.equals("Running"))
+		if(state.equals("Running"))
 		{
-			this.age++;
-			this.numbersOfTimeAsked++;
+			age++;
+			numbersOfTimeAsked++;
 			return "Running";
 		}
 		
 		
 		
-		if(this.state.equals("Sleeping"))
+		if(state.equals("Sleeping"))
 		{
-			boolean wake= tryToWake(this.sleepTime);
+			boolean wake= tryToWake(sleepTime);
 			if(wake)
 			{
-				this.timeBetweenLastSlumber++;
+				timeBetweenLastSlumber++;
 				setStatus("Bored");
 				return "Bored";
 			}
-			else this.sleepTime++;
+			else sleepTime++;
 			
 		}
 		
-		if(this.state.equals("Bored"))
+		if(state.equals("Bored"))
 		{
 			if(beenAsleepOnce=false)
 			{	
@@ -157,7 +157,7 @@ public class Pore {
 			if(asleep)
 			{
 				setStatus("Sleeping");
-				this.timeBetweenLastSlumber=0;
+				timeBetweenLastSlumber=0;
 				beenAsleepOnce=true;
 				return "Sleeping";
 			}
@@ -171,7 +171,7 @@ public class Pore {
 			if(asleep)
 			{
 				setStatus("Sleeping");
-				this.timeBetweenLastSlumber=0;
+				timeBetweenLastSlumber=0;
 				return "Sleeping";
 			}
 			else return "Bored";
@@ -179,7 +179,7 @@ public class Pore {
 		}
 
 		
-		if(this.numbersOfTimeAsked > this.sequenceLength)
+		if(numbersOfTimeAsked > sequenceLength)
 		{
 			setStatus("Finished");
 			return "Finished";
@@ -197,7 +197,7 @@ public class Pore {
 			
 
 			
-			else if(this.state.equals("Finished"))
+			else if(state.equals("Finished"))
 			{
 				setStatus("Bored");
 				return "Bored";

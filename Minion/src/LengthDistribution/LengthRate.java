@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import jdk.nashorn.internal.runtime.QuotedStringTokenizer;
-
 /**
  * 
  * @author Daniel Dehncke
@@ -373,6 +371,11 @@ public class LengthRate {
 
 		//here´s the problem. possibilities[][] contains data but after returning it to the constructor the data is gone.
 		return possibilities;
+	}
+	
+	public static void main()
+	{
+		
 	}
 /**
  * Test	
