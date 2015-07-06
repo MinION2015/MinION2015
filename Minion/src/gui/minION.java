@@ -807,12 +807,14 @@ public class minION extends javax.swing.JFrame {
 
 	message=message+"</html>";
 
-	outputTextArea.setText(message);
-	
+	outputTextArea.setText(message);  
 
     }                                           
 
-                                         
+    private void pauseButtonActionPerformed(java.awt.event.ActionEvent evt) {                                            
+    stopButton.setEnabled(false);
+    //cd.pause();
+    }                                           
 
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {                                             
     System.exit(0);
@@ -828,7 +830,29 @@ public class minION extends javax.swing.JFrame {
     mainBasecallingSourceTextField.setText(baseCallingChooser.getSelectedFile().getAbsolutePath());
     }                                                           
 
-                                                  
+    private void mainLdSettingTextFieldActionPerformed(java.awt.event.ActionEvent evt) {                                                       
+        // TODO add your handling code here:
+    }                                                      
+
+    private void mainBasecallingSourceTextFieldActionPerformed(java.awt.event.ActionEvent evt) {                                                               
+        // TODO add your handling code here:
+    }                                                              
+
+    private void numberOfPoresFormattedTextField1ActionPerformed(java.awt.event.ActionEvent evt) {                                                                 
+        // TODO add your handling code here:
+    }                                                                
+
+    private void durationPerTickFormattedTextFieldActionPerformed(java.awt.event.ActionEvent evt) {                                                                  
+        // TODO add your handling code here:
+    }                                                                 
+
+    private void maxAgeOfPoresTextFieldActionPerformed(java.awt.event.ActionEvent evt) {                                                       
+        // TODO add your handling code here:
+    }                                                      
+
+    private void outputFileTextFieldActionPerformed(java.awt.event.ActionEvent evt) {                                                    
+
+    }                                                   
 
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
         mainFileChooser.showOpenDialog(minION.this);
@@ -842,28 +866,52 @@ public class minION extends javax.swing.JFrame {
         settingFileDirectoryTextField.setText(settingFileDirectory.getSelectedFile().getAbsolutePath());
     }                                                          
 
-                                                      
+    private void settingFileDirectoryTextFieldActionPerformed(java.awt.event.ActionEvent evt) {                                                              
+        // TODO add your handling code here:
+    }                                                             
 
     private void bBrowseButtonActionPerformed(java.awt.event.ActionEvent evt) {                                              
         createBasecallingBlastFileChooser.showOpenDialog(minION.this);
         bBlastPathTextField.setText(createBasecallingBlastFileChooser.getSelectedFile().getAbsolutePath());
     }                                             
 
-                                              
+    private void bBlastPathTextFieldActionPerformed(java.awt.event.ActionEvent evt) {                                                    
+        // TODO add your handling code here:
+    }                                                   
+
+    private void bNameTextFieldActionPerformed(java.awt.event.ActionEvent evt) {                                               
+        // TODO add your handling code here:
+    }                                              
+
+    private void ldFastATextFieldActionPerformed(java.awt.event.ActionEvent evt) {                                                 
+        // TODO add your handling code here:
+    }                                                
 
     private void ldBrowseButtonActionPerformed(java.awt.event.ActionEvent evt) {                                               
         createLengthDistributionFastAFileChooser.showOpenDialog(minION.this);
         ldFastATextField.setText(createLengthDistributionFastAFileChooser.getSelectedFile().getAbsolutePath());
     }                                              
 
-                                          
+    private void fastQActionPerformed(java.awt.event.ActionEvent evt) {                                      
+        // TODO add your handling code here:
+    }                                     
+
+    private void fastAActionPerformed(java.awt.event.ActionEvent evt) {                                      
+        // TODO add your handling code here:
+    }                                     
+
+    private void outputComboBoxActionPerformed(java.awt.event.ActionEvent evt) {                                               
+        // TODO add your handling code here:
+    }                                              
 
     private void createSettingFileMenuItemActionPerformed(java.awt.event.ActionEvent evt) {                                                          
         optionsTabbedPane.setSelectedIndex(1);
         optionsDialog.setVisible(true);
     }                                                         
 
-                                             
+    private void loadFileMenuItemActionPerformed(java.awt.event.ActionEvent evt) {                                                 
+        // TODO add your handling code here:
+    }                                                
 
     private void InputSettingsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {                                                      
         optionsTabbedPane.setSelectedIndex(0);
