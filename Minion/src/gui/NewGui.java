@@ -13,7 +13,9 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
 import java.io.File;
+
 
 
 import controller.Controller;
@@ -290,6 +292,7 @@ public class NewGui extends javax.swing.JFrame {
 			String message= "<html>";
 			Controller cd = null;
 			int basecalling = 0;
+
 		
 			String chosen = (String) dimComboBox.getSelectedItem();
 
@@ -310,9 +313,18 @@ public class NewGui extends javax.swing.JFrame {
 					System.out.println("Input directory: "+sourceField.getText());
 					System.out.println("Output: "+outputFileTextField.getText());
 				*/
-				GUIOptions options = new GUIOptions(sourceField.getText(),outputFileTextField.getText(),
-						basecalling,Integer.parseInt(numberOfPoresFormattedTextField.getText()),Integer.parseInt(durationPerTickFormattedTextField.getText()),
-						Integer.parseInt(numberOfTicksTextField.getText()),Integer.parseInt(windowSizeFormattedTextField.getText()));
+					
+
+				
+				GUIOptions options = new GUIOptions(
+						sourceField.getText(),
+						outputFileTextField.getText(),
+						outputComboBox.getSelectedItem(), 
+						basecalling, 
+						Integer.parseInt(numberOfPoresFormattedTextField.getText()),
+						Integer.parseInt(durationPerTickFormattedTextField.getText()),
+						Integer.parseInt(numberOfTicksTextField.getText()),
+						Integer.parseInt(windowSizeFormattedTextField.getText()));
 
 				cd = new Controller(options);
 
@@ -321,7 +333,7 @@ public class NewGui extends javax.swing.JFrame {
 			
 
 
-			/*int length= cd.getFastAErrors().size();
+			int length= cd.getFastAErrors().size();
 
 			for(int i=0; i<length;i++)
 			{
@@ -334,7 +346,7 @@ public class NewGui extends javax.swing.JFrame {
 
 			message=message+"</html>";
 
-			outputTextField.setText(message);  */
+			outputTextField.setText(message);  
 		
     }                                           
 
@@ -378,9 +390,9 @@ public class NewGui extends javax.swing.JFrame {
     private javax.swing.JLabel windowSizeForLengthDistributionLabel;
     private javax.swing.JFormattedTextField windowSizeFormattedTextField;
     // End of variables declaration   
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         NewGui sim = new NewGui();
         sim.setVisible(true);
-    }
+    }*/
 }
 
