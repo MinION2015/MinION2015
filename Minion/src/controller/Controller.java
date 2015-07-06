@@ -111,11 +111,11 @@ public class Controller {
 		if(status.equals("Resume")){
 			status = "Running";
 			run();
-			System.out.println("currentNum Ticks: "+currentNumberOfTicks);
+			//System.out.println("currentNum Ticks: "+currentNumberOfTicks);
 		}
 	}
 	public void pause(){
-		int counter=0;
+		//int counter=0;
 		status = "Paused";
 		while(status.equals("Paused")){
 			try {
@@ -124,7 +124,7 @@ public class Controller {
 				// TODO Auto-generated catch block
 				System.err.println(e.getMessage());
 			}
-			counter++;
+//			counter++;
 //			if(counter == 3000){
 //				System.out.println("blub2");
 //				resume();
@@ -169,13 +169,13 @@ public class Controller {
 		return fastA.getErrorInSequence();
 	}
 
-	public static void main(String[] args){
-		
-		GUIOptions op = new GUIOptions("C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/src/example4.fasta","TestController.txt","Real-Time",1,1,10,1,100,10);
-		Controller cd = new Controller(op);
-		cd.run();
-	
-	}
+//	public static void main(String[] args){
+//		
+//		GUIOptions op = new GUIOptions("C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/src/example4.fasta","TestController.txt","Real-Time",1,1,10,1,100,10);
+//		Controller cd = new Controller(op);
+//		cd.run();
+//	
+//	}
 
 }
 
