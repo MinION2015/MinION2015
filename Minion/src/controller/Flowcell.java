@@ -151,8 +151,8 @@ public class Flowcell{
 //				statusOfPore = "Finished";
 //			}
 			
-			if(statusOfPore.equals("Running") || statusOfPore.equals("Dead")){
-				System.out.println("Busy with running or being dead");
+			if(statusOfPore.equals("Running") || statusOfPore.equals("Dead") || statusOfPore.equals("Sleeping")){
+				System.out.println("Busy with running or being dead or sleeping");
 				continue;
 			}else if(statusOfPore.equals("Bored")){
 				System.out.println("I am bored");
