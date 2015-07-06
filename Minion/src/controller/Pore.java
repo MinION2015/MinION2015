@@ -4,6 +4,7 @@ package controller;
 import error.*;
 import reader.*;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -26,10 +27,10 @@ public class Pore {
 	private int age = 0;
 	private int numbersOfTimeAsked = 0;
 	private int sequenceLength = 0; //for checking if more ticks are are done then sequence length
-	private int  ageLimit=0;
-	private int [] probs = new int[ageLimit];// the probabilities if the pore dies depending on ageLimit
-	private int [] sleepProbs = new int[500];// the probabilities if the pore goes to sleep depending on the time it last slept
-	private int [] wakeProbs = new int[100];
+	private static int  ageLimit=0;
+	private static int [] deathProbs = new int[ageLimit];// the probabilities if the pore dies depending on ageLimit 
+	private static int [] sleepProbs = new int[500];// the probabilities if the pore goes to sleep depending on the time it last slept
+	private static int [] wakeProbs = new int[100];
 	private boolean beenAsleepOnce=false;
 	private int timeBetweenLastSlumber=0;
 	private int sleepTime=0; //time it has been sleeping
@@ -39,16 +40,41 @@ public class Pore {
 	 * @functionality constructor for Pore
 	 * @output a pore object
 	 */
-	
 	public Pore(){
 		
 	}
 	public Pore(int ageLimit)
 	{
 		this.ageLimit=ageLimit;
-		this.probs =setProbs(ageLimit);
-		this.sleepProbs=setProbs(500); // for now after 500 ticks the Pore will definitely go to sleep
-		this.wakeProbs=setProbs(100);
+		this.deathProbs =new int[ageLimit];
+		this.deathProbs =setDeathProbs(ageLimit);
+		this.sleepProbs=setSleepProbs(500); // for now after 500 ticks the Pore will definitely go to sleep
+		this.wakeProbs=setWakeProbs(100);
+	}
+	
+	//Exceptions fŸr zu hohes age -> arrayoutofBounds schreiben
+	public static void main(String[] args) throws MyException, IOException
+	{
+		Pore p = new Pore(666);
+		//System.out.println(tryToDie(665));
+		LengthDistribution l = new LengthDistribution(1000);
+		Sequence seq = new Sequence(">","ATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG");
+		System.out.println(p.simulate(seq)); 
+		
+//		
+//		for(int i=0;i<probs.length;i++)
+//		{
+//			System.out.println(probs[i]);
+//		}
+//		System.out.println("LALALALALALS");
+//		for(int i=0;i<sleepProbs.length;i++)
+//		{
+//			System.out.println(sleepProbs[i]);
+//		}
+//		System.out.println(sleepProbs.length);
+//		System.out.println(sleepProbs[666]);
+		
+		
 	}
 
 	/**
@@ -220,13 +246,15 @@ public class Pore {
 	 * 					at this index in the array is taken and if the number is less or equal to this number the pore dies 
 	 * 					
 	 */
-	private boolean tryToDie(int age)
+	private static boolean tryToDie(int age)
 	{
 		boolean dead=false;
 		Random rand = new Random();
 		int r = rand.nextInt(100)+1; 
+		System.out.println("zufallszahl: "+r);
+		System.out.println("Intervallsobergrenze: "+deathProbs[age]);
 		
-		if(r<=probs[age]) return dead=true;
+		if(r<=deathProbs[age]) return dead=true;
 		else return dead=false;
 	}
 	
@@ -237,13 +265,15 @@ public class Pore {
 	 * @functionality:  a random integer between 1 and 100 is generated and depending on the age of the Pore the possibility
 	 * 					at this index in the array is taken and if the number is less or equal to this number the pore goes to sleep  					
 	 */
-	private boolean tryToSleep(int age)
+	private static boolean tryToSleep(int age)
 	{
 		boolean sleep=false;
 		Random rand = new Random();
 		int r = rand.nextInt(100)+1; 
+		System.out.println("zufallszahl: "+r);
+		System.out.println("Intervallsobergrenze: "+sleepProbs[age]);
 		
-		if(r<=probs[age]) return sleep=true;
+		if(r<=sleepProbs[age]) return sleep=true;
 		else return sleep=false;
 	}
 	
@@ -254,22 +284,27 @@ public class Pore {
 	 * @functionality:  a random integer between 1 and 100 is generated and depending on the last time the Pore was asleep, the possibility
 	 * 					at this index in the array is taken and if the number is less or equal to this number the pore goes to sleep  					
 	 */
-	private boolean tryToSleep2(int timeBetweenLastSlumber)
+	private static boolean tryToSleep2(int timeBetweenLastSlumber)
 	{
 		
 		boolean sleep=false;
 		Random rand = new Random();
 		int r = rand.nextInt(100)+1; 
+		
+		System.out.println("zufallszahl: "+r);
+		System.out.println("Intervallsobergrenze: "+sleepProbs[timeBetweenLastSlumber]);
 		if(r<=sleepProbs[timeBetweenLastSlumber]) return sleep=true;
 		else return sleep=false;
 	}
 	
-	private boolean tryToWake(int sleepTime)
+	private static boolean tryToWake(int sleepTime)
 	{
 		
 		boolean wake=false;
 		Random rand = new Random();
-		int r = rand.nextInt(100)+1; 
+		int r = rand.nextInt(100)+1;
+		System.out.println("zufallszahl: "+r);
+		System.out.println("Intervallsobergrenze: "+wakeProbs[sleepTime]);
 		if(r<=wakeProbs[sleepTime]) return wake=true;
 		else return wake=false;
 	}
@@ -283,23 +318,64 @@ public class Pore {
 	 * @functionality: depending on the age of a pore the probability that it dies increases
 	 * 					an array is generated where with 5-10%-intervals of AgeLimit the Probability to die increases
 	**/
-	private int[] setProbs(int ageLimit)
+	private static int[] setDeathProbs(int ageLimit)
 	{
 		for(int i=0; i<ageLimit;i++)
 		{
-			if(i<ageLimit*0.1) probs[i]=0;
-			if(ageLimit*0.1<=i && i <ageLimit*0.2) probs[i]=1;
-			if(ageLimit*0.2<=i && i<ageLimit*0.3) probs[i]=3;
-			if(ageLimit*0.3<=i &&i<ageLimit*0.4) probs[i]=4;
-			if(ageLimit*0.4<=i &&i<ageLimit*0.5) probs[i]=5;
-			if(ageLimit*0.5<=i &&i<ageLimit*0.6) probs[i]=10;
-			if(ageLimit*0.6<=i &&i<ageLimit*0.7) probs[i]=20;
-			if(ageLimit*0.7<=i &&i<ageLimit*0.8) probs[i]=40;
-			if(ageLimit*0.8<=i &&i<ageLimit*0.9) probs[i]=60;
-			if(ageLimit*0.9<=i &&i<ageLimit*0.95) probs[i]=90;
-			if(ageLimit*0.95<=i &&i<ageLimit) probs[i]=100;
+			if(i<ageLimit*0.1) deathProbs[i]=0;
+			if(ageLimit*0.1<=i && i <ageLimit*0.2) deathProbs[i]=1;
+			if(ageLimit*0.2<=i && i<ageLimit*0.3) deathProbs[i]=3;
+			if(ageLimit*0.3<=i &&i<ageLimit*0.4) deathProbs[i]=4;
+			if(ageLimit*0.4<=i &&i<ageLimit*0.5) deathProbs[i]=5;
+			if(ageLimit*0.5<=i &&i<ageLimit*0.6) deathProbs[i]=10;
+			if(ageLimit*0.6<=i &&i<ageLimit*0.7) deathProbs[i]=20;
+			if(ageLimit*0.7<=i &&i<ageLimit*0.8) deathProbs[i]=40;
+			if(ageLimit*0.8<=i &&i<ageLimit*0.9) deathProbs[i]=60;
+			if(ageLimit*0.9<=i &&i<ageLimit*0.95) deathProbs[i]=90;
+			if(ageLimit*0.95<=i &&i<ageLimit) deathProbs[i]=100;
+			
 		}
-		return probs;
+		return deathProbs;
+	}
+	
+	private static int[] setSleepProbs(int age)
+	{
+		for(int i=0; i<age;i++)
+		{
+			if(i<age*0.1) sleepProbs[i]=0;
+			if(age*0.1<=i && i <age*0.2) sleepProbs[i]=1;
+			if(age*0.2<=i && i<age*0.3) sleepProbs[i]=3;
+			if(age*0.3<=i &&i<age*0.4) sleepProbs[i]=4;
+			if(age*0.4<=i &&i<age*0.5) sleepProbs[i]=5;
+			if(age*0.5<=i &&i<age*0.6) sleepProbs[i]=10;
+			if(age*0.6<=i &&i<age*0.7) sleepProbs[i]=20;
+			if(age*0.7<=i &&i<age*0.8) sleepProbs[i]=40;
+			if(age*0.8<=i &&i<age*0.9) sleepProbs[i]=60;
+			if(age*0.9<=i &&i<age*0.95) sleepProbs[i]=90;
+			if(age*0.95<=i &&i<age) sleepProbs[i]=100;
+			
+		}
+		return sleepProbs;
+	}
+	
+	private static int[] setWakeProbs(int age)
+	{
+		for(int i=0; i<age;i++)
+		{
+			if(i<age*0.1) wakeProbs[i]=0;
+			if(age*0.1<=i && i <age*0.2) wakeProbs[i]=1;
+			if(age*0.2<=i && i<age*0.3) wakeProbs[i]=3;
+			if(age*0.3<=i &&i<age*0.4) wakeProbs[i]=4;
+			if(age*0.4<=i &&i<age*0.5) wakeProbs[i]=5;
+			if(age*0.5<=i &&i<age*0.6) wakeProbs[i]=10;
+			if(age*0.6<=i &&i<age*0.7) wakeProbs[i]=20;
+			if(age*0.7<=i &&i<age*0.8) wakeProbs[i]=40;
+			if(age*0.8<=i &&i<age*0.9) wakeProbs[i]=60;
+			if(age*0.9<=i &&i<age*0.95) wakeProbs[i]=90;
+			if(age*0.95<=i &&i<age) wakeProbs[i]=100;
+			
+		}
+		return wakeProbs;
 	}
 	
 	
