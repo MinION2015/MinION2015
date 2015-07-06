@@ -219,11 +219,7 @@ public class Pore {
 			{
 				setStatus("Dead");
 				return "Dead";
-			}
-			
-
-			
-			else if(state.equals("Finished"))
+			}else if(state.equals("Finished"))
 			{
 				setStatus("Bored");
 				return "Bored";
