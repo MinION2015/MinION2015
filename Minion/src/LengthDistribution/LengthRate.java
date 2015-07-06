@@ -67,7 +67,10 @@ public class LengthRate {
 		String fastA = "";
 		while((currLine = br.readLine()) != null)
 		{
-			
+		if(currLine.isEmpty())
+		{
+			continue;
+		}
 			
 		String tmp = currLine.substring(0, 1);
 
@@ -103,6 +106,8 @@ public class LengthRate {
 		//window is the Size we look at
 		br.close();
 		
+		
+		
 		print(LengthsArraytemp, outputName);	
 	}
 	/**
@@ -122,7 +127,7 @@ public class LengthRate {
 			if(LengthsArray[i] != 0)
 			{
 				Output.write(LengthsArray[i]+",");
-				saveLengths.add(LengthsArray.length);			//use list to store the lengths. 
+				saveLengths.add(i);			//use list to store the lengths. 
 			}
 			
 		}
@@ -131,6 +136,7 @@ public class LengthRate {
 		
 		Output.newLine();
 		Iterator it = saveLengths.iterator();					//create Iterator to run over the the List
+
 		Output.write("{");
 		while(it.hasNext())
 		{
@@ -168,6 +174,10 @@ public class LengthRate {
 		String fastA = "";
 		while((currLine = br.readLine()) != null)
 		{
+		if(currLine.isEmpty())
+		{
+			continue;
+		}
 			
 			
 		String tmp = currLine.substring(0, 1);
@@ -373,21 +383,12 @@ public class LengthRate {
 		return possibilities;
 	}
 	
-	public static void main()
-	{
-		
-	}
+
 /**
  * Test	
+ * @throws IOException 
  */
-//	public static void main(String args[]){
-//		LengthRate r = new LengthRate();
-//		for(int i = 0; i < 4; i++){
-//				System.out.print(r.getProb(i) +" ");
-//		}
-//		System.out.println();
-//		for(int i = 0; i < 4; i++){
-//			System.out.print(r.getLength(i)+" ");
-//		}
+//	public static void main(String args[]) throws IOException{
+//		saveSelectedLengths("example4.txt", "neu");
 //	}
 }
