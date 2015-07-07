@@ -26,7 +26,7 @@ public class Pore {
 	private String state = "Bored";
 	private int age = 0;
 	private int numbersOfTimeAsked = 0;
-	private int sequenceLength = 0; //for checking if more ticks are are done then sequence length s
+	private int sequenceLength = 0; //for checking if more ticks are are done then sequence length sf
 	private static int  ageLimit=0;
 	private static int [] deathProbs = new int[ageLimit];// the probabilities if the pore dies depending on ageLimit 
 	private static int [] sleepProbs = new int[500];// the probabilities if the pore goes to sleep depending on the time it last slept
@@ -129,7 +129,7 @@ public class Pore {
 		System.out.println(subseq);
 
 
-		String fasta = errorModel.applyErrorBasecalling(subseq, basecalling,"setting/default.setting");
+//		String fasta = errorModel.applyErrorBasecalling(subseq, basecalling,"setting/default.setting");
 		try{
 			fasta = SimulationError.applyErrorBasecalling(subseq);
 		}catch(Exception e){
