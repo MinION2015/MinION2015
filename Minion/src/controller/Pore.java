@@ -34,6 +34,7 @@ public class Pore {
 	private boolean beenAsleepOnce=false;
 	private int timeBetweenLastSlumber=0;
 	private int sleepTime=0; //time it has been sleeping
+	private boolean wokeUp=false;
 	
 	/**
 	 * @author Albert Langensiepen
@@ -55,24 +56,25 @@ public class Pore {
 	//Exceptions fŸr zu hohes age -> arrayoutofBounds schreiben
 	public static void main(String[] args) throws MyException, IOException
 	{
-		Pore p = new Pore(666);
-		//System.out.println(tryToDie(665));
-		LengthDistribution l = new LengthDistribution(1000);
-		Sequence seq = new Sequence(">","ATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG");
-		System.out.println(p.simulate(seq)); 
 		
-//		
-//		for(int i=0;i<probs.length;i++)
-//		{
-//			System.out.println(probs[i]);
-//		}
-//		System.out.println("LALALALALALS");
-//		for(int i=0;i<sleepProbs.length;i++)
-//		{
-//			System.out.println(sleepProbs[i]);
-//		}
-//		System.out.println(sleepProbs.length);
-//		System.out.println(sleepProbs[666]);
+		Pore p = new Pore(700);
+		
+		p.sleepTime=10;
+		p.beenAsleepOnce=true;
+		p.timeBetweenLastSlumber=400;
+		p.age=599;
+		p.numbersOfTimeAsked=5;
+		p.sequenceLength=10;
+		p.setStatus("Running");
+		System.out.println(p.checkStatus());
+		System.out.println("Pore State: "+p.state);
+		System.out.println("Age: "+p.age);
+		System.out.println("Numbers of Times Asked: "+p.numbersOfTimeAsked);
+		
+		//Sequence seq = new Sequence(">","ATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG");
+		//System.out.println(p.simulate(seq).getSequence()); 
+		
+
 		
 		
 	}
@@ -89,11 +91,11 @@ public class Pore {
 	 * @input a DNA sequence, an error model chosen by the user, a random sequence length from the Length Distribution and a basecalling code
 	 * @output a Sequence object
 	 */
-	public Sequence simulate(Sequence sequence) throws MyException
+	public Sequence simulate(Sequence sequence) throws Exception
 	{
 		Random rand = new Random();
 
-		int length =(int) LengthDistribution.getRandLength();
+		int length = (int) LengthDistribution.getRandLength();
 		
 		//checks if the random lengths are feasible
 		for(int i=0;i<10;i++)
@@ -106,22 +108,28 @@ public class Pore {
 			if(i==9)
 			{
 				throw new MyException(ErrorCodes.Pore_NOCAPABLESEQUENCELENGTH);
+				
 			}
 		}
+		
 		//random number between 0 and sequenceLength-lenght is created
 		int start = rand.nextInt(sequence.lengthOfSequence()-length);
 		
+		System.out.println(start);
+		
 		
 		/*
-		 * SequenceLengthThreshold is for the 
+		 * SequenceLengthThreshold is for the checkStatus-method
 		 */
 		sequenceLength = length;
 	
 
 		String subseq = sequence.getSequence().substring(start, start+length);
+		
+		System.out.println(subseq);
 
 
-		//String fasta = errorModel.applyErrorBasecalling(subseq, basecalling,"setting/default.setting");
+		String fasta = errorModel.applyErrorBasecalling(subseq, basecalling,"setting/default.setting");
 		try{
 			fasta = SimulationError.applyErrorBasecalling(subseq);
 		}catch(Exception e){
@@ -149,17 +157,53 @@ public class Pore {
 	 */
 	public String checkStatus()
 	{
+		if(wokeUp)
+		{
+			timeBetweenLastSlumber++;
+		}
+		
 		if(state.equals("Dead"))
 			return "Dead";
 		
+		if(state.equals("Finished"))
+			return "Bored";
+		
 		if(state.equals("Running"))
-		{
-			age++;
-			numbersOfTimeAsked++;
-			return "Running";
+		{	
+			// nur wŠhrend running? ? noch unklar!
+			if(numbersOfTimeAsked > sequenceLength) 
+			{
+				setStatus("Finished");
+				return "Finished";
+			}
+			else
+			{
+				
+
+				boolean dead=tryToDie(age);
+				
+				if(dead)
+				{
+					setStatus("Dead");
+					return "Dead";
+				}
+//				else if(state.equals("Finished"))
+//				{
+//					setStatus("Bored");
+//					return "Bored";
+//				}
+				else{
+					age++;
+					numbersOfTimeAsked++;
+					return "Running";
+				}
+			}
+			
+			
+//			age++;
+//			numbersOfTimeAsked++;
+//			return "Running";
 		}
-		
-		
 		
 		if(state.equals("Sleeping"))
 		{
@@ -167,16 +211,21 @@ public class Pore {
 			if(wake)
 			{
 				timeBetweenLastSlumber++;
+				wokeUp=true;
 				setStatus("Bored");
 				return "Bored";
 			}
-			else sleepTime++;
+			else{
+				sleepTime++;
+				return "Sleeping";
+			
+			}
 			
 		}
 		
 		if(state.equals("Bored"))
 		{
-			if(beenAsleepOnce=false)
+			if(!beenAsleepOnce)
 			{	
 			boolean asleep=tryToSleep(age);
 			
@@ -185,6 +234,7 @@ public class Pore {
 				setStatus("Sleeping");
 				timeBetweenLastSlumber=0;
 				beenAsleepOnce=true;
+				wokeUp=false;
 				return "Sleeping";
 			}
 			else return "Bored";
@@ -203,29 +253,8 @@ public class Pore {
 			else return "Bored";
 			}
 		}
-
-		
-		if(numbersOfTimeAsked > sequenceLength)
-		{
-			setStatus("Finished");
-			return "Finished";
-		}else
-		{
-			
-
-			boolean dead=tryToDie(age);
-			
-			if(dead)
-			{
-				setStatus("Dead");
-				return "Dead";
-			}else if(state.equals("Finished"))
-			{
-				setStatus("Bored");
-				return "Bored";
-			}
-			else return "Running";
-		}
+		//not sure about this
+		else return "Bored";
 		
 	}
 	
@@ -299,8 +328,8 @@ public class Pore {
 		boolean wake=false;
 		Random rand = new Random();
 		int r = rand.nextInt(100)+1;
-		System.out.println("zufallszahl: "+r);
-		System.out.println("Intervallsobergrenze: "+wakeProbs[sleepTime]);
+		//System.out.println("zufallszahl: "+r);
+		//System.out.println("Intervallsobergrenze: "+wakeProbs[sleepTime]);
 		if(r<=wakeProbs[sleepTime]) return wake=true;
 		else return wake=false;
 	}
