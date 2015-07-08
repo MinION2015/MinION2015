@@ -59,18 +59,18 @@ public class Pore {
 //		
 //		Pore p = new Pore(700);
 //		
-//		p.sleepTime=10;
-//		p.beenAsleepOnce=true;
-//		p.timeBetweenLastSlumber=400;
-//		p.age=599;
-//		p.numbersOfTimeAsked=5;
-//		p.sequenceLength=10;
-//		p.setStatus("Running");
-//		System.out.println(p.checkStatus());
-//		System.out.println("Pore State: "+p.state);
-//		System.out.println("Age: "+p.age);
-//		System.out.println("Numbers of Times Asked: "+p.numbersOfTimeAsked);
-//		
+////		p.sleepTime=10;
+////		p.beenAsleepOnce=true;
+////		p.timeBetweenLastSlumber=400;
+////		p.age=599;
+////		p.numbersOfTimeAsked=5;
+////		p.sequenceLength=10;
+////		p.setStatus("Running");
+////		System.out.println(p.checkStatus());
+////		System.out.println("Pore State: "+p.state);
+////		System.out.println("Age: "+p.age);
+////		System.out.println("Numbers of Times Asked: "+p.numbersOfTimeAsked);
+////		
 //		
 //		Sequence seq = new Sequence(">","ATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG");
 //		try {
@@ -98,7 +98,7 @@ public class Pore {
 	 * @input a DNA sequence, an error model chosen by the user, a random sequence length from the Length Distribution and a basecalling code
 	 * @output a Sequence object
 	 */
-	public Sequence simulate(Sequence sequence) throws Exception
+	public Sequence simulate(Sequence sequence) throws MyException
 	{
 		Random rand = new Random();
 

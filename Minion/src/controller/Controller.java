@@ -25,6 +25,7 @@ import LengthDistribution.LengthDistribution;
  *@input GUIOptions object containing all necessary information
  *@output file with results
  */
+
 public class Controller {
 	
 	private GUIOptions options;
@@ -35,17 +36,22 @@ public class Controller {
 	private int currentNumberOfTicks;
 	
 	
+	public Controller(){
+		
+	}
 	public Controller(GUIOptions options){
 		this.options = options;
 		//wrong filetype works
 		try{
 			checkFileEnding(options.getInputFilename());
 			this.fastA = new FastA();
+			
 			this.outputFastA = new FastA();
 			fastA.parse(options.getInputFilename());
 			this.flowcell = new Flowcell(options.getNumberOfPores(),options.getMaxAgeOfPores());
 			status = "Running";
 			//TODO options.getSetting or sth like that
+			//TODO create SettingFile
 			setupModel(options.getBasecalling(),"default",options.getWindowSizeForLengthDistribution());
 			currentNumberOfTicks = 0;
 		}catch(MyException e){
@@ -56,6 +62,7 @@ public class Controller {
 	}
 
 	public void run(){
+		System.out.println("");
 		try{	
 		
 			//Sequence seq = new Sequence("me","GGTTAAGCGACTAAGCGTACACGGTGGATGCCTAGGCAGTCAGAGGCGATGAAGGGCGTGCTAATCTGCGAAAAGCGTCGGTAAGCTGATATGAAGCGTTATAACCGACGATACCCGAATGGGGAAACCCAGTGCAATACGTTGCACTATCGTTAGATGAATACATAGTCTAACGAGGCGAACCGGGGGAACTGAAACATCTAAGTACCCCGAGGAAAAGAAATCAACCGAGATTCCCCCAGTAGCGGCGAGCGAACGGGGAGGAGCCCAGAGTCTGAATCAGTTTGTGTGTTAGTGGAAGCGTCTGGAAAGTCGCACGGTACAGGGTGATAGTCCCGTACACCAAAATGCACAGGCTGTGAACTCGATGAGTAGGGCGGGACACGTGACATCCTGTCTGAATATGGGGGGACCATCCTCCAAGGCTAAATACTCCTGACTGACCGATAGTGAACCAGTACCGTGAGGGAAAGGCGAAAAGAACCCCGGCGAGGGGAGTGAAATAGAACCTGAAACCGTGTACGTACAAGCAGTGGGAGCACCTTCGTGGTGTGACTGCGTACCTTTTGTATAATGGGTCAGCGACTTATATTTTGTAGCAAGGTTAACCGAATAGGGGAGCCGTAGGGAAACCGAGTCTTAACTAGGCGTCTAGTTGCAAGGTATAGACCCGAAACCCGGTGATCTAGCCATGGGCAGGTTGAAGGTTGGGTAACACTAACTGGAGGACCGAACCGACTAATGTTGAAAAATTAGCGGATGACTTGTGGTGGGGGTGAAAGGCCAATCAAACCGGGAGATAGCTGGTTCTCCCCGAAAGCTATTTAGGTAGCGCCTCGTGAACTCATCTTCGGGGGTAGAGCACTGTTTCGGCTAGGGGGCCATCCCGGCTTACCAAACCGATGCAAAGGTTAAGCGACTAAGCGTACACGGTGGATGCCTAGGCAGTCAGAGGCGATGAAGGGCGTGCTAATCTGCGAAAAGCGTCGGTAAGCTGATATGAAGCGTTATAACCGACGATACCCGAATGGGGAAACCCAGTGCAATACGTTGCACTATCGTTAGATGAATACATAGTCTAACGAGGCGAACCGGGGGAACTGAAACATCTAAGTACCCCGAGGAAAAGAAATCAACCGAGATTCCCCCAGTAGCGGCGAGCGAACGGGGAGGAGCCCAGAGTCTGAATCAGTTTGTGTGTTAGTGGAAGCGTCTGGAAAGTCGCACGGTACAGGGTGATAGTCCCGTACACCAAAATGCACAGGCTGTGAACTCGATGAGTAGGGCGGGACACGTGACATCCTGTCTGAATATGGGGGGACCATCCTCCAAGGCTAAATACTCCTGACTGACCGATAGTGAACCAGTACCGTGAGGGAAAGGCGAAAAGAACCCCGGCGAGGGGAGTGAAATAGAACCTGAAACCGTGTACGTACAAGCAGTGGGAGCACCTTCGTGGTGTGACTGCGTACCTTTTGTATAATGGGTCAGCGACTTATATTTTGTAGCAAGGTTAACCGAATAGGGGAGCCGTAGGGAAACCGAGTCTTAACTAGGCGTCTAGTTGCAAGGTATAGACCCGAAACCCGGTGATCTAGCCATGGGCAGGTTGAAGGTTGGGTAACACTAACTGGAGGACCGAACCGACTAATGTTGAAAAATTAGCGGATGACTTGTGGTGGGGGTGAAAGGCCAATCAAACCGGGAGATAGCTGGTTCTCCCCGAAAGCTATTTAGGTAGCGCCTCGTGAACTCATCTTCGGGGGTAGAGCACTGTTTCGGCTAGGGGGCCATCCCGGCTTACCAAACCGATGCAAA");
@@ -65,11 +72,11 @@ public class Controller {
 
 			while(currentNumberOfTicks < options.getTotalNumberOfTicks() && !status.equals("Stopped")  &&flowcell.getNumberOfPores() > 0){
 
-
+				pos = Chance.getRandInt(0, fastA.getSequence().size()-1);
+				flowcell.tick(fastA.getSequence().get(pos));
 				if(options.getWriteInFileOption().equals("Real-Time")){
 					try{
-						pos = Chance.getRandInt(0, fastA.getSequence().size()-1);
-						flowcell.tick(fastA.getSequence().get(pos));
+						
 						flowcell.getFlowcellOutput().writeInFile(options.getOutputFilename());
 						Thread.sleep(options.getDurationOfTick());
 					}catch(Exception e){
@@ -77,8 +84,6 @@ public class Controller {
 					}
 				}else if(options.getWriteInFileOption().equals("Write all")){
 					try{
-						pos = Chance.getRandInt(0, fastA.getSequence().size()-1);
-						flowcell.tick(fastA.getSequence().get(pos));
 						for(Sequence s : flowcell.getFlowcellOutput().getSequence()){
 							outputFastA.addSeq(s);
 						}
@@ -164,7 +169,7 @@ public class Controller {
 	}
 	
 	
-	private static void setupModel(int basecalling, String settingfile, int windowSize) throws Exception{
+	public static void setupModel(int basecalling, String settingfile, int windowSize) throws Exception{
 		BasecallingErrorRate basecallingError = new BasecallingErrorRate(basecalling,settingfile);
 		LengthDistribution lengthDistribution = new LengthDistribution(windowSize);	
 	}
@@ -179,12 +184,42 @@ public class Controller {
 		return fastA.getErrorInSequence();
 	}
 
-	public static void main(String[] args){
+/*	public static void main(String[] args){
 		
 		GUIOptions op = new GUIOptions("C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/src/example4.fasta","TestController.txt","Real-Time",1,1,100,10,100,10);
 		Controller cd = new Controller(op);
 		cd.run();
 	
+	}*/
+	public void setOption(GUIOptions options){
+		this.options = options;
+		//wrong filetype works
+		try{
+			checkFileEnding(options.getInputFilename());
+			this.fastA = new FastA();
+			this.outputFastA = new FastA();
+			fastA.parse(options.getInputFilename());
+			this.flowcell = new Flowcell(options.getNumberOfPores(),options.getMaxAgeOfPores());
+			status = "Running";
+			//TODO options.getSetting or sth like that
+			//TODO create SettingFile
+			setupModel(options.getBasecalling(),"default",options.getWindowSizeForLengthDistribution());
+			currentNumberOfTicks = 0;
+		}catch(MyException e){
+			System.err.println(e.getErrorMessage());
+		}catch(Exception e){
+			System.err.println(e.getMessage());
+		}
+	}
+	
+	public void writeOptions(){
+		
+		if(this.fastA != null){
+			System.out.println("FastA not null.");
+			if(this.outputFastA != null){
+				System.out.println("outputFastA not null.");
+			}
+		}
 	}
 
 }

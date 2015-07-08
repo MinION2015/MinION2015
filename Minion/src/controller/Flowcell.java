@@ -1,6 +1,6 @@
 package controller;
 
-import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,9 +8,7 @@ import reader.FastA;
 import reader.Sequence;
 import Basecalling.BasecallingErrorRate;
 import LengthDistribution.LengthDistribution;
-import error.Chance;
-import error.ErrorCodes;
-import error.MyException;
+import error.*;
 
 /**
  * 
@@ -46,8 +44,8 @@ public class Flowcell{
 		for(Pore p : poreList){
 			try{
 				//TODO comment in
-				//p.simulate(seq);
-				//System.out.println("Pore is simulated");
+				p.simulate(seq);
+				System.out.println("Pore is simulated");
 				checkFlowcellState();
 				System.out.println("flowcellstatecheck is executed");
 			}catch(MyException e){

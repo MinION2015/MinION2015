@@ -253,7 +253,7 @@ public class createSetting {
 	
 	/* CONFIGURATION OF BASECALLING SETTING FILES
 	 * 1D
-	 * A#% for A to A#% for A to T#% for A to G#% for A to C
+	 * A#0.2 for A to A#% for A to T#% for A to G#% for A to C
 	 * T#% for T to A#% for T to T#% for T to G#% for T to C
 	 * G#% for G to A#% for G to T#% for G to G#% for G to C
 	 * C#% for C to A#% for C to T#% for C to G#% for C to C

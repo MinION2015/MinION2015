@@ -27,13 +27,14 @@ public class minION extends javax.swing.JFrame {
     javax.swing.JFileChooser createLengthDistributionFastAFileChooser = new javax.swing.JFileChooser();
     javax.swing.JFileChooser settingFileDirectory = new javax.swing.JFileChooser();
     
-    	private String inputFilename;
+    private String inputFilename;
 	private String outputFilename;
 	private int basecalling;
 	private int ticksPerSecond;
 	private int numberOfPores;
 	private int runningTime;
 	private int windowSizeForLengthDistribution;
+	private Controller cd = new Controller();
     /**
      * Creates new form NewJFrame
      */
@@ -742,8 +743,7 @@ public class minION extends javax.swing.JFrame {
     pauseButton.setEnabled(true);
     stopButton.setEnabled(true);
 
-	String message= "<html>";
-	Controller cd = null;
+	String message= "";
 	int basecalling = 0;
 
 	String chosen = (String) dimComboBox.getSelectedItem();
@@ -786,22 +786,20 @@ public class minION extends javax.swing.JFrame {
 				Integer.parseInt(durationPerTickFormattedTextField.getText()),
 				Integer.parseInt(numberOfTicksTextField.getText()),
 				Integer.parseInt(windowSizeFormattedTextField.getText()));
-
-		cd = new Controller(options);
-
-		cd.run();
-		
-	
-
+		cd.writeOptions();
+		cd.setOption(options);
+		cd.writeOptions();
+		//cd.run();
+			
 
 	int length= cd.getFastAErrors().size();
 
 	for(int i=0; i<length;i++)
 	{
-		if(cd.getFastAErrors().get(i).isCriticalError()) {
-			JOptionPane.showMessageDialog(null, cd.getFastAErrors().get(i).getErrorMessage(), "Critical Error", JOptionPane.ERROR_MESSAGE);
+		if(this.cd.getFastAErrors().get(i).isCriticalError()) {
+			JOptionPane.showMessageDialog(null, this.cd.getFastAErrors().get(i).getErrorMessage(), "Critical Error", JOptionPane.ERROR_MESSAGE);
 		} else {
-			message= message + " " + cd.getFastAErrors().get(i).getErrorMessage()+"<br>";
+			message= message + " " + this.cd.getFastAErrors().get(i).getErrorMessage()+"<br>";
 		}
 	}
 
@@ -812,8 +810,14 @@ public class minION extends javax.swing.JFrame {
     }                                           
 
     private void pauseButtonActionPerformed(java.awt.event.ActionEvent evt) {                                            
-    stopButton.setEnabled(false);
-    //cd.pause();
+    if(pauseButton.getText()=="Pause"){
+    	stopButton.setEnabled(false);
+    	pauseButton.setText("Resume");
+        cd.pause();
+    }else
+    	stopButton.setEnabled(true);
+    	pauseButton.setText("Pause");
+    	cd.resume();  	
     }                                           
 
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {                                             
@@ -921,6 +925,7 @@ public class minION extends javax.swing.JFrame {
     private void stopButtonActionPerformed(java.awt.event.ActionEvent evt) {                                           
     pauseButton.setEnabled(false);
     stopButton.setEnabled(false);
+    cd.stop();
     }                                          
 
  
