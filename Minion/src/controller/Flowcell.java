@@ -30,7 +30,7 @@ public class Flowcell{
 		try{
 			addPores(numberOfPores);
 		}catch(MyException e){
-			System.err.println(e.getErrorMessage());
+			System.err.println("Konstruktor: "+e.getErrorMessage());
 		}
 		this.maxAgeOfPores = maxAgeOfPores;
 		fastA = new FastA();
@@ -45,15 +45,17 @@ public class Flowcell{
 	public void startFlowcell(Sequence seq) throws MyException{
 		for(Pore p : poreList){
 			try{
-				p.simulate(seq);
-				System.out.println("Pore is simulated");
+				//TODO comment in
+				//p.simulate(seq);
+				//System.out.println("Pore is simulated");
 				checkFlowcellState();
 				System.out.println("flowcellstatecheck is executed");
 			}catch(MyException e){
+				//if flowcell contains pores then keep going
 				if(e.getErrorCode() == 4001){
 					continue;
 				}else{
-					System.err.println(e.getErrorMessage());
+					System.err.println("start Flowcell: "+e.getErrorMessage());
 				}
 			}
 			
@@ -68,16 +70,16 @@ public class Flowcell{
 	
 		try{
 			for(int i = 0; i < numberOfPores; i++){
-				//TODO change constructor as soon as pore is fixed
-				Pore p = new Pore();
+
+				Pore p = new Pore(maxAgeOfPores);
 				poreList.add(p);
 			}
 			checkFlowcellState();
 		
 		}catch(MyException e){
-			//If error code says flowcell is not empty/containing alive pores, print out the number of alove pores 
+			//If checkFlowcellState is executed will throw an containing pores error if numOfPore =/ 0; print out the number of alive pores 
 			if(e.getErrorCode() == 4001){
-				System.out.println(e.getErrorMessage() + " "+getNumberOfPores());
+				System.out.println(e.getErrorMessage() + " "+getNumberOfPores()+"(addPores)");
 			}else{
 				//else print out any other error message
 				System.err.println(e.getErrorMessage());	
@@ -97,14 +99,14 @@ public class Flowcell{
 		removeDeadPores();
 		
 		if(poreList.isEmpty()){
-			System.err.println("Flowcell is empty");
+			System.err.println("Flowcell is empty check method");
 			throw new MyException(ErrorCodes.FLOWCELL_EMPTY);
 		}
 		else{
 				//for testing purposes
-				for(Pore p :poreList){
-					System.out.println("An alive pore is still in flowcell");
-				}
+//				for(Pore p :poreList){
+//					System.out.println("An alive pore is still in flowcell");
+//				}
 				throw new MyException(ErrorCodes.FLOWCELL_CONTAINS_PORES);
 		}
 	}
@@ -117,15 +119,16 @@ public class Flowcell{
 		
 		List<Pore> posOfDeadPores = new ArrayList<Pore>(); 
 		for(Pore p : poreList){
-			String statusOfPore = p.checkStatus();//"Dead";//"alive";
+			System.out.println("remove Dead POres, p.checkStatus: " +p.checkStatus());
+			String statusOfPore = "Alive";//"Dead";//"alive";
 			if(statusOfPore.equals("Dead")){
 					posOfDeadPores.add(p);
-					//System.out.println("This pore is dead");
+					System.out.println("This pore is dead");
 			}
 			
 		}
 		for(Pore i : posOfDeadPores){
-			//System.out.println("pore #"+posOfDeadPores.indexOf(i)+" got removed removed");
+			System.out.println("pore #"+posOfDeadPores.indexOf(i)+" got removed");
 			poreList.remove(i);
 		}
 	}
@@ -136,11 +139,11 @@ public class Flowcell{
 	public void tick(Sequence seq){
 		fastA =new FastA();
 		for(Pore p : poreList){
-			//TODO apparently never changes it state, thus still only hard coded version works
-			//also prob the reason why the output doesn't change as no pore gets resimulated
+			//TODO can't change right now, as simulate doesn't work, thus will hardcode it "Finished and fetch the tick input sequence
 			/******************************/
-			String statusOfPore = "Finished";//p.checkStatus();//"Running"//"Bored"//"Finished"
+			String statusOfPore = "Finished";//"Running"//"Bored"//"Finished"
 			/*******************************/
+			
 			//just for playing around with the status;
 //			double rand = Chance.getRand();
 //			if(rand<0.3){
@@ -156,24 +159,38 @@ public class Flowcell{
 				continue;
 			}else if(statusOfPore.equals("Bored")){
 				System.out.println("I am bored");
-				try{
-					p.simulate(seq);
-				}catch(MyException e){
-					System.err.println(e.getErrorMessage());
-				}
+				//TODO
+//				try{
+//					p.simulate(seq);
+//				}catch(MyException e){
+//					System.err.println(e.getErrorMessage());
+//				}
 			}else if(statusOfPore.equals("Finished")){
 				//collecting output
 				System.out.println("I am done.");
 				
-				seq = p.getSequenceFromPore();
 				try{
 					//TODO each pore gives me the excact same output x-times
-					fastA.addSeq(p.getSequenceFromPore());
+//					seq = p.getSequenceFromPore();
+					fastA.addSeq(seq);
 				}catch(Exception e){
-					System.err.println(e.getMessage());
+					System.err.println("Error in tick/collecting output: "+e.getMessage());
 				}
 			}
-		}	
+			//TODO think about if necessary
+//			try{
+//				checkFlowcellState();
+//				System.out.println("chcek flowcell state in tick");
+//			}catch(MyException e){
+//				//if flowcell contains pores then keep going
+//				if(e.getErrorCode() == 4001){
+//					continue;
+//				}else{
+//					System.err.println(e.getErrorMessage() + "tik");
+//				}
+//			}
+		}
+		
 	}
 	
 	public FastA getFlowcellOutput(){
@@ -183,13 +200,13 @@ public class Flowcell{
 		return poreList.size();
 	}
 	
-//	//All test suffice
-//	/*
-//	 * tests
-//	 */
+	//All test suffice
+	/*
+	 * tests
+	 */
 //	public static void main(String[] args) throws MyException,IOException{
 //		
-//	Flowcell g = new Flowcell(1);
+//	Flowcell g = new Flowcell(5,4);
 //	try{
 //		BasecallingErrorRate err = new BasecallingErrorRate(1, "default");
 //		LengthDistribution lenght = new LengthDistribution(10);
@@ -197,16 +214,16 @@ public class Flowcell{
 //		System.err.println(e.getMessage());
 //	}
 //	Sequence seq = new Sequence("me","GGTTAAGCGACTAAGCGTACACGGTGGATGCCTAGGCAGTCAGAGGCGATGAAGGGCGTGCTAATCTGCGAAAAGCGTCGGTAAGCTGATATGAAGCGTTATAACCGACGATACCCGAATGGGGAAACCCAGTGCAATACGTTGCACTATCGTTAGATGAATACATAGTCTAACGAGGCGAACCGGGGGAACTGAAACATCTAAGTACCCCGAGGAAAAGAAATCAACCGAGATTCCCCCAGTAGCGGCGAGCGAACGGGGAGGAGCCCAGAGTCTGAATCAGTTTGTGTGTTAGTGGAAGCGTCTGGAAAGTCGCACGGTACAGGGTGATAGTCCCGTACACCAAAATGCACAGGCTGTGAACTCGATGAGTAGGGCGGGACACGTGACATCCTGTCTGAATATGGGGGGACCATCCTCCAAGGCTAAATACTCCTGACTGACCGATAGTGAACCAGTACCGTGAGGGAAAGGCGAAAAGAACCCCGGCGAGGGGAGTGAAATAGAACCTGAAACCGTGTACGTACAAGCAGTGGGAGCACCTTCGTGGTGTGACTGCGTACCTTTTGTATAATGGGTCAGCGACTTATATTTTGTAGCAAGGTTAACCGAATAGGGGAGCCGTAGGGAAACCGAGTCTTAACTAGGCGTCTAGTTGCAAGGTATAGACCCGAAACCCGGTGATCTAGCCATGGGCAGGTTGAAGGTTGGGTAACACTAACTGGAGGACCGAACCGACTAATGTTGAAAAATTAGCGGATGACTTGTGGTGGGGGTGAAAGGCCAATCAAACCGGGAGATAGCTGGTTCTCCCCGAAAGCTATTTAGGTAGCGCCTCGTGAACTCATCTTCGGGGGTAGAGCACTGTTTCGGCTAGGGGGCCATCCCGGCTTACCAAACCGATGCAAAGGTTAAGCGACTAAGCGTACACGGTGGATGCCTAGGCAGTCAGAGGCGATGAAGGGCGTGCTAATCTGCGAAAAGCGTCGGTAAGCTGATATGAAGCGTTATAACCGACGATACCCGAATGGGGAAACCCAGTGCAATACGTTGCACTATCGTTAGATGAATACATAGTCTAACGAGGCGAACCGGGGGAACTGAAACATCTAAGTACCCCGAGGAAAAGAAATCAACCGAGATTCCCCCAGTAGCGGCGAGCGAACGGGGAGGAGCCCAGAGTCTGAATCAGTTTGTGTGTTAGTGGAAGCGTCTGGAAAGTCGCACGGTACAGGGTGATAGTCCCGTACACCAAAATGCACAGGCTGTGAACTCGATGAGTAGGGCGGGACACGTGACATCCTGTCTGAATATGGGGGGACCATCCTCCAAGGCTAAATACTCCTGACTGACCGATAGTGAACCAGTACCGTGAGGGAAAGGCGAAAAGAACCCCGGCGAGGGGAGTGAAATAGAACCTGAAACCGTGTACGTACAAGCAGTGGGAGCACCTTCGTGGTGTGACTGCGTACCTTTTGTATAATGGGTCAGCGACTTATATTTTGTAGCAAGGTTAACCGAATAGGGGAGCCGTAGGGAAACCGAGTCTTAACTAGGCGTCTAGTTGCAAGGTATAGACCCGAAACCCGGTGATCTAGCCATGGGCAGGTTGAAGGTTGGGTAACACTAACTGGAGGACCGAACCGACTAATGTTGAAAAATTAGCGGATGACTTGTGGTGGGGGTGAAAGGCCAATCAAACCGGGAGATAGCTGGTTCTCCCCGAAAGCTATTTAGGTAGCGCCTCGTGAACTCATCTTCGGGGGTAGAGCACTGTTTCGGCTAGGGGGCCATCCCGGCTTACCAAACCGATGCAAA");
-//	g.startFlowcell(seq);
+//	//g.startFlowcell(seq);
 //	g.tick(seq);
+//	g.removeDeadPores();
 //	FastA f = g.getFlowcellOutput();
 //	f.writeInFile("TestFlowcell.txt");
-//	//Length Distribution throws nullpointers, thus I can't retest the startFlowcellmethod right now
 //	
 //	
 //	//Flowcell f = new Flowcell(0);
-//		//Flowcell t = new Flowcell(-10);
-//		//Flowcell d = new Flowcell(10);
+//	//Flowcell t = new Flowcell(-10);
+//	//Flowcell d = new Flowcell(10);
 //	
 //	
 //	}
