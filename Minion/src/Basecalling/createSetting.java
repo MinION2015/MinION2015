@@ -10,49 +10,51 @@ import java.io.IOException;
  * 
  * @author kevinlindner
  * @Functionality the function creates a new settings file with a given blast file 
+ * to see how the basecalling configuration works look at the notes below
  * @Input as inout u need the sourcepath of the blast file, the name of the created setting file and the dimension of the blast file
  * @Ouput the function itself doesnt give a value back, but generates a .setting file
  */
 public class createSetting {
 	
 	
-	double percentageMatrix[][] = new double[5][5];
+	double percentageMatrix[][] = new double[4][4];
+	double insertionProb;
+	double deletionProb;
 	
-	public createSetting(String sourcepath, String outputName, int dimension) throws IOException{
-		this.percentageMatrix=calculate(sourcepath);
-		print(percentageMatrix,outputName,dimension);
+	public createSetting(String sourcepath, String outputPath, int dimension) throws IOException{
+		calculate(sourcepath);
+		print(outputPath,dimension);
 	}
 	
-	private double[][] calculate(String sourcepath) throws IOException{
+	private void calculate(String sourcepath) throws IOException{
 
 		BufferedReader Input = new BufferedReader(new FileReader(sourcepath));
-		
-		char cacheChar;
+		String cacheString = "";
+		int endInt = 0;
 		int end=0;
 		String query= "";
 		String sbjct= "";
 		//A T G C -
-		double[][] matrix = new double[5][5];
-		for(int i=0;i<5;i++)
-			for(int j=0;j<5;j++)
+		double[][] matrix = new double[4][4];
+		for(int i=0;i<4;i++)
+			for(int j=0;j<4;j++)
 				matrix[i][j]=0;
 		
 		int countA = 0;
 		int countT = 0;
 		int countG = 0;
 		int countC = 0;
-		int countminus = 0;
+		int countAll = 0;
+		int countInsertion = 0;
+		int countDeletion = 0;
 
-		while(true){
-			while(true){
-			Input.readLine();
-			Input.mark(1000);
-			cacheChar=(char) Input.read();
-			Input.reset();
-			if(cacheChar=='Q')
-				break;
+		do{
+			while(cacheString.contains("Query") && !(cacheString.contains("Query="))){
+				Input.mark(1000);
+				cacheString = Input.readLine();
+				Input.reset();
 			}
-			while(true){
+			do {
 			query = Input.readLine();
 			Input.readLine();
 			sbjct = Input.readLine();
@@ -107,50 +109,24 @@ public class createSetting {
 				if(query.charAt(i)=='C'&&sbjct.charAt(i)=='C'){
 					matrix[3][3]++;
 				countC++;}
-				if(query.charAt(i)=='-'&&sbjct.charAt(i)=='A'){
-					matrix[0][4]++;
-				countA++;}
-				if(query.charAt(i)=='-'&&sbjct.charAt(i)=='T'){
-					matrix[1][4]++;
-				countT++;}
-				if(query.charAt(i)=='-'&&sbjct.charAt(i)=='G'){
-					matrix[2][4]++;
-				countG++;}
-				if(query.charAt(i)=='-'&&sbjct.charAt(i)=='C'){
-					matrix[3][4]++;
-				countC++;}
-				if(query.charAt(i)=='A'&&sbjct.charAt(i)=='-'){
-					matrix[4][0]++;
-				countminus++;}
-				if(query.charAt(i)=='T'&&sbjct.charAt(i)=='-'){
-					matrix[4][1]++;
-				countminus++;}
-				if(query.charAt(i)=='G'&&sbjct.charAt(i)=='-'){
-					matrix[4][2]++;
-				countminus++;}
-				if(query.charAt(i)=='C'&&sbjct.charAt(i)=='-'){
-					matrix[4][3]++;
-				countminus++;}
-			}	
-			Input.mark(1000);
-			cacheChar=(char) Input.read();
-			Input.reset();
-			if(cacheChar!='Q')
-				break;
-			}
+				if(sbjct.charAt(i)=='-')
+					countInsertion++;
+				if(query.charAt(i)=='-')
+					countDeletion++;
+				}	
+			} while (query.contains("Query"));
 			
-			Input.mark(100000);
+			Input.mark(200);
 			for(int i=0;i<100;i++){
-			Input.readLine();
+			endInt = Input.read();
 			}
-			end= Input.read();
-			Input.reset();
-			if(end==-1)
-				break;		
-		}
+			Input.reset();	
+		}while(endInt != -1);
 		
-		for(int i=0;i<5;i++){
-			for(int j=0;j<5;j++){
+		countAll = countA+countT+countC+countG+countDeletion+countInsertion;
+		
+		for(int i=0;i<4;i++){
+			for(int j=0;j<4;j++){
 				switch(i){
 				case 0:
 					matrix[i][j]=matrix[i][j]/countA;
@@ -164,19 +140,18 @@ public class createSetting {
 				case 3:
 					matrix[i][j]=matrix[i][j]/countC;
 					break;
-				case 4:
-					matrix[i][j]=matrix[i][j]/countminus;
-					break;
 				}
 			}
 		}
-		return matrix;
+		
+		insertionProb=countInsertion/countAll;
+		deletionProb=countDeletion/countAll;
+		percentageMatrix=matrix;
 	}
 	
 	
-	private void print(double matrix[][], String outputName, int dimension) throws IOException{
-		
-		BufferedWriter Output = new BufferedWriter(new FileWriter("src/settingFiles/"+outputName+".setting"));
+	private void print(String outputPath, int dimension) throws IOException{
+		BufferedWriter Output = new BufferedWriter(new FileWriter(outputPath));
 		Output.write("1D");
 		if(dimension==1){
 			for(int i=0;i<4;i++){
@@ -198,106 +173,103 @@ public class createSetting {
 					Output.write("C");
 					break;
 				}
-				for(int j=0;j<5;j++){
-					Output.newLine();
-					Output.write(Double.toString(matrix[i][j]));
+				for(int j=0;j<4;j++){
+					Output.write("#"+Double.toString(percentageMatrix[i][j]));
 				}
 			}	
-			for(int i=0;i<25;i++){
-				Output.newLine();
-				Output.write("0");
-			}
+			Output.newLine();
+			Output.write("IN#"+insertionProb);
+			Output.newLine();
+			Output.write("OUT#"+deletionProb);
+			Output.newLine();
+			Output.write("2D");
+			Output.newLine();
+			Output.write("A#0#0#0#0");
+			Output.newLine();
+			Output.write("T#0#0#0#0");
+			Output.newLine();
+			Output.write("G#0#0#0#0");
+			Output.newLine();
+			Output.write("C#0#0#0#0");
+			Output.newLine();
+			Output.write("IN#0");
+			Output.newLine();
+			Output.write("OUT#0");
 		}else if(dimension==2){
-			Output.write("0");
-			for(int i=0;i<24;i++){
+			Output.write("1D");
+			Output.newLine();
+			Output.write("A#0#0#0#0");
+			Output.newLine();
+			Output.write("T#0#0#0#0");
+			Output.newLine();
+			Output.write("G#0#0#0#0");
+			Output.newLine();
+			Output.write("C#0#0#0#0");
+			Output.newLine();
+			Output.write("IN#0");
+			Output.newLine();
+			Output.write("OUT#0");
+			Output.newLine();
+		for(int i=0;i<4;i++){
+			switch(i){
+			case 0:
 				Output.newLine();
-				Output.write("0");
+				Output.write("A");
+				break;
+			case 1:
+				Output.newLine();
+				Output.write("T");
+				break;
+			case 2:
+				Output.newLine();
+				Output.write("G");
+				break;
+			case 3:
+				Output.newLine();
+				Output.write("C");
+				break;
 			}
-			for(int i=0;i<5;i++){
-				switch(i){
-				case 0:
-					Output.newLine();
-					Output.write("A");
-					break;
-				case 1:
-					Output.newLine();
-					Output.write("T");
-					break;
-				case 2:
-					Output.newLine();
-					Output.write("G");
-					break;
-				case 3:
-					Output.newLine();
-					Output.write("C");
-					break;
-				}
-				for(int j=0;j<5;j++){
-					Output.newLine();
-					Output.write(Double.toString(matrix[i][j]));
-					Output.newLine();
-					Output.write(Double.toString(matrix[i][j]));
-					Output.newLine();
-					Output.write(Double.toString(matrix[i][j]));
-					Output.newLine();
-					Output.write(Double.toString(matrix[i][j]));
-					Output.newLine();
-					Output.write(Double.toString(matrix[i][j]));
-				}
-			}	
-		}else{
-			for(int k=0;k<2;k++){
-				switch(k){
-				case 0:
-					Output.write("1D");
-					break;
-				case 1:
-					Output.write("2D");
-					break;
-				}
-			for(int i=0;i<5;i++){
-				switch(i){
-				case 0:
-					Output.newLine();
-					Output.write("A");
-					break;
-				case 1:
-					Output.newLine();
-					Output.write("T");
-					break;
-				case 2:
-					Output.newLine();
-					Output.write("G");
-					break;
-				case 3:
-					Output.newLine();
-					Output.write("C");
-					break;
-				}
-				for(int j=0;j<5;j++){
-					Output.newLine();
-					Output.write(Double.toString(matrix[i][j]));
-					Output.newLine();
-					Output.write(Double.toString(matrix[i][j]));
-					Output.newLine();
-					Output.write(Double.toString(matrix[i][j]));
-					Output.newLine();
-					Output.write(Double.toString(matrix[i][j]));
-					Output.newLine();
-					Output.write(Double.toString(matrix[i][j]));
-				}
-			}	
+			for(int j=0;j<4;j++){
+				Output.write("#"+Double.toString(percentageMatrix[i][j]));
 			}
+			Output.newLine();
+			Output.write("IN#"+insertionProb);
+			Output.newLine();
+			Output.write("OUT#"+deletionProb);
+		}	
+		
+		
+		
 			
-		}
+		}else
+			Output.write("ERROR: WRONG DIMENSION");
 		Output.close();
-			
 	}
-	/* works
-	public static void main(String args[]) throws IOException{
+	
 
-	createSetting create = new createSetting("run09_4_-5_5_5.txt","settingname",1);
-	}
-	*/
+	
+	
+	/* CONFIGURATION OF BASECALLING SETTING FILES
+	 * 1D
+	 * A#% for A to A#% for A to T#% for A to G#% for A to C
+	 * T#% for T to A#% for T to T#% for T to G#% for T to C
+	 * G#% for G to A#% for G to T#% for G to G#% for G to C
+	 * C#% for C to A#% for C to T#% for C to G#% for C to C
+	 * IN% for an - Insertion
+	 * OUT% to delete a Base
+	 * 2D
+	 * A#% for A to A#% for A to T#% for A to G#% for A to C
+	 * T#% for T to A#% for T to T#% for T to G#% for T to C
+	 * G#% for G to A#% for G to T#% for G to G#% for G to C
+	 * C#% for C to A#% for C to T#% for C to G#% for C to C
+	 * IN% for an - Insertion
+	 * OUT% to delete a Base
+	 */
+	
+	
+	
+	
+	
+	
 	
 }

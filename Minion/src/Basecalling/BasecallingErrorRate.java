@@ -24,55 +24,77 @@ import error.MyException;
 public class BasecallingErrorRate {
 
 
-	private static double[][] transProb;
-	private static char[] base = {'A','T','G','C','-'};
+	private static double[][] transProbMatrix;
+	private static char[] base = {'A','T','G','C'};
+	private static double insertionProb = 0;
+	private static double deletionProb = 0;
 	
-	public BasecallingErrorRate(int basecalling,String settingFilename) throws Exception{
-		this.transProb = new double[4][5];
-		generate(basecalling, settingFilename);
+	public BasecallingErrorRate(int dimension,String settingFilePath) throws Exception{
+		BasecallingErrorRate.transProbMatrix = new double[4][4];
+		generate(dimension, settingFilePath);
 		
 	}
 	
-	private static void generate(int basecalling,String settingFilename) throws Exception{
-		BufferedReader Input = new BufferedReader(new FileReader("src/settingFiles/"+settingFilename+".setting"));
-			if(basecalling == 1){
+	
+	private static void generate(int dimension,String settingFilePath) throws Exception{
+		char cacheChar = ' ';
+		String Value = "";
+		BufferedReader Input = new BufferedReader(new FileReader(settingFilePath));
+			if(dimension == 1){
 				Input.readLine();
 				Input.readLine();
-			}else if(basecalling == 2){
-				for(int i=0;i<27;i++)
+			}else if(dimension == 2)
+				for(int i=0;i<10;i++)
 					Input.readLine();
+			
+			for(int i=0;i<4;i++){
+				cacheChar=' ';
+				Value = "";
+				while(cacheChar!='#')
+					cacheChar=(char) Input.read();
+				for(int j=0;j<4;j++){
+					cacheChar=' ';
+					while(cacheChar!='#'&&cacheChar!='I'){
+						cacheChar=(char) Input.read();
+						Value = Value+cacheChar;
+						transProbMatrix[i][j] = Double.parseDouble(Value);
+					}
+				}
 			}
-				transProb[0][0] = Double.parseDouble(Input.readLine());
-				transProb[0][1] = transProb[0][0]+Double.parseDouble(Input.readLine());
-				transProb[0][2] = transProb[0][1]+Double.parseDouble(Input.readLine());
-				transProb[0][3] = transProb[0][2]+Double.parseDouble(Input.readLine());
-				transProb[0][4] = transProb[0][3]+Double.parseDouble(Input.readLine());
-				Input.readLine();
-				transProb[1][0] = Double.parseDouble(Input.readLine());
-				transProb[1][1] = transProb[1][0]+Double.parseDouble(Input.readLine());
-				transProb[1][2] = transProb[1][1]+Double.parseDouble(Input.readLine());
-				transProb[1][3] = transProb[1][2]+Double.parseDouble(Input.readLine());
-				transProb[1][4] = transProb[1][3]+Double.parseDouble(Input.readLine());
-				Input.readLine();
-				transProb[2][0] = Double.parseDouble(Input.readLine());
-				transProb[2][1] = transProb[2][0]+Double.parseDouble(Input.readLine());
-				transProb[2][2] = transProb[2][1]+Double.parseDouble(Input.readLine());
-				transProb[2][3] = transProb[2][2]+Double.parseDouble(Input.readLine());
-				transProb[2][4] = transProb[2][3]+Double.parseDouble(Input.readLine());
-				Input.readLine();
-				transProb[3][0] = Double.parseDouble(Input.readLine());
-				transProb[3][1] = transProb[3][0] +Double.parseDouble(Input.readLine());
-				transProb[3][2] = transProb[3][1] +Double.parseDouble(Input.readLine());
-				transProb[3][3] = transProb[3][2] +Double.parseDouble(Input.readLine());
-				transProb[3][4] = transProb[3][3]+Double.parseDouble(Input.readLine());
+			while(cacheChar!='#')
+				cacheChar=(char) Input.read();
+			Value = "";
+			cacheChar = ' ';
+			while(cacheChar!='#'&&cacheChar!='O'){
+				cacheChar=(char) Input.read();
+				Value = Value+cacheChar;
+			}
+			insertionProb = Double.parseDouble(Value);
+			Value = "";
+			cacheChar = ' ';
+			while(cacheChar!='#')
+				cacheChar=(char) Input.read();
+			while(cacheChar!='#'){
+				cacheChar=(char) Input.read();
+				Value = Value+cacheChar;
+			}
+			deletionProb = Double.parseDouble(Value);
 	}
 	
 	public static double getValue(int i, int j){
-		return transProb[i][j];
+		return transProbMatrix[i][j];
 	}
 	
 	public static String getBase(int i){
 		return Character.toString(base[i]);
+	}
+	
+	public static double getInsertionProb(){
+		return insertionProb;
+	}
+	
+	public static double getDeletionProb(){
+		return deletionProb;
 	}
 	
 	public static  int getRow(char a){
@@ -92,8 +114,6 @@ public class BasecallingErrorRate {
 		try {
 			err = new BasecallingErrorRate(2,"default");
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		for(int i = 0; i < 4;i++){
 			for(int j = 0; j < 5;j++){
