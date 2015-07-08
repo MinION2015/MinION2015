@@ -24,13 +24,12 @@ import error.MyException;
 public class BasecallingErrorRate {
 
 
-	private static double[][] transProbMatrix;
+	private static double[][] transProbMatrix = new double[4][4];
 	private static char[] base = {'A','T','G','C'};
 	private static double insertionProb = 0;
 	private static double deletionProb = 0;
 	
 	public BasecallingErrorRate(int dimension,String settingFilePath) throws Exception{
-		BasecallingErrorRate.transProbMatrix = new double[4][4];
 		generate(dimension, settingFilePath);
 		
 	}
@@ -79,6 +78,7 @@ public class BasecallingErrorRate {
 				Value = Value+cacheChar;
 			}
 			deletionProb = Double.parseDouble(Value);
+			Input.close();
 	}
 	/*
 	public static void age(){
