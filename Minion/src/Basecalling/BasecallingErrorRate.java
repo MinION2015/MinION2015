@@ -80,6 +80,17 @@ public class BasecallingErrorRate {
 			}
 			deletionProb = Double.parseDouble(Value);
 	}
+	/*
+	public static void age(){
+		insertionProb=insertionProb*1.1;
+		deletionProb=deletionProb*1.1;
+		for(int i=0;i<4;i++){
+			transProbMatrix[i][]
+		}
+		*/	
+				
+				
+	
 	
 	public static double getValue(int i, int j){
 		return transProbMatrix[i][j];
