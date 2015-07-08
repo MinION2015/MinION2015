@@ -27,13 +27,14 @@ public class minION extends javax.swing.JFrame {
     javax.swing.JFileChooser createLengthDistributionFastAFileChooser = new javax.swing.JFileChooser();
     javax.swing.JFileChooser settingFileDirectory = new javax.swing.JFileChooser();
     
-    	private String inputFilename;
+    private String inputFilename;
 	private String outputFilename;
 	private int basecalling;
 	private int ticksPerSecond;
 	private int numberOfPores;
 	private int runningTime;
 	private int windowSizeForLengthDistribution;
+	private Controller cd = new Controller();
     /**
      * Creates new form NewJFrame
      */
@@ -743,7 +744,6 @@ public class minION extends javax.swing.JFrame {
     stopButton.setEnabled(true);
 
 	String message= "<html>";
-	Controller cd = null;
 	int basecalling = 0;
 
 	String chosen = (String) dimComboBox.getSelectedItem();
@@ -786,10 +786,12 @@ public class minION extends javax.swing.JFrame {
 				Integer.parseInt(durationPerTickFormattedTextField.getText()),
 				Integer.parseInt(numberOfTicksTextField.getText()),
 				Integer.parseInt(windowSizeFormattedTextField.getText()));
-
-		cd = new Controller(options);
-
-		cd.run();
+		cd.writeOptions();
+		cd.setOption(options);
+		cd.writeOptions();
+		//cd.run();
+		
+		
 		
 	
 
@@ -798,10 +800,10 @@ public class minION extends javax.swing.JFrame {
 
 	for(int i=0; i<length;i++)
 	{
-		if(cd.getFastAErrors().get(i).isCriticalError()) {
-			JOptionPane.showMessageDialog(null, cd.getFastAErrors().get(i).getErrorMessage(), "Critical Error", JOptionPane.ERROR_MESSAGE);
+		if(this.cd.getFastAErrors().get(i).isCriticalError()) {
+			JOptionPane.showMessageDialog(null, this.cd.getFastAErrors().get(i).getErrorMessage(), "Critical Error", JOptionPane.ERROR_MESSAGE);
 		} else {
-			message= message + " " + cd.getFastAErrors().get(i).getErrorMessage()+"<br>";
+			message= message + " " + this.cd.getFastAErrors().get(i).getErrorMessage()+"<br>";
 		}
 	}
 
@@ -813,7 +815,7 @@ public class minION extends javax.swing.JFrame {
 
     private void pauseButtonActionPerformed(java.awt.event.ActionEvent evt) {                                            
     stopButton.setEnabled(false);
-    //cd.pause();
+    cd.pause();
     }                                           
 
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {                                             
@@ -921,6 +923,7 @@ public class minION extends javax.swing.JFrame {
     private void stopButtonActionPerformed(java.awt.event.ActionEvent evt) {                                           
     pauseButton.setEnabled(false);
     stopButton.setEnabled(false);
+    cd.stop();
     }                                          
 
  
@@ -996,10 +999,10 @@ public class minION extends javax.swing.JFrame {
     private javax.swing.JFormattedTextField windowSizeFormattedTextField;
     // End of variables declaration                   
 
-//    public static void main(String[] args) {
-//        minION sim = new minION();
-//        sim.setVisible(true);
-//    }
+    public static void main(String[] args) {
+        minION sim = new minION();
+        sim.setVisible(true);
+    }
 
 
 }

@@ -19,8 +19,15 @@ public class GUIOptions {
 	private int totalNumberOfTicks;
 	private int windowSizeForLengthDistribution;
 	
-	public GUIOptions(String inputFilename, String outputFilename, String writeInFileOption,int basecalling, 
-			int numberOfPores,int maxAgeOfPores,int durationOfTick, int totalNumberOfTicks,int windowSizeForLengthDistribution){
+	public GUIOptions(String inputFilename, 
+			String outputFilename, 
+			String writeInFileOption,
+			int basecalling, 
+			int numberOfPores,
+			int maxAgeOfPores,
+			int durationOfTick, 
+			int totalNumberOfTicks,
+			int windowSizeForLengthDistribution){
 		this.inputFilename = inputFilename;
 		this.outputFilename = outputFilename;
 		this.writeInFileOption = writeInFileOption;
@@ -67,5 +74,6 @@ public class GUIOptions {
 	public int getDurationOfTick() {
 		return durationOfTick;
 	}
+	
 
 }
