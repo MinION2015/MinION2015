@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import error.ErrorCodes;
 import error.MyException;
 
 public class FastQ implements FiletypeContainingSequences{
@@ -35,15 +36,9 @@ public class FastQ implements FiletypeContainingSequences{
 			if (counter == 0 && temp.startsWith("@")) {
 				identity = temp;
 				counter++;
-			} else if (counter == 1 && temp == temp.toUpperCase()) {
+			} else if (counter == 1) {
 				sequence = temp;
 				counter++;
-			} else if (counter == 1) {
-				identity = "";
-				sequence = "";
-				addInfo = "";
-				score = "";
-				counter = 0;
 			} else if (counter == 2 && temp.startsWith("+")) {
 				addInfo = temp;
 				counter++;
@@ -56,7 +51,7 @@ public class FastQ implements FiletypeContainingSequences{
 			} else if (counter == 3) {
 				score = temp;
 				processRead(identity, sequence,addInfo,score);
-				identity = temp;
+				identity = "";
 				sequence = "";
 				addInfo = "";
 				score = "";
@@ -67,7 +62,29 @@ public class FastQ implements FiletypeContainingSequences{
 		bufferReader.close();
 	}
 		
+	
+	private void processRead(String header,String sequence, String addInfo, String score){
 		
+		try{
+			checkForReadingError(header,sequence,addInfo,score);
+			FastQSequence seq = new Sequence(header, sequence,addInfo,score);
+			MyException err = new MyException(ErrorCodes.NO_ERROR);
+			seqList.add(seq);
+			errList.add(err);
+		}catch(MyException e){
+			if(e.getErrorCode() == 2003){//gapped seq
+				FastQSequence seq = new FastQSequence(header, sequence,addInfo,score);
+				seqList.add(seq);
+				errList.add(e);
+			}else{
+			Sequence seq = new Sequence(null,null);
+			seqList.add(seq);
+			errList.add(e);
+			}
+		}
+	}
+	
+	private void checkForReadingError(){
 	}
 
 	public void writeInFile(String filename) {

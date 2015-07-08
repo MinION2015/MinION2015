@@ -178,14 +178,14 @@ public class Controller {
 	public ArrayList<MyException> getFastAErrors() {
 		return fastA.getErrorInSequence();
 	}
-//
-//	public static void main(String[] args){
-//		
-//		GUIOptions op = new GUIOptions("C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/src/example4.fasta","TestController.txt","Real-Time",1,1,100,10,100,10);
-//		Controller cd = new Controller(op);
-//		cd.run();
-//	
-//	}
+
+	public static void main(String[] args){
+		
+		GUIOptions op = new GUIOptions("C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/src/example4.fasta","TestController.txt","Real-Time",1,1,100,10,100,10);
+		Controller cd = new Controller(op);
+		cd.run();
+	
+	}
 
 }
 

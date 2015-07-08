@@ -54,30 +54,37 @@ public class Pore {
 	}
 	
 	//Exceptions fŸr zu hohes age -> arrayoutofBounds schreiben
-	public static void main(String[] args) throws MyException, IOException
-	{
-		
-		Pore p = new Pore(700);
-		
-		p.sleepTime=10;
-		p.beenAsleepOnce=true;
-		p.timeBetweenLastSlumber=400;
-		p.age=599;
-		p.numbersOfTimeAsked=5;
-		p.sequenceLength=10;
-		p.setStatus("Running");
-		System.out.println(p.checkStatus());
-		System.out.println("Pore State: "+p.state);
-		System.out.println("Age: "+p.age);
-		System.out.println("Numbers of Times Asked: "+p.numbersOfTimeAsked);
-		
-		//Sequence seq = new Sequence(">","ATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG");
-		//System.out.println(p.simulate(seq).getSequence()); 
-		
-
-		
-		
-	}
+//	public static void main(String[] args) throws MyException, IOException
+//	{
+//		
+//		Pore p = new Pore(700);
+//		
+//		p.sleepTime=10;
+//		p.beenAsleepOnce=true;
+//		p.timeBetweenLastSlumber=400;
+//		p.age=599;
+//		p.numbersOfTimeAsked=5;
+//		p.sequenceLength=10;
+//		p.setStatus("Running");
+//		System.out.println(p.checkStatus());
+//		System.out.println("Pore State: "+p.state);
+//		System.out.println("Age: "+p.age);
+//		System.out.println("Numbers of Times Asked: "+p.numbersOfTimeAsked);
+//		
+//		
+//		Sequence seq = new Sequence(">","ATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG");
+//		try {
+//			p.simulate(seq);
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		//System.out.println(p.simulate(seq).getSequence()); 
+//		
+//
+//		
+//		
+//	}
 
 	/**
 	 * @author Albert Langensiepen und Daniel Dehncke
