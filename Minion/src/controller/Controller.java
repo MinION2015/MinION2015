@@ -8,10 +8,14 @@ import gui.GUIOptions;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import reader.*;
+
+import reader.FastA;
+import reader.Sequence;
 import Basecalling.BasecallingErrorRate;
 import Basecalling.createSetting;
 import LengthDistribution.LengthDistribution;
+
+
 /**
  * 
  * @author Friederike Hanssen
@@ -53,45 +57,44 @@ public class Controller {
 
 	public void run(){
 		try{	
-			
+		
 			//Sequence seq = new Sequence("me","GGTTAAGCGACTAAGCGTACACGGTGGATGCCTAGGCAGTCAGAGGCGATGAAGGGCGTGCTAATCTGCGAAAAGCGTCGGTAAGCTGATATGAAGCGTTATAACCGACGATACCCGAATGGGGAAACCCAGTGCAATACGTTGCACTATCGTTAGATGAATACATAGTCTAACGAGGCGAACCGGGGGAACTGAAACATCTAAGTACCCCGAGGAAAAGAAATCAACCGAGATTCCCCCAGTAGCGGCGAGCGAACGGGGAGGAGCCCAGAGTCTGAATCAGTTTGTGTGTTAGTGGAAGCGTCTGGAAAGTCGCACGGTACAGGGTGATAGTCCCGTACACCAAAATGCACAGGCTGTGAACTCGATGAGTAGGGCGGGACACGTGACATCCTGTCTGAATATGGGGGGACCATCCTCCAAGGCTAAATACTCCTGACTGACCGATAGTGAACCAGTACCGTGAGGGAAAGGCGAAAAGAACCCCGGCGAGGGGAGTGAAATAGAACCTGAAACCGTGTACGTACAAGCAGTGGGAGCACCTTCGTGGTGTGACTGCGTACCTTTTGTATAATGGGTCAGCGACTTATATTTTGTAGCAAGGTTAACCGAATAGGGGAGCCGTAGGGAAACCGAGTCTTAACTAGGCGTCTAGTTGCAAGGTATAGACCCGAAACCCGGTGATCTAGCCATGGGCAGGTTGAAGGTTGGGTAACACTAACTGGAGGACCGAACCGACTAATGTTGAAAAATTAGCGGATGACTTGTGGTGGGGGTGAAAGGCCAATCAAACCGGGAGATAGCTGGTTCTCCCCGAAAGCTATTTAGGTAGCGCCTCGTGAACTCATCTTCGGGGGTAGAGCACTGTTTCGGCTAGGGGGCCATCCCGGCTTACCAAACCGATGCAAAGGTTAAGCGACTAAGCGTACACGGTGGATGCCTAGGCAGTCAGAGGCGATGAAGGGCGTGCTAATCTGCGAAAAGCGTCGGTAAGCTGATATGAAGCGTTATAACCGACGATACCCGAATGGGGAAACCCAGTGCAATACGTTGCACTATCGTTAGATGAATACATAGTCTAACGAGGCGAACCGGGGGAACTGAAACATCTAAGTACCCCGAGGAAAAGAAATCAACCGAGATTCCCCCAGTAGCGGCGAGCGAACGGGGAGGAGCCCAGAGTCTGAATCAGTTTGTGTGTTAGTGGAAGCGTCTGGAAAGTCGCACGGTACAGGGTGATAGTCCCGTACACCAAAATGCACAGGCTGTGAACTCGATGAGTAGGGCGGGACACGTGACATCCTGTCTGAATATGGGGGGACCATCCTCCAAGGCTAAATACTCCTGACTGACCGATAGTGAACCAGTACCGTGAGGGAAAGGCGAAAAGAACCCCGGCGAGGGGAGTGAAATAGAACCTGAAACCGTGTACGTACAAGCAGTGGGAGCACCTTCGTGGTGTGACTGCGTACCTTTTGTATAATGGGTCAGCGACTTATATTTTGTAGCAAGGTTAACCGAATAGGGGAGCCGTAGGGAAACCGAGTCTTAACTAGGCGTCTAGTTGCAAGGTATAGACCCGAAACCCGGTGATCTAGCCATGGGCAGGTTGAAGGTTGGGTAACACTAACTGGAGGACCGAACCGACTAATGTTGAAAAATTAGCGGATGACTTGTGGTGGGGGTGAAAGGCCAATCAAACCGGGAGATAGCTGGTTCTCCCCGAAAGCTATTTAGGTAGCGCCTCGTGAACTCATCTTCGGGGGTAGAGCACTGTTTCGGCTAGGGGGCCATCCCGGCTTACCAAACCGATGCAAA");
 			int pos = Chance.getRandInt(0, fastA.getSequence().size()-1);
+			//when p.simulat is commented out in pore method than it works, why? -> p.simulate seems to give nullpointer
 			flowcell.startFlowcell(fastA.getSequence().get(pos));
-			
-			
-				while(currentNumberOfTicks < options.getTotalNumberOfTicks()){
-				if(!status.equals("Stopped")){
-					if(flowcell.getNumberOfPores() > 0){
 
-						if(options.getWriteInFileOption().equals("Real-Time")){
-							try{
-								pos = Chance.getRandInt(0, fastA.getSequence().size()-1);
-								flowcell.tick(fastA.getSequence().get(pos));
-								flowcell.getFlowcellOutput().writeInFile(options.getOutputFilename());
-								Thread.sleep(options.getDurationOfTick());
-							}catch(Exception e){
-								System.err.println(e.getMessage());
-							}
-						}else if(options.getWriteInFileOption().equals("Write all")){
-							try{
-								pos = Chance.getRandInt(0, fastA.getSequence().size()-1);
-								flowcell.tick(fastA.getSequence().get(pos));
-								for(Sequence s : flowcell.getFlowcellOutput().getSequence()){
-									outputFastA.addSeq(s);
-								}
-								Thread.sleep(options.getDurationOfTick());
-							}catch(Exception e){
-								System.err.println(e.getMessage());
-							}
+			while(currentNumberOfTicks < options.getTotalNumberOfTicks() && !status.equals("Stopped")  &&flowcell.getNumberOfPores() > 0){
+
+
+				if(options.getWriteInFileOption().equals("Real-Time")){
+					try{
+						pos = Chance.getRandInt(0, fastA.getSequence().size()-1);
+						flowcell.tick(fastA.getSequence().get(pos));
+						flowcell.getFlowcellOutput().writeInFile(options.getOutputFilename());
+						Thread.sleep(options.getDurationOfTick());
+					}catch(Exception e){
+						System.err.println(e.getMessage());
+					}
+				}else if(options.getWriteInFileOption().equals("Write all")){
+					try{
+						pos = Chance.getRandInt(0, fastA.getSequence().size()-1);
+						flowcell.tick(fastA.getSequence().get(pos));
+						for(Sequence s : flowcell.getFlowcellOutput().getSequence()){
+							outputFastA.addSeq(s);
 						}
-					} 
-					currentNumberOfTicks++;
-					if(currentNumberOfTicks == 50){
-						System.out.println("currentNum Ticks: "+currentNumberOfTicks);
-						pause();
+						Thread.sleep(options.getDurationOfTick());
+					}catch(Exception e){
+						System.err.println(e.getMessage());
 					}
 				}
-			
+				currentNumberOfTicks++;
+				if(currentNumberOfTicks == 50){
+					System.out.println("currentNum Ticks: "+currentNumberOfTicks);
+					pause();
+				}
+
+
+
 			}
 			if(options.getWriteInFileOption().equals("Write all")){
 				outputFastA.writeInFile(options.getOutputFilename());
@@ -100,23 +103,26 @@ public class Controller {
 			
 
 		}catch(MyException e){
-			System.err.println(e.getErrorMessage());
+			System.err.println("Controller "+e.getErrorMessage());
 		}catch(Exception e){
-			System.err.println(e.getMessage());
+			//for some reason it catches this
+			System.err.println("Controller "+e.getMessage());
 		}	
 	}
 	//TODO maybe change start button to resume after pause is pressed or pause button to resume or sth
 	public void resume(){
-		status = "Resume";
-		if(status.equals("Resume")){
+		
+		if(status.equals("Paused")){
 			status = "Running";
+			System.out.println("Resumed");
 			run();
 			//System.out.println("currentNum Ticks: "+currentNumberOfTicks);
 		}
 	}
 	public void pause(){
-		//int counter=0;
+		int counter=0;
 		status = "Paused";
+		System.out.println("Paused");
 		while(status.equals("Paused")){
 			try {
 				Thread.sleep(1);
@@ -124,18 +130,22 @@ public class Controller {
 				// TODO Auto-generated catch block
 				System.err.println(e.getMessage());
 			}
-//			counter++;
-//			if(counter == 3000){
-//				System.out.println("blub2");
-//				resume();
-//			}
+			counter++;
+			if(counter == 3000){
+				System.out.println("resumed");
+				resume();
+			}
 			
 		}
 	}
 	
 	public void stop(){
-		status = "Stopped";
+		status = "Simulation is Stopped";
+		System.out.println("Stopped");
 		currentNumberOfTicks = options.getTotalNumberOfTicks();
+		//should not do anything, doesn't :)
+		resume();
+		
 	}
 	
 	/**
@@ -168,10 +178,10 @@ public class Controller {
 	public ArrayList<MyException> getFastAErrors() {
 		return fastA.getErrorInSequence();
 	}
-
+//
 //	public static void main(String[] args){
 //		
-//		GUIOptions op = new GUIOptions("C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/src/example4.fasta","TestController.txt","Real-Time",1,1,10,1,100,10);
+//		GUIOptions op = new GUIOptions("C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/src/example4.fasta","TestController.txt","Real-Time",1,1,100,10,100,10);
 //		Controller cd = new Controller(op);
 //		cd.run();
 //	
