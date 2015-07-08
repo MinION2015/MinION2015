@@ -408,7 +408,7 @@ public class minION extends javax.swing.JFrame {
 
         windowSizeForLengthDistributionLabel.setText("Window size:");
 
-        outputFileTextField.setText("Result");
+        outputFileTextField.setText("");
         outputFileTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 outputFileTextFieldActionPerformed(evt);
@@ -865,7 +865,19 @@ public class minION extends javax.swing.JFrame {
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
         mainFileChooser.showOpenDialog(minION.this);
         sourceField.setText(mainFileChooser.getSelectedFile().getAbsolutePath());
-          
+        // Default settingfilepath is set by importing the fastA/fastQ file
+        if(settingFileDirectoryTextField.getText().isEmpty()){
+        	int sep = mainFileChooser.getSelectedFile().getAbsolutePath().lastIndexOf("\\");
+        	settingFileDirectoryTextField.setText(mainFileChooser.getSelectedFile().getAbsolutePath().substring(0, sep));	
+        }
+        // Default Output-Filename is set: inputFilename_result.TXT
+        if(outputFileTextField.getText().isEmpty()){
+        	int dot = mainFileChooser.getSelectedFile().getAbsolutePath().lastIndexOf(".");
+            int sep = mainFileChooser.getSelectedFile().getAbsolutePath().lastIndexOf("\\");
+            String out = mainFileChooser.getSelectedFile().getAbsolutePath().substring(sep + 1, dot);
+            out=out+"_result.TXT";
+            outputFileTextField.setText(out);
+        }
     }                                            
 
     private void settingFileDirectoryButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                           
