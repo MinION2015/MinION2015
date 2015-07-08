@@ -18,6 +18,8 @@ public class GUIOptions {
 	private int durationOfTick;
 	private int totalNumberOfTicks;
 	private int windowSizeForLengthDistribution;
+	private String basecallingSetup;
+	private String lengthDistributionSetup;
 	
 	public GUIOptions(String inputFilename, 
 			String outputFilename, 

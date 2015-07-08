@@ -743,7 +743,7 @@ public class minION extends javax.swing.JFrame {
     pauseButton.setEnabled(true);
     stopButton.setEnabled(true);
 
-	String message= "<html>";
+	String message= "";
 	int basecalling = 0;
 
 	String chosen = (String) dimComboBox.getSelectedItem();
@@ -790,11 +790,7 @@ public class minION extends javax.swing.JFrame {
 		cd.setOption(options);
 		cd.writeOptions();
 		//cd.run();
-		
-		
-		
-	
-
+			
 
 	int length= cd.getFastAErrors().size();
 
@@ -814,8 +810,14 @@ public class minION extends javax.swing.JFrame {
     }                                           
 
     private void pauseButtonActionPerformed(java.awt.event.ActionEvent evt) {                                            
-    stopButton.setEnabled(false);
-    cd.pause();
+    if(pauseButton.getText()=="Pause"){
+    	stopButton.setEnabled(false);
+    	pauseButton.setText("Resume");
+        cd.pause();
+    }else
+    	stopButton.setEnabled(true);
+    	pauseButton.setText("Pause");
+    	cd.resume();  	
     }                                           
 
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {                                             
