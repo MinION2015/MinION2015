@@ -246,7 +246,9 @@ public class createSetting {
 		Output.close();
 	}
 	
-
+/*public void main(String args[]){
+	createSettingFile(,,1)
+}*/
 	
 	
 	/* CONFIGURATION OF BASECALLING SETTING FILES
