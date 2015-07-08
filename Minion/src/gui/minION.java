@@ -996,10 +996,10 @@ public class minION extends javax.swing.JFrame {
     private javax.swing.JFormattedTextField windowSizeFormattedTextField;
     // End of variables declaration                   
 
-    public static void main(String[] args) {
-        minION sim = new minION();
-        sim.setVisible(true);
-    }
+//    public static void main(String[] args) {
+//        minION sim = new minION();
+//        sim.setVisible(true);
+//    }
 
 
 }
