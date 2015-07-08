@@ -799,13 +799,17 @@ public class minION extends javax.swing.JFrame {
 		if(this.cd.getFastAErrors().get(i).isCriticalError()) {
 			JOptionPane.showMessageDialog(null, this.cd.getFastAErrors().get(i).getErrorMessage(), "Critical Error", JOptionPane.ERROR_MESSAGE);
 		} else {
-			message= message + " " + this.cd.getFastAErrors().get(i).getErrorMessage()+"<br>";
+			message= message + " " + this.cd.getFastAErrors().get(i).getErrorMessage()+"\n";
+			outputTextArea.setText(message); 
 		}
 	}
 
-	message=message+"</html>";
+	/*testing the outputTextFieldArea
+	for(int i=0; i<100; i++){
+		message=message+"Test-Line "+i+"\n";
+	}
 
-	outputTextArea.setText(message);  
+	outputTextArea.setText(message);  */
 
     }                                           
 
