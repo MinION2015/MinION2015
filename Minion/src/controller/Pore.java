@@ -409,6 +409,14 @@ public class Pore {
 		}
 		return wakeProbs;
 	}
+	public String getState()
+	{
+		return state;
+	}
+	public int getnumbersOfTimeAsked()
+	{
+		return numbersOfTimeAsked;
+	}
 	
 	
 //	public static void main(String[] args){

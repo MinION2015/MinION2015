@@ -23,8 +23,10 @@ public class Flowcell{
 	private ArrayList<Pore> poreList = new ArrayList<Pore>();
 	private FastA fastA;
 	private int maxAgeOfPores;
+	private int currentSumOfReads; //needed for already recorded Reads
 	
 	public Flowcell(int numberOfPores,int maxAgeOfPores) throws MyException{
+		currentSumOfReads = 0;
 		try{
 			addPores(numberOfPores);
 		}catch(MyException e){
@@ -196,6 +198,44 @@ public class Flowcell{
 	}
 	public int getNumberOfPores(){
 		return poreList.size();
+	}
+	public double[] getStates() throws MyException
+	{
+		//TODO return lengths of finished sequences?
+		double[] states = new double[7];		//[0] Running, [1]Bored, [2] Dead,[3] Alive,[4] Finished, [5] Sleeping,[6] sum of Pores
+		for(Pore p : poreList)
+		{
+			states[6]++;
+			switch(p.getState()){
+			case "Running": 
+				states[0]++; 
+				break;
+			case "Bored": 
+				states[1]++; 
+				break;
+			case "Dead": 
+				states[2]++; 
+				break;
+			case "Alive": 
+				states[3]++; 
+				break;
+			case "Finished": 
+				states[4]++; 
+				break;
+			case "Sleeping": 
+				states[5]++; 
+				break;
+			default: throw new MyException(ErrorCodes.FLOWCELL_Invalid_Pore_Status);
+			}
+		}
+		//TODO
+		currentSumOfReads += (int)states[0] * 10;//currentReads are Recorded every Tick and added. 10 is just a example, not sure where the reads per tick are stored
+												//better move this into methode tick
+		return states;
+	}
+	public int getcurrentSumOfReads()
+	{
+		return currentSumOfReads;
 	}
 	
 	//All test suffice

@@ -25,7 +25,8 @@ public enum ErrorCodes {
 	Pore_NOCAPABLESEQUENCELENGTH(3003,"Die Sequenz ist zu kurz!", true),
 	
 	FLOWCELL_EMPTY(4000,"Flowcell is empty.",true),
-	FLOWCELL_CONTAINS_PORES(4001,"Current number of pores in flowcell: ",false);
+	FLOWCELL_CONTAINS_PORES(4001,"Current number of pores in flowcell: ",false),
+	FLOWCELL_Invalid_Pore_Status(4002,"Invalide Pore Status ",false);
 	
 	private final int identity;
 	private final String message;

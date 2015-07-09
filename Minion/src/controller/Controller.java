@@ -221,6 +221,10 @@ public class Controller {
 			}
 		}
 	}
+	public Flowcell getFlowcell()
+	{
+		return flowcell;
+	}
 
 }
 
