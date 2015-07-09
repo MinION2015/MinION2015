@@ -1028,7 +1028,7 @@ public class minION extends javax.swing.JFrame {
     {
     	
     	//gets a double array with the values (number of Reads), Quality, dead pores, running pores, sleeping pores, alive pores, bored pores usw.
-    	double[] porestates = cd.getFlowcell().getStates();//[0] Running, [1]Bored, [2] Dead,[3] Alive,[4] Finished, [5] Sleeping,[6] sum of Pores
+    	double[] porestates = cd.getFlowcell().getStates();//[0] Running, [1]Bored, [2] Dead,[3] Finished, [4] Sleeping,[5] sum of Pores
     	int currentSumOfReads = cd.getFlowcell().getcurrentSumOfReads();
     }
 

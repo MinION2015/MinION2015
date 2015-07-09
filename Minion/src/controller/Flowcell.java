@@ -202,7 +202,7 @@ public class Flowcell{
 	public double[] getStates() throws MyException
 	{
 		//TODO return lengths of finished sequences?
-		double[] states = new double[7];		//[0] Running, [1]Bored, [2] Dead,[3] Alive,[4] Finished, [5] Sleeping,[6] sum of Pores
+		double[] states = new double[7];		//[0] Running, [1]Bored, [2] Dead,[3] Finished, [4] Sleeping,[4] sum of Pores
 		for(Pore p : poreList)
 		{
 			states[6]++;
@@ -216,14 +216,11 @@ public class Flowcell{
 			case "Dead": 
 				states[2]++; 
 				break;
-			case "Alive": 
+			case "Finished": 
 				states[3]++; 
 				break;
-			case "Finished": 
-				states[4]++; 
-				break;
 			case "Sleeping": 
-				states[5]++; 
+				states[4]++; 
 				break;
 			default: throw new MyException(ErrorCodes.FLOWCELL_Invalid_Pore_Status);
 			}
