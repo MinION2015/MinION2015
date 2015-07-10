@@ -86,18 +86,18 @@ public class FastA implements FiletypeContainingSequences {
 
 		try {
 			checkForReadingError(header, sequence);
-			Sequence seq = new Sequence(header, sequence);
+			Sequence seq = new FastASequence(header, sequence);
 			MyException err = new MyException(ErrorCodes.NO_ERROR);
 			seqList.add(seq);
 			errList.add(err);
 
 		} catch (MyException e){
-			if(e.getErrorCode() == 2003){//gapped seq
-				Sequence seq = new Sequence(header, sequence);
+			if(e.getErrorCode() == 2003 || e.getErrorCode() == 2010){//gapped seq || no sequence name
+				Sequence seq = new FastASequence(header, sequence);
 				seqList.add(seq);
 				errList.add(e);
 			}else{
-			Sequence seq = new Sequence(null,null);
+			Sequence seq = new FastASequence(null,null);
 			seqList.add(seq);
 			errList.add(e);
 			}
@@ -149,7 +149,7 @@ public class FastA implements FiletypeContainingSequences {
 			throw new MyException(ErrorCodes.LOWERCASE_SEQUENCE);
 		}
 	}
-
+		
 	/**
 	 * Writes results in the given filename. Each sequence in the order: Entry\\header\\sequence\\Errors:\\(error messages||null)
 	 */
@@ -166,16 +166,9 @@ public class FastA implements FiletypeContainingSequences {
 				FileWriter fw = new FileWriter("./" + writeInFile,true);
 				BufferedWriter bw = new BufferedWriter(fw);
 				for (int i = 0; i < seqList.size();i++) {
-					bw.append("Entry:");
-					bw.newLine();
 					bw.append(seqList.get(i).getHeader());
 					bw.newLine();
 					bw.append(seqList.get(i).getSequence());
-					bw.newLine();
-					bw.append("Errors found:");
-					bw.newLine();
-					bw.append(errList.get(i).getErrorMessage());
-					bw.newLine();
 					bw.newLine();
 				}
 
@@ -216,41 +209,39 @@ public class FastA implements FiletypeContainingSequences {
 //	 */
 //
 //	public static void main(String[] args) throws IOException, MyException{
-////		if(args.length != 1){
-////			System.err.println("You should specify a FastA file as input!");
-////			System.exit(1);
-////		}else{
-////			FastA pfastA = new FastA();
-////			pfastA.parse(args[0]);
-////			pfastA.writeInFile("hallo1.txt");
-////			
-//		
-//		/**
-//		 * TEsts	
-//		 */
+//////		if(args.length != 1){
+//////			System.err.println("You should specify a FastA file as input!");
+//////			System.exit(1);
+//////		}else{
+//////			FastA pfastA = new FastA();
+//////			pfastA.parse(args[0]);
+//////			pfastA.writeInFile("hallo1.txt");
+//////			
+////		
+////		/**
+////		 * TEsts	
+////		 */
 //			FastA pfastA = new FastA();
-//			Sequence seq = new Sequence ("me", "ACTG-");
-//			pfastA.addSeq (seq);
-//			ArrayList<Sequence> arr = pfastA.getSequence();
-//			ArrayList<MyException> err = pfastA.getErrorInSequence();
-//			System.out.println(arr.get(0).getHeader()+" "+arr.get(0).getSequence());
-//			System.out.println(err.get(0).getErrorMessage());
-//			seq = new Sequence("me","ACFT");
-//			try{
-//				pfastA.checkForReadingError("me", "ACT-");
-//			}catch(MyException e){
-//				//expected: sequence contains gaps
-//				System.out.println(e.getErrorMessage());
-//			}
-//			pfastA.processRead("me", "ACT-GA");
-//			System.out.println(pfastA.getSequence().get(1).getHeader());
-//			System.out.println(pfastA.getSequence().get(1).getSequence());
+//			Sequence seq = new FastASequence ("me", "ACTG-");
+////			pfastA.addSeq (seq);
+////			ArrayList<Sequence> arr = pfastA.getSequence();
+////			ArrayList<MyException> err = pfastA.getErrorInSequence();
+////			System.out.println(arr.get(0).getHeader()+" "+arr.get(0).getSequence());
+////			System.out.println(err.get(0).getErrorMessage());
+////			seq = new Sequence("me","ACFT");
+////			try{
+////				pfastA.checkForReadingError("me", "ACT-");
+////			}catch(MyException e){
+////				//expected: sequence contains gaps
+////				System.out.println(e.getErrorMessage());
+////			}
+////			pfastA.processRead("me", "ACT-GA");
+////			System.out.println(pfastA.getSequence().get(1).getHeader());
+////			System.out.println(pfastA.getSequence().get(1).getSequence());
+////			
+//			pfastA.parse("C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/src/example4.fasta");
+//			pfastA.writeInFile("TestFastAWirteInfile.txt");
 //			
-//			//pfastA.parse("C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/src/example4.fasta");
-//			pfastA.writeInFile("Test.txt");
-//			
-//	//	}
+//		}
 //
-//	}
-
 }
