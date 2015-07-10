@@ -14,6 +14,7 @@ public enum ErrorCodes {
 	CORRUPTED_SEQUENCE(2001, "The sequence has an illegal character in it!", true),
 	LOWERCASE_SEQUENCE(2002, "There is at least one lowercase nucleotide in the sequence.", false),
 	GAPPED_SEQUENCE(2003,"This sequence contains gaps!",true),
+	INCORRECT_SEQUENCE_SCORE(2004,"The scoring line is faulty",true),
 	
 	
 	NO_SEQUENCE_NAME(2010, "There is no sequence name.", false),

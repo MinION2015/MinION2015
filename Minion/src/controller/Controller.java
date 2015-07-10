@@ -24,7 +24,7 @@ import LengthDistribution.LengthDistribution;
  */
 /**
  * TODO : comments, class that will create a FastQ read(Kevin?), changing errormodel accroding to time, maybe some kind of tryToChangeModelFunction that gets called and changes accroding to numbers of times aslked(a bit like Pore)
- * Write more testcases, think about if start flowcell is actually needed, test start/stop/pause using gui, change tests using absolute path, 
+ * Write more testcases, think about if start flowcell is actually needed, test start/stop/pause using gui, change tests using absolute path, how does pore know what to write
  * add contracts
  * @author Friederike
  *

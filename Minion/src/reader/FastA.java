@@ -22,14 +22,14 @@ import error.MyException;
  */
 public class FastA implements FiletypeContainingSequences {
 
-	private ArrayList<FastASequence> seqList;
+	private ArrayList<Sequence> seqList;
 	private ArrayList<MyException> errList;
 
 	/**
 	 * FastA object contains two array lists, one storing correct sequences, one storing occurring errors.
 	 */
 	public FastA() {
-		this.seqList = new ArrayList<FastASequence>();
+		this.seqList = new ArrayList<Sequence>();
 		this.errList = new ArrayList<MyException>();
 	}
 
@@ -187,7 +187,7 @@ public class FastA implements FiletypeContainingSequences {
 
 
 	
-	public ArrayList<FastASequence> getSequence() {
+	public ArrayList<Sequence> getSequence() {
 		return seqList;
 	}
 
@@ -199,7 +199,7 @@ public class FastA implements FiletypeContainingSequences {
 	/**
 	 * Adds a single sequence to an existing fasta file and processes it accordingly
 	 */
-	public void addSeq(FastASequence seq) throws MyException{
+	public void addSeq(Sequence seq) throws MyException{
 		
 		processRead(seq.getHeader(),seq.getSequence());
 	}

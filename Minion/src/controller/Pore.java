@@ -1,15 +1,14 @@
 package controller;
 
 
-import error.*;
-import reader.*;
-
-import java.io.IOException;
-import java.util.Iterator;
 import java.util.Random;
 
+import reader.FastASequence;
+import reader.Sequence;
 import Basecalling.SimulationError;
 import LengthDistribution.LengthDistribution;
+import error.ErrorCodes;
+import error.MyException;
 
 /**
  * @author Albert Langensiepen und Daniel Dehncke
@@ -20,7 +19,7 @@ import LengthDistribution.LengthDistribution;
 public class Pore {
 	
 
-	String fasta ="";
+	String sequenceAsString =""; //can't come up with anything better right now, will rename later. Rike
 	private Sequence seq;
 
 	private String state = "Bored";
@@ -138,15 +137,16 @@ public class Pore {
 
 //		String fasta = errorModel.applyErrorBasecalling(subseq, basecalling,"setting/default.setting");
 		try{
-			fasta = SimulationError.applyErrorBasecalling(subseq);
+			sequenceAsString = SimulationError.applyErrorBasecalling(subseq);
 		}catch(Exception e){
 			System.err.println("Error occurs in pore class");
 		}
 		
-		if(fasta.isEmpty()) System.out.println("Sequence is empty");
+		if(sequenceAsString.isEmpty()) System.out.println("Sequence is empty");
 
 		//Sequence seq = new Sequence(sequence.,fasta);
-		seq = new Sequence(sequence.getHeader(),fasta);
+		//will leave it like this for now, sinc it is getting late and github threw me back an hour, will think about it tomoorrow, Rike
+		seq = new FastASequence(sequence.getHeader(),sequenceAsString);
 		this.state = "Running";
 		
 		
