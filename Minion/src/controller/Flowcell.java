@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import reader.FastA;
+import reader.FastASequence;
+import reader.FastQ;
+import reader.FiletypeContainingSequences;
 import reader.Sequence;
-import Basecalling.BasecallingErrorRate;
-import LengthDistribution.LengthDistribution;
-import error.*;
+import error.ErrorCodes;
+import error.MyException;
 
 /**
  * 
@@ -21,19 +23,22 @@ import error.*;
 public class Flowcell{
 	
 	private ArrayList<Pore> poreList = new ArrayList<Pore>();
-	private FastA fastA;
+	private FiletypeContainingSequences outputSequence;
 	private int maxAgeOfPores;
 	private int currentSumOfReads; //needed for already recorded Reads
+	private String outputFormat;
 	
-	public Flowcell(int numberOfPores,int maxAgeOfPores) throws MyException{
+	public Flowcell(int numberOfPores,int maxAgeOfPores,String outputFormat) throws MyException{
 		currentSumOfReads = 0;
+		this.outputFormat = outputFormat;
 		try{
 			addPores(numberOfPores);
+			resetFlowcellOutputFormat();
+			
 		}catch(MyException e){
-			System.err.println("Konstruktor: "+e.getErrorMessage());
+			System.err.println("Constructor: "+e.getErrorMessage());
 		}
 		this.maxAgeOfPores = maxAgeOfPores;
-		fastA = new FastA();
 	}
 	
 	
@@ -61,6 +66,14 @@ public class Flowcell{
 			
 		}
 	}
+	
+	private void resetFlowcellOutputFormat(){
+		if(outputFormat == "fasta"){
+			outputSequence = new FastA();
+		}else if(outputFormat == "fasta"){
+			outputSequence = new FastQ();
+		}
+	}
 	/**
 	 * The integer gives the number of pores that should be added. They are stored in a Arraylist, thus they are just added as a new object to the flowcell array list 
 	 * Since the flowcell won't get any more pores after being initiated I made the method private
@@ -70,7 +83,6 @@ public class Flowcell{
 	
 		try{
 			for(int i = 0; i < numberOfPores; i++){
-
 				Pore p = new Pore(maxAgeOfPores);
 				poreList.add(p);
 			}
@@ -137,7 +149,7 @@ public class Flowcell{
 	 * In each tick all pores are checked and either given work , if their are bored, else they are left alone. If one is finished the output is added to the FastA object, so later it can be printed to a file
 	 */
 	public void tick(Sequence seq){
-		fastA =new FastA();
+		resetFlowcellOutputFormat();
 		for(Pore p : poreList){
 			//TODO can't change right now, as simulate doesn't work, thus will hardcode it "Finished and fetch the tick input sequence
 			/******************************/
@@ -172,7 +184,7 @@ public class Flowcell{
 				try{
 					//TODO each pore gives me the excact same output x-times
 //					seq = p.getSequenceFromPore();
-					fastA.addSeq(seq);
+					outputSequence.addSeq(seq);
 				}catch(Exception e){
 					System.err.println("Error in tick/collecting output: "+e.getMessage());
 				}
@@ -193,8 +205,8 @@ public class Flowcell{
 		
 	}
 	
-	public FastA getFlowcellOutput(){
-		return fastA;
+	public FiletypeContainingSequences getFlowcellOutput(){
+		return outputSequence;
 	}
 	public int getNumberOfPores(){
 		return poreList.size();
