@@ -22,14 +22,14 @@ import error.MyException;
  */
 public class FastA implements FiletypeContainingSequences {
 
-	private ArrayList<Sequence> seqList;
+	private ArrayList<FastASequence> seqList;
 	private ArrayList<MyException> errList;
 
 	/**
 	 * FastA object contains two array lists, one storing correct sequences, one storing occurring errors.
 	 */
 	public FastA() {
-		this.seqList = new ArrayList<Sequence>();
+		this.seqList = new ArrayList<FastASequence>();
 		this.errList = new ArrayList<MyException>();
 	}
 
@@ -86,18 +86,18 @@ public class FastA implements FiletypeContainingSequences {
 
 		try {
 			checkForReadingError(header, sequence);
-			Sequence seq = new FastASequence(header, sequence);
+			FastASequence seq = new FastASequence(header, sequence);
 			MyException err = new MyException(ErrorCodes.NO_ERROR);
 			seqList.add(seq);
 			errList.add(err);
 
 		} catch (MyException e){
 			if(e.getErrorCode() == 2003 || e.getErrorCode() == 2010){//gapped seq || no sequence name
-				Sequence seq = new FastASequence(header, sequence);
+				FastASequence seq = new FastASequence(header, sequence);
 				seqList.add(seq);
 				errList.add(e);
 			}else{
-			Sequence seq = new FastASequence(null,null);
+			FastASequence seq = new FastASequence(null,null);
 			seqList.add(seq);
 			errList.add(e);
 			}
@@ -187,7 +187,7 @@ public class FastA implements FiletypeContainingSequences {
 
 
 	
-	public ArrayList<Sequence> getSequence() {
+	public ArrayList<FastASequence> getSequence() {
 		return seqList;
 	}
 
@@ -199,7 +199,7 @@ public class FastA implements FiletypeContainingSequences {
 	/**
 	 * Adds a single sequence to an existing fasta file and processes it accordingly
 	 */
-	public void addSeq(Sequence seq) throws MyException{
+	public void addSeq(FastASequence seq) throws MyException{
 		
 		processRead(seq.getHeader(),seq.getSequence());
 	}
