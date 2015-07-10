@@ -5,55 +5,57 @@ import error.ErrorCodes;
 import error.MyException;
 import gui.GUIOptions;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
-
-import reader.FastA;
-import reader.Sequence;
+import reader.*;
 import Basecalling.BasecallingErrorRate;
-import Basecalling.createSetting;
 import LengthDistribution.LengthDistribution;
 
 
 /**
  * 
  * @author Friederike Hanssen
- *@Functionality Controllers runs the program. First, the file ending is checked, if it is approved, the program should be run//TODO implement stop. 
+ *@Functionality Controllers runs the program. First, the file ending is checked, if it is a fasta ending, a new FastA object is created, if fastQ a new fastQ object. The user can additionally decide if he wants fastA or fastA as output.
+ *The program only runs if file either has a fasta ending or a fastq ending . 
  *It sets up the Error model and the length distribution so they can be used everywhere in the program, initliazes the flowcell and applies some kind of time 
  *between the controller and the flowcell still need to figure out loggin of results.
  *@input GUIOptions object containing all necessary information
  *@output file with results
  */
-
+/**
+ * TODO : comments, class that will create a FastQ read(Kevin?), changing errormodel accroding to time, maybe some kind of tryToChangeModelFunction that gets called and changes accroding to numbers of times aslked(a bit like Pore)
+ * Write more testcases, think about if start flowcell is actually needed, test start/stop/pause using gui, change tests using absolute path, 
+ * add contracts
+ * @author Friederike
+ *
+ */
 public class Controller {
 	
 	private GUIOptions options;
-	private FastA fastA;
-	private FastA outputFastA;
+	private FiletypeContainingSequences inputFile;
+	private FiletypeContainingSequences outputFile;
 	private Flowcell flowcell;
-	private String status; //"Ready","Running","Paused","Stopped","NotAbleToPerform"."NoAlivePoresLeft"
+	private String status; //"Ready","Running","Paused","Stopped"
 	private int currentNumberOfTicks;
 	
 	
-	public Controller(){
-		
-	}
+	
 	public Controller(GUIOptions options){
 		this.options = options;
-		//wrong filetype works
+		//first its determined if a new fasta or fasta file was the input
 		try{
-			checkFileEnding(options.getInputFilename());
-			this.fastA = new FastA();
 			
-			this.outputFastA = new FastA();
-			fastA.parse(options.getInputFilename());
-			this.flowcell = new Flowcell(options.getNumberOfPores(),options.getMaxAgeOfPores());
+			checkFileEnding(options.getInputFilename());
+			createOutputFormat();
+			
+			
+			//initializing run
+			setupModel(options.getBasecalling(),"default",options.getWindowSizeForLengthDistribution());
+			currentNumberOfTicks = 0;
+			this.flowcell = new Flowcell(options.getNumberOfPores(),options.getMaxAgeOfPores(),options.getOutputFormat());
 			status = "Running";
 			//TODO options.getSetting or sth like that
 			//TODO create SettingFile
-			setupModel(options.getBasecalling(),"default",options.getWindowSizeForLengthDistribution());
-			currentNumberOfTicks = 0;
 		}catch(MyException e){
 			System.err.println(e.getErrorMessage());
 		}catch(Exception e){
@@ -62,21 +64,19 @@ public class Controller {
 	}
 
 	public void run(){
-		System.out.println("");
 		try{	
 		
 			//Sequence seq = new Sequence("me","GGTTAAGCGACTAAGCGTACACGGTGGATGCCTAGGCAGTCAGAGGCGATGAAGGGCGTGCTAATCTGCGAAAAGCGTCGGTAAGCTGATATGAAGCGTTATAACCGACGATACCCGAATGGGGAAACCCAGTGCAATACGTTGCACTATCGTTAGATGAATACATAGTCTAACGAGGCGAACCGGGGGAACTGAAACATCTAAGTACCCCGAGGAAAAGAAATCAACCGAGATTCCCCCAGTAGCGGCGAGCGAACGGGGAGGAGCCCAGAGTCTGAATCAGTTTGTGTGTTAGTGGAAGCGTCTGGAAAGTCGCACGGTACAGGGTGATAGTCCCGTACACCAAAATGCACAGGCTGTGAACTCGATGAGTAGGGCGGGACACGTGACATCCTGTCTGAATATGGGGGGACCATCCTCCAAGGCTAAATACTCCTGACTGACCGATAGTGAACCAGTACCGTGAGGGAAAGGCGAAAAGAACCCCGGCGAGGGGAGTGAAATAGAACCTGAAACCGTGTACGTACAAGCAGTGGGAGCACCTTCGTGGTGTGACTGCGTACCTTTTGTATAATGGGTCAGCGACTTATATTTTGTAGCAAGGTTAACCGAATAGGGGAGCCGTAGGGAAACCGAGTCTTAACTAGGCGTCTAGTTGCAAGGTATAGACCCGAAACCCGGTGATCTAGCCATGGGCAGGTTGAAGGTTGGGTAACACTAACTGGAGGACCGAACCGACTAATGTTGAAAAATTAGCGGATGACTTGTGGTGGGGGTGAAAGGCCAATCAAACCGGGAGATAGCTGGTTCTCCCCGAAAGCTATTTAGGTAGCGCCTCGTGAACTCATCTTCGGGGGTAGAGCACTGTTTCGGCTAGGGGGCCATCCCGGCTTACCAAACCGATGCAAAGGTTAAGCGACTAAGCGTACACGGTGGATGCCTAGGCAGTCAGAGGCGATGAAGGGCGTGCTAATCTGCGAAAAGCGTCGGTAAGCTGATATGAAGCGTTATAACCGACGATACCCGAATGGGGAAACCCAGTGCAATACGTTGCACTATCGTTAGATGAATACATAGTCTAACGAGGCGAACCGGGGGAACTGAAACATCTAAGTACCCCGAGGAAAAGAAATCAACCGAGATTCCCCCAGTAGCGGCGAGCGAACGGGGAGGAGCCCAGAGTCTGAATCAGTTTGTGTGTTAGTGGAAGCGTCTGGAAAGTCGCACGGTACAGGGTGATAGTCCCGTACACCAAAATGCACAGGCTGTGAACTCGATGAGTAGGGCGGGACACGTGACATCCTGTCTGAATATGGGGGGACCATCCTCCAAGGCTAAATACTCCTGACTGACCGATAGTGAACCAGTACCGTGAGGGAAAGGCGAAAAGAACCCCGGCGAGGGGAGTGAAATAGAACCTGAAACCGTGTACGTACAAGCAGTGGGAGCACCTTCGTGGTGTGACTGCGTACCTTTTGTATAATGGGTCAGCGACTTATATTTTGTAGCAAGGTTAACCGAATAGGGGAGCCGTAGGGAAACCGAGTCTTAACTAGGCGTCTAGTTGCAAGGTATAGACCCGAAACCCGGTGATCTAGCCATGGGCAGGTTGAAGGTTGGGTAACACTAACTGGAGGACCGAACCGACTAATGTTGAAAAATTAGCGGATGACTTGTGGTGGGGGTGAAAGGCCAATCAAACCGGGAGATAGCTGGTTCTCCCCGAAAGCTATTTAGGTAGCGCCTCGTGAACTCATCTTCGGGGGTAGAGCACTGTTTCGGCTAGGGGGCCATCCCGGCTTACCAAACCGATGCAAA");
-			int pos = Chance.getRandInt(0, fastA.getSequence().size()-1);
+			int pos = Chance.getRandInt(0, inputFile.getSequence().size()-1);
 			//when p.simulat is commented out in pore method than it works, why? -> p.simulate seems to give nullpointer
-			flowcell.startFlowcell(fastA.getSequence().get(pos));
+			flowcell.startFlowcell(inputFile.getSequence().get(pos));
 
 			while(currentNumberOfTicks < options.getTotalNumberOfTicks() && !status.equals("Stopped")  &&flowcell.getNumberOfPores() > 0){
 
-				pos = Chance.getRandInt(0, fastA.getSequence().size()-1);
-				flowcell.tick(fastA.getSequence().get(pos));
+				pos = Chance.getRandInt(0, inputFile.getSequence().size()-1);
+				flowcell.tick(inputFile.getSequence().get(pos));
 				if(options.getWriteInFileOption().equals("Real-Time")){
 					try{
-						
 						flowcell.getFlowcellOutput().writeInFile(options.getOutputFilename());
 						Thread.sleep(options.getDurationOfTick());
 					}catch(Exception e){
@@ -85,7 +85,7 @@ public class Controller {
 				}else if(options.getWriteInFileOption().equals("Write all")){
 					try{
 						for(Sequence s : flowcell.getFlowcellOutput().getSequence()){
-							outputFastA.addSeq(s);
+							outputFile.addSeq(s);
 						}
 						Thread.sleep(options.getDurationOfTick());
 					}catch(Exception e){
@@ -102,7 +102,7 @@ public class Controller {
 
 			}
 			if(options.getWriteInFileOption().equals("Write all")){
-				outputFastA.writeInFile(options.getOutputFilename());
+				outputFile.writeInFile(options.getOutputFilename());
 			}
 
 			
@@ -153,35 +153,45 @@ public class Controller {
 		
 	}
 	
-	/**
-	 * pls dont delete the function its necessary for the create new Setting file  button
-	 * @param blastfilePath
-	 * @param settingname
-	 * @param dimension
-	 */
-	public void createSettingfile(String blastfilePath, String settingname, int dimension){
-		try {
-			createSetting newSetting = new createSetting(blastfilePath, settingname, dimension);
-		} catch (IOException e) {
-			// TODO catch needs to be done
-			e.printStackTrace();
-		}
-	}
-	
 	
 	public static void setupModel(int basecalling, String settingfile, int windowSize) throws Exception{
 		BasecallingErrorRate basecallingError = new BasecallingErrorRate(basecalling,settingfile);
 		LengthDistribution lengthDistribution = new LengthDistribution(windowSize);	
 	}
-	//works
+	
+	
+	/**
+	 * Either a new fasta or fastq inputFile is created depending on gui input
+	 * @param filename
+	 * @throws MyException
+	 */
 	private void checkFileEnding(String filename) throws MyException{
-		if(!filename.endsWith(".fasta")){
+		if(filename.endsWith(".fasta")){
+			inputFile = new FastA();
+		}else if(filename.endsWith(".fastq")){
+			inputFile = new FastQ();
+		}else{
 			throw new MyException(ErrorCodes.BAD_FILETYPE);
 		}
 	}
 	
-	public ArrayList<MyException> getFastAErrors() {
-		return fastA.getErrorInSequence();
+	private void createOutputFormat() throws MyException{
+		
+		if(options.getOutputFormat() == "fasta"){
+			outputFile = new FastA();
+		}else if(options.getOutputFormat() == "fastq"){
+			outputFile = new FastQ();
+		}else{
+			throw new MyException(ErrorCodes.BAD_FILETYPE);
+		}
+	}
+	
+	public ArrayList<MyException> getInputFileErrors() {
+		return inputFile.getErrorInSequence();
+	}
+	
+	public ArrayList<MyException> getOutoutFileErrors(){
+		return outputFile.getErrorInSequence();
 	}
 
 /*	public static void main(String[] args){
@@ -191,36 +201,7 @@ public class Controller {
 		cd.run();
 	
 	}*/
-	public void setOption(GUIOptions options){
-		this.options = options;
-		//wrong filetype works
-		try{
-			checkFileEnding(options.getInputFilename());
-			this.fastA = new FastA();
-			this.outputFastA = new FastA();
-			fastA.parse(options.getInputFilename());
-			this.flowcell = new Flowcell(options.getNumberOfPores(),options.getMaxAgeOfPores());
-			status = "Running";
-			//TODO options.getSetting or sth like that
-			//TODO create SettingFile
-			setupModel(options.getBasecalling(),"default",options.getWindowSizeForLengthDistribution());
-			currentNumberOfTicks = 0;
-		}catch(MyException e){
-			System.err.println(e.getErrorMessage());
-		}catch(Exception e){
-			System.err.println(e.getMessage());
-		}
-	}
-	
-	public void writeOptions(){
-		
-		if(this.fastA != null){
-			System.out.println("FastA not null.");
-			if(this.outputFastA != null){
-				System.out.println("outputFastA not null.");
-			}
-		}
-	}
+
 	public Flowcell getFlowcell()
 	{
 		return flowcell;
