@@ -747,7 +747,17 @@ public class minION extends javax.swing.JFrame {
 
 	String message= "";
 	int basecalling = 0;
+	String inputFormat = "fasta";
+	
+	//Check which Input format is chosen
+    if(fastA.isSelected()){
+        inputFormat="fasta";
+    }
+    else if(fastQ.isSelected()){
+        inputFormat="fastq";
+    }
 
+    //Check which dimension is chosen
 	String chosen = (String) dimComboBox.getSelectedItem();
 
 			if (chosen.equals("1D")) {
@@ -781,7 +791,8 @@ public class minION extends javax.swing.JFrame {
 		GUIOptions options = new GUIOptions(
 				sourceField.getText(),
 				outputFileTextField.getText(), 
-				(String) outputComboBox.getSelectedItem(),"fasta",
+				(String) outputComboBox.getSelectedItem(),
+				inputFormat,
 				basecalling, 
 				Integer.parseInt(numberOfPoresFormattedTextField1.getText()),
 				Integer.parseInt(maxAgeOfPoresTextField.getText()),
@@ -790,7 +801,7 @@ public class minION extends javax.swing.JFrame {
 				Integer.parseInt(windowSizeFormattedTextField.getText()));
 		this.cd = new Controller(options);
 		System.out.println(options.getInputFilename());
-		cd.run();
+		//cd.run();
 			
 
 	int length= cd.getOutputFileErrors().size();
