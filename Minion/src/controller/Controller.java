@@ -35,32 +35,39 @@ public class Controller {
 	private FiletypeContainingSequences inputFile;
 	private FiletypeContainingSequences outputFile;
 	private Flowcell flowcell;
-	private String status; //"Ready","Running","Paused","Stopped"
+	private String status; //"Running","Paused","Stopped"
 	private int currentNumberOfTicks;
 	
 	
-	
+//	public Controller(){
+//		
+//	}
 	public Controller(GUIOptions options){
 		this.options = options;
 		//first its determined if a new fasta or fasta file was the input
 		try{
-			
 			checkFileEnding(options.getInputFilename());
 			createOutputFormat();
-			
-			
-			//initializing run
-			setupModel(options.getBasecalling(),"default",options.getWindowSizeForLengthDistribution());
-			currentNumberOfTicks = 0;
-			this.flowcell = new Flowcell(options.getNumberOfPores(),options.getMaxAgeOfPores(),options.getOutputFormat());
-			status = "Running";
+			initialize(options);
 			//TODO options.getSetting or sth like that
 			//TODO create SettingFile
 		}catch(MyException e){
-			System.err.println(e.getErrorMessage());
+			System.err.println("Controller constructor: "+e.getErrorMessage());
 		}catch(Exception e){
-			System.err.println(e.getMessage());
+			System.err.println("Controller constructor: "+e.getMessage());
 		}
+	}
+
+	private void initialize(GUIOptions options) throws Exception, MyException {
+		String settingPathName = "C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/default.settings";
+		try{
+		setupModel(options.getBasecalling(),settingPathName,options.getWindowSizeForLengthDistribution());
+		}catch(Exception e){
+			System.out.println("SetupModel exception"+ e.getMessage());
+		}
+		currentNumberOfTicks = 0;
+		this.flowcell = new Flowcell(options.getNumberOfPores(),options.getMaxAgeOfPores(),options.getOutputFormat());
+		status = "Running";
 	}
 
 	public void run(){
@@ -167,8 +174,10 @@ public class Controller {
 	private void checkFileEnding(String filename) throws MyException{
 		if(filename.endsWith(".fasta")){
 			inputFile = new FastA();
+			System.out.println("new FastA file created");
 		}else if(filename.endsWith(".fastq")){
 			inputFile = new FastQ();
+			System.out.println("new FastQ file created");
 		}else{
 			throw new MyException(ErrorCodes.BAD_FILETYPE);
 		}
@@ -193,13 +202,34 @@ public class Controller {
 		return outputFile.getErrorInSequence();
 	}
 
-/*	public static void main(String[] args){
-		
-		GUIOptions op = new GUIOptions("C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/src/example4.fasta","TestController.txt","Real-Time",1,1,100,10,100,10);
-		Controller cd = new Controller(op);
-		cd.run();
-	
-	}*/
+//	public static void main(String[] args){
+//		
+//		//GUIOptions op = new GUIOptions("C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/src/example4.fasta","TestController.txt","Real-Time","fastq",1,1,100,10,100,10);
+//		Controller cd = new Controller();
+//		
+////		try{
+////			cd.checkFileEnding(".fasta");
+////		}catch(MyException e){
+////			System.out.println("Controller test checkfileEnding: "+ e.getErrorMessage());
+////		}
+////		try{
+////			cd.checkFileEnding(".fastq");
+////		}catch(MyException e){
+////			System.out.println("Controller test checkfileEnding: "+ e.getErrorMessage());
+////		}
+////		try{
+////			cd.checkFileEnding(".notRightFiletype");
+////		}catch(MyException e){
+////			System.out.println("Controller test checkfileEnding: "+ e.getErrorMessage());
+////		}
+////		try{
+////			setupModel(1,"C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/src/default.setting",10);
+////		}catch(Exception e){
+////			System.out.println("SetupMOdel test " + e.getMessage());
+////		}
+//		//cd.run();
+//	
+//	}
 
 	public Flowcell getFlowcell()
 	{
