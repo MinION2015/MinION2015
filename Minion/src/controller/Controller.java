@@ -93,10 +93,10 @@ public class Controller {
 					}
 				}
 				currentNumberOfTicks++;
-				if(currentNumberOfTicks == 50){
-					System.out.println("currentNum Ticks: "+currentNumberOfTicks);
-					pause();
-				}
+//				if(currentNumberOfTicks == 50){
+//					System.out.println("currentNum Ticks: "+currentNumberOfTicks);
+//					pause();
+//				}
 
 
 
@@ -125,7 +125,7 @@ public class Controller {
 		}
 	}
 	public void pause(){
-		int counter=0;
+		//int counter=0;
 		status = "Paused";
 		System.out.println("Paused");
 		while(status.equals("Paused")){
@@ -135,11 +135,11 @@ public class Controller {
 				// TODO Auto-generated catch block
 				System.err.println(e.getMessage());
 			}
-			counter++;
-			if(counter == 3000){
-				System.out.println("resumed");
-				resume();
-			}
+//			counter++;
+//			if(counter == 3000){
+//				System.out.println("resumed");
+//				resume();
+//			}
 			
 		}
 	}
@@ -148,8 +148,7 @@ public class Controller {
 		status = "Simulation is Stopped";
 		System.out.println("Stopped");
 		currentNumberOfTicks = options.getTotalNumberOfTicks();
-		//should not do anything, doesn't :)
-		resume();
+		
 		
 	}
 	
@@ -190,7 +189,7 @@ public class Controller {
 		return inputFile.getErrorInSequence();
 	}
 	
-	public ArrayList<MyException> getOutoutFileErrors(){
+	public ArrayList<MyException> getOutputFileErrors(){
 		return outputFile.getErrorInSequence();
 	}
 

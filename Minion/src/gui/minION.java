@@ -36,7 +36,7 @@ public class minION extends javax.swing.JFrame {
 	private int numberOfPores;
 	private int runningTime;
 	private int windowSizeForLengthDistribution;
-	private Controller cd = new Controller();
+	private Controller cd;
     /**
      * Creates new form NewJFrame
      */
@@ -781,27 +781,26 @@ public class minION extends javax.swing.JFrame {
 		GUIOptions options = new GUIOptions(
 				sourceField.getText(),
 				outputFileTextField.getText(), 
-				(String) outputComboBox.getSelectedItem(),
+				(String) outputComboBox.getSelectedItem(),"fasta",
 				basecalling, 
 				Integer.parseInt(numberOfPoresFormattedTextField1.getText()),
 				Integer.parseInt(maxAgeOfPoresTextField.getText()),
 				Integer.parseInt(durationPerTickFormattedTextField.getText()),
 				Integer.parseInt(numberOfTicksTextField.getText()),
 				Integer.parseInt(windowSizeFormattedTextField.getText()));
-		cd.writeOptions();
-		cd.setOption(options);
-		cd.writeOptions();
-		//cd.run();
+		this.cd = new Controller(options);
+		System.out.println(options.getInputFilename());
+		cd.run();
 			
 
-	int length= cd.getFastAErrors().size();
+	int length= cd.getOutputFileErrors().size();
 
 	for(int i=0; i<length;i++)
 	{
-		if(this.cd.getFastAErrors().get(i).isCriticalError()) {
-			JOptionPane.showMessageDialog(null, this.cd.getFastAErrors().get(i).getErrorMessage(), "Critical Error", JOptionPane.ERROR_MESSAGE);
+		if(this.cd.getOutputFileErrors().get(i).isCriticalError()) {
+			JOptionPane.showMessageDialog(null, this.cd.getOutputFileErrors().get(i).getErrorMessage(), "Critical Error", JOptionPane.ERROR_MESSAGE);
 		} else {
-			message= message + " " + this.cd.getFastAErrors().get(i).getErrorMessage()+"\n";
+			message= message + " " + this.cd.getOutputFileErrors().get(i).getErrorMessage()+"\n";
 			outputTextArea.setText(message); 
 		}
 	}
