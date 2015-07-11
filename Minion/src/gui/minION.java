@@ -800,7 +800,7 @@ public class minION extends javax.swing.JFrame {
 				Integer.parseInt(numberOfTicksTextField.getText()),
 				Integer.parseInt(windowSizeFormattedTextField.getText()));
 		this.cd = new Controller(options);
-		System.out.println(options.getInputFilename());
+		//System.out.println(options.getInputFilename());
 		//cd.run();
 			
 
@@ -830,10 +830,13 @@ public class minION extends javax.swing.JFrame {
     	stopButton.setEnabled(false);
     	pauseButton.setText("Resume");
         cd.pause();
-    }else
+    }
+    else{
     	stopButton.setEnabled(true);
     	pauseButton.setText("Pause");
-    	cd.resume();  	
+    	cd.resume();  
+    }
+	
     }                                           
 
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {                                             
@@ -951,6 +954,8 @@ public class minION extends javax.swing.JFrame {
     }                                                     
 
     private void stopButtonActionPerformed(java.awt.event.ActionEvent evt) {                                           
+    
+    pauseButton.setText("Pause");
     pauseButton.setEnabled(false);
     stopButton.setEnabled(false);
     cd.stop();
