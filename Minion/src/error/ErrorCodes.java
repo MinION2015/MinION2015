@@ -28,6 +28,8 @@ public enum ErrorCodes {
 	FLOWCELL_EMPTY(4000,"Flowcell is empty.",true),
 	FLOWCELL_CONTAINS_PORES(4001,"Current number of pores in flowcell: ",false),
 	FLOWCELL_Invalid_Pore_Status(4002,"Invalide Pore Status ",false),
+	FLOWCELL_ONLY_CONTAINS_DEAD_PORES(4003,"All pores are dead",true),
+	FLOWCELL_OUTPUT_FORMAT_COULD_NOT_BE_CREATED(4004,"Flowcell output format could not be created.", true),
 	
 	CONTROLLER_NOT_RUNNING(5000,"Program doesn't run.",true),
 	CONTROLLER_NOT_PAUSING(5001,"Program deosn't pause",true),

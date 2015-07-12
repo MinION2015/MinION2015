@@ -25,7 +25,7 @@ import LengthDistribution.LengthDistribution;
  */
 /**
  * TODO : comments, class that will create a FastQ read(Kevin?), changing errormodel accroding to time, maybe some kind of tryToChangeModelFunction that gets called and changes accroding to numbers of times aslked(a bit like Pore)
- * Write more testcases, think about if start flowcell is actually needed, test start/stop/pause using gui, change tests using absolute path, how does pore know what to write
+ * Write more testcases, think about if start flowcell is actually needed,  change tests using absolute path, how does pore know what to write
  * add contracts
  * @author Friederike
  *
@@ -43,6 +43,9 @@ public class Controller {
 //	public Controller(){
 //		
 //	} //used for testing
+/**	
+ * @param options
+ */
 	public Controller(GUIOptions options){
 		System.out.println("New Controller is created.");
 		this.options = options;
@@ -71,7 +74,7 @@ public class Controller {
 			//when p.simulat is commented out in pore method than it works, why? -> p.simulate seems to give nullpointer
 			//flowcell.startFlowcell(inputFile.getSequence().get(pos));
 			
-			while((currentNumberOfTicks < options.getTotalNumberOfTicks()) && !checkIfStoppedYet()  && flowcell.getNumberOfPores() > 0){
+			while((currentNumberOfTicks < options.getTotalNumberOfTicks()) && !checkIfStoppedYet()  && flowcell.getNumberOfAlivePores() > 0){
 				
 				pos = Chance.getRandInt(0, inputFile.getSequence().size()-1);
 				//flowcell.tick(inputFile.getSequence().get(pos));
