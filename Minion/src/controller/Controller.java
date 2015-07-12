@@ -38,7 +38,7 @@ public class Controller {
 	private Flowcell flowcell;
 	private String status; //"Running","Paused","Stopped"
 	private int currentNumberOfTicks;
-	
+	private boolean hasBeenStopped =false;
 	
 //	public Controller(){
 //		
@@ -70,10 +70,9 @@ public class Controller {
 			
 			//when p.simulat is commented out in pore method than it works, why? -> p.simulate seems to give nullpointer
 			//flowcell.startFlowcell(inputFile.getSequence().get(pos));
-			
-			System.out.println(checkIfNotStopped());
-			boolean isStopped = checkIfNotStopped();
-			while((currentNumberOfTicks < options.getTotalNumberOfTicks()) && isStopped  && flowcell.getNumberOfPores() > 0){
+			boolean a = checkIfStoppedYet();
+			System.out.println(!a);
+			while((currentNumberOfTicks < options.getTotalNumberOfTicks()) && !checkIfStoppedYet()  && flowcell.getNumberOfPores() > 0){
 				
 				pos = Chance.getRandInt(0, inputFile.getSequence().size()-1);
 				//flowcell.tick(inputFile.getSequence().get(pos));
@@ -103,9 +102,9 @@ public class Controller {
 
 			
 			System.out.println("Run was executed without throwing errors");
-//		}catch(MyException e){
-//			System.err.println("Run method in Controller "+e.getErrorMessage());
-//			throw new MyException(ErrorCodes.CONTROLLER_NOT_RUNNING);
+		}catch(MyException e){
+			System.err.println("Run method in Controller: "+e.getErrorMessage());
+			throw new MyException(ErrorCodes.CONTROLLER_NOT_RUNNING);
 		}catch(Exception e){
 			System.err.println("Run method in Controller2: "+e.getMessage());
 			throw new MyException(ErrorCodes.CONTROLLER_NOT_RUNNING);
@@ -113,15 +112,16 @@ public class Controller {
 	}
 
 	public void resume() throws MyException{
-
+		
 		try{
-			if(status.equals("Paused")){
-				status = "Running";
-				System.out.println("Resumed");
-				System.out.println("currentNum Ticks when resuming(should be equal to when pausing): "+currentNumberOfTicks);
-				run();
-				
-			}
+				checkIfStoppedYet();
+				if(status.equals("Paused")){
+					status = "Running";
+					System.out.println("Resumed");
+					System.out.println("currentNum Ticks when resuming(should be equal to when pausing): "+currentNumberOfTicks);
+					run();
+
+				}
 		}catch(MyException e){
 			throw new MyException(ErrorCodes.CONTROLLER_NOT_RESUMING);
 		}
@@ -130,6 +130,7 @@ public class Controller {
 	public void pause() throws MyException{
 		int counter=0;
 		try{
+			checkIfStoppedYet();
 			status = "Paused";
 			System.out.println("Paused");
 			System.out.println("Current number of ticks when pausing: "+currentNumberOfTicks);
@@ -158,16 +159,14 @@ public class Controller {
 		currentNumberOfTicks = options.getTotalNumberOfTicks();	
 	}
 	
-	private boolean checkIfNotStopped() throws MyException{
-		System.out.println("blub");
-		boolean notStopped = true;
+	private boolean checkIfStoppedYet() throws MyException{
 		if(status.equals("Stopped")){
-			notStopped = false;
-			System.out.println(notStopped);
+			hasBeenStopped = true;
+			System.out.println("Program has been stopped: "+hasBeenStopped);
 			throw new MyException(ErrorCodes.CONTROLLER_NOT_RUNNING);
 		}
 		
-		return notStopped;
+		return hasBeenStopped;
 	}
 
 	
@@ -255,72 +254,46 @@ public class Controller {
  * Tests
  * @param args
  */
-//	public static void main(String[] args){
+	public static void main(String[] args){
+		
+		GUIOptions op = new GUIOptions("C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/src/example4.fasta","TestController.txt","Real-Time","fasta","C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/default.setting",1,1,100,10,100,10);
+//		Controller cd = new Controller();
 //		
-//		GUIOptions op = new GUIOptions("C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/src/example4.fasta","TestController.txt","Real-Time","fasta","C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/default.setting",1,1,100,10,100,10);
-////		Controller cd = new Controller();
-////		
-////		//expected output
-////		try {
-////			cd.createInputFormat("example.fastq"); //expected: new FastQ is created
-////			cd.createInputFormat("example.fasta"); //expected: new FastA is created
-////			cd.createInputFormat("example.txt"); // catch block is expected
-////		} catch (MyException e) {
-////			System.err.println("create inputformat method in controller throws following error: "+ e.getErrorMessage());
-////		}
-////		
-////		//expected output
-////		try{
-////			cd.createOutputFormat("fasta"); //expected: new FastA output created
-////			cd.createOutputFormat("fastq"); //expected: new fastQ output created
-////			cd.createOutputFormat("txt"); //catch block expected
-////		}catch(MyException e){
-////			System.err.println("create outputformat method in controller throws following error: "+ e.getErrorMessage());
-////		}
-////		
-////		//TODO unexpected error
-////		try {
-////			setupModel(op.getBasecalling(), op.getBasecallingSetup(), 10);
-////		}  catch (Exception e) {
-////			System.err.println("model excep: "+ e.getMessage());
-////		}
-////		
-////		//expected output
-////		try{
-////			cd.initialize(op); //expected: flowcell is created
-////			System.out.println("current# Ticks: " + cd.currentNumberOfTicks); //expected:0
-////			System.out.println("status of controller: "+ cd.status);//expected: Running
-////		}catch(MyException e){
-////			System.err.println("Initialize method in controller throws following error: "+ e.getErrorMessage()); //expected: setupModel doesnt work
-////		}
-//		
-//		Controller cd = new Controller(op);
-////		try{
-////			cd.run();
-////		}catch (MyException e){
-////			System.err.println("Running thrwos: "+ e.getErrorMessage());
-////		}
-////		
-////		try{
-////			cd.pause();
-////		}catch(MyException e){
-////			System.err.println("Pause thrwos: "+ e.getErrorMessage());
-////		}
-////		
-////		try{
-////			cd.resume();
-////		}catch(MyException e){
-////			System.err.println("Pause thrwos: "+ e.getErrorMessage());
-////		}
-//		
-//		try{
-//			cd.stop();
-//		}catch(MyException e){
-//			System.err.println("Stop thrwos: "+ e.getErrorMessage());
+//		//expected output
+//		try {
+//			cd.createInputFormat("example.fastq"); //expected: new FastQ is created
+//			cd.createInputFormat("example.fasta"); //expected: new FastA is created
+//			cd.createInputFormat("example.txt"); // catch block is expected
+//		} catch (MyException e) {
+//			System.err.println("create inputformat method in controller throws following error: "+ e.getErrorMessage());
 //		}
-//		//this should now not be able to be executed anymore:
-//		System.err.println("There shouldn't be any output after this line.");
-//		System.out.println(cd.status);
+//		
+//		//expected output
+//		try{
+//			cd.createOutputFormat("fasta"); //expected: new FastA output created
+//			cd.createOutputFormat("fastq"); //expected: new fastQ output created
+//			cd.createOutputFormat("txt"); //catch block expected
+//		}catch(MyException e){
+//			System.err.println("create outputformat method in controller throws following error: "+ e.getErrorMessage());
+//		}
+//		
+//		//TODO unexpected error
+//		try {
+//			setupModel(op.getBasecalling(), op.getBasecallingSetup(), 10);
+//		}  catch (Exception e) {
+//			System.err.println("model excep: "+ e.getMessage());
+//		}
+//		
+//		//expected output
+//		try{
+//			cd.initialize(op); //expected: flowcell is created
+//			System.out.println("current# Ticks: " + cd.currentNumberOfTicks); //expected:0
+//			System.out.println("status of controller: "+ cd.status);//expected: Running
+//		}catch(MyException e){
+//			System.err.println("Initialize method in controller throws following error: "+ e.getErrorMessage()); //expected: setupModel doesnt work
+//		}
+		
+		Controller cd = new Controller(op);
 //		try{
 //			cd.run();
 //		}catch (MyException e){
@@ -338,8 +311,35 @@ public class Controller {
 //		}catch(MyException e){
 //			System.err.println("Pause thrwos: "+ e.getErrorMessage());
 //		}
-//		
-//	}
+		
+		try{
+			cd.stop();
+		}catch(MyException e){
+			System.err.println("Stop throws: "+ e.getErrorMessage());
+		}
+		//this should now not be able to be executed anymore:
+		System.err.println("There shouldn't be any output after this line.");
+		System.out.println(cd.status);
+		System.out.println("cur#Ticks vs. maxNumberOfTicks : "+ cd.currentNumberOfTicks + " "+ op.getTotalNumberOfTicks());
+		try{
+			cd.run();
+		}catch (MyException e){
+			System.err.println("Catch in main for run() throws: "+ e.getErrorMessage());
+		}
+		
+		try{
+			cd.pause();
+		}catch(MyException e){
+			System.err.println("Pause thrwos: "+ e.getErrorMessage());
+		}
+		
+		try{
+			cd.resume();
+		}catch(MyException e){
+			System.err.println("Resume thrwos: "+ e.getErrorMessage());
+		}
+		
+	}
 
 }
 
