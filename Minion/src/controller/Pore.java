@@ -19,21 +19,25 @@ import error.MyException;
 public class Pore {
 	
 
-	String sequenceAsString =""; //can't come up with anything better right now, will rename later. Rike
+	private String sequenceAsString =""; //can't come up with anything better right now, will rename later. Rike
 	private Sequence seq;
-
-	private String state = "Bored";
-	private int age = 0;
-	private int numbersOfTimeAsked = 0;
 	private int sequenceLength = 0; //for checking if more ticks are are done then sequence length sf
-	private static int  ageLimit=0;
-	private static int [] deathProbs = new int[ageLimit];// the probabilities if the pore dies depending on ageLimit 
-	private static int [] sleepProbs = new int[500];// the probabilities if the pore goes to sleep depending on the time it last slept
-	private static int [] wakeProbs = new int[100];
-	private boolean beenAsleepOnce=false;
-	private int timeBetweenLastSlumber=0;
-	private int sleepTime=0; //time it has been sleeping
-	private boolean wokeUp=false;
+	
+	
+	private String state;
+	private int age;
+	private int numbersOfTimeAsked;
+	private int timeBetweenLastSlumber;
+	private int sleepTime; //time it has been sleeping
+	private boolean beenAsleepOnce;
+	private boolean wokeUp;
+	
+	
+	private static int  ageLimit;
+	private static int [] deathProbs;// the probabilities if the pore dies depending on ageLimit 
+	private static int [] sleepProbs;// the probabilities if the pore goes to sleep depending on the time it last slept
+	private static int [] wakeProbs;
+	
 	
 	/**
 	 * @author Albert Langensiepen
@@ -45,45 +49,20 @@ public class Pore {
 	}
 	public Pore(int ageLimit)
 	{
+		state = "Bored";
+		age = 0;
+		numbersOfTimeAsked = 0;
+		beenAsleepOnce = false;
+		timeBetweenLastSlumber = 0;
+		sleepTime = 0;
+		wokeUp = false;
 		this.ageLimit=ageLimit;
-		this.deathProbs =new int[ageLimit];
-		this.deathProbs =setDeathProbs(ageLimit);
-		this.sleepProbs=setSleepProbs(500); // for now after 500 ticks the Pore will definitely go to sleep
-		this.wakeProbs=setWakeProbs(100);
+		deathProbs = new int[ageLimit];
+		deathProbs = setDeathProbs(ageLimit);
+		sleepProbs=setSleepProbs(500); // for now after 500 ticks the Pore will definitely go to sleep
+		wakeProbs=setWakeProbs(100);
 	}
 	
-	//Exceptions fŸr zu hohes age -> arrayoutofBounds schreiben
-//	public static void main(String[] args) throws MyException, IOException
-//	{
-//		
-//		Pore p = new Pore(700);
-//		
-////		p.sleepTime=10;
-////		p.beenAsleepOnce=true;
-////		p.timeBetweenLastSlumber=400;
-////		p.age=599;
-////		p.numbersOfTimeAsked=5;
-////		p.sequenceLength=10;
-////		p.setStatus("Running");
-////		System.out.println(p.checkStatus());
-////		System.out.println("Pore State: "+p.state);
-////		System.out.println("Age: "+p.age);
-////		System.out.println("Numbers of Times Asked: "+p.numbersOfTimeAsked);
-////		
-//		
-//		Sequence seq = new Sequence(">","ATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG");
-//		try {
-//			p.simulate(seq);
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		//System.out.println(p.simulate(seq).getSequence()); 
-//		
-//
-//		
-//		
-//	}
 
 	/**
 	 * @author Albert Langensiepen und Daniel Dehncke und Friederike Hanssen(reorganized somethings, tried to avoid that no length is getting returned by implementing a do while loop insted of a for loop until 10,
@@ -151,12 +130,10 @@ public class Pore {
 		}
 
 		sequence.setSequence(sequenceAsString);	
+		//TODO sequence.setScore(sequence.assignScore); //sth like this
 		return sequence;
 	}
 	
-	public Sequence getSequenceFromPore(){
-		return seq;
-	}
 	/**
 	 * @author Daniel Dehncke und Albert Langensiepen
 	 * @return String state
@@ -265,11 +242,6 @@ public class Pore {
 		
 	}
 	
-	public void setStatus(String state)
-	{
-		this.state = state;
-	}
-	
 	/**
 	 * @author: Albert Langensiepen
 	 * @input: age of a Pore 
@@ -369,7 +341,6 @@ public class Pore {
 		}
 		return deathProbs;
 	}
-	
 	private static int[] setSleepProbs(int age)
 	{
 		for(int i=0; i<age;i++)
@@ -389,7 +360,6 @@ public class Pore {
 		}
 		return sleepProbs;
 	}
-	
 	private static int[] setWakeProbs(int age)
 	{
 		for(int i=0; i<age;i++)
@@ -409,6 +379,11 @@ public class Pore {
 		}
 		return wakeProbs;
 	}
+	public void setStatus(String state)
+	{
+		this.state = state;
+	}
+
 	public String getState()
 	{
 		return state;
@@ -417,24 +392,64 @@ public class Pore {
 	{
 		return numbersOfTimeAsked;
 	}
-	
-//	
-	public static void main(String[] args){
-		Pore p = new Pore(10);
-		Sequence seq = new FastASequence("me","GGTTAAGCGACTAAGCGTACACGGTGGATGCCTAGGCAGTCAGAGGCGATGAAGGGCGTGCTAATCTGCGAAAAGCGTCGGTAAGCTGATATGAAGCGTTATAACCGACGATACCCGAATGGGGAAACCCAGTGCAATACGTTGCACTATCGTTAGATGAATACATAGTCTAACGAGGCGAACCGGGGGAACTGAAACATCTAAGTACCCCGAGGAAAAGAAATCAACCGAGATTCCCCCAGTAGCGGCGAGCGAACGGGGAGGAGCCCAGAGTCTGAATCAGTTTGTGTGTTAGTGGAAGCGTCTGGAAAGTCGCACGGTACAGGGTGATAGTCCCGTACACCAAAATGCACAGGCTGTGAACTCGATGAGTAGGGCGGGACACGTGACATCCTGTCTGAATATGGGGGGACCATCCTCCAAGGCTAAATACTCCTGACTGACCGATAGTGAACCAGTACCGTGAGGGAAAGGCGAAAAGAACCCCGGCGAGGGGAGTGAAATAGAACCTGAAACCGTGTACGTACAAGCAGTGGGAGCACCTTCGTGGTGTGACTGCGTACCTTTTGTATAATGGGTCAGCGACTTATATTTTGTAGCAAGGTTAACCGAATAGGGGAGCCGTAGGGAAACCGAGTCTTAACTAGGCGTCTAGTTGCAAGGTATAGACCCGAAACCCGGTGATCTAGCCATGGGCAGGTTGAAGGTTGGGTAACACTAACTGGAGGACCGAACCGACTAATGTTGAAAAATTAGCGGATGACTTGTGGTGGGGGTGAAAGGCCAATCAAACCGGGAGATAGCTGGTTCTCCCCGAAAGCTATTTAGGTAGCGCCTCGTGAACTCATCTTCGGGGGTAGAGCACTGTTTCGGCTAGGGGGCCATCCCGGCTTACCAAACCGATGCAAAGGTTAAGCGACTAAGCGTACACGGTGGATGCCTAGGCAGTCAGAGGCGATGAAGGGCGTGCTAATCTGCGAAAAGCGTCGGTAAGCTGATATGAAGCGTTATAACCGACGATACCCGAATGGGGAAACCCAGTGCAATACGTTGCACTATCGTTAGATGAATACATAGTCTAACGAGGCGAACCGGGGGAACTGAAACATCTAAGTACCCCGAGGAAAAGAAATCAACCGAGATTCCCCCAGTAGCGGCGAGCGAACGGGGAGGAGCCCAGAGTCTGAATCAGTTTGTGTGTTAGTGGAAGCGTCTGGAAAGTCGCACGGTACAGGGTGATAGTCCCGTACACCAAAATGCACAGGCTGTGAACTCGATGAGTAGGGCGGGACACGTGACATCCTGTCTGAATATGGGGGGACCATCCTCCAAGGCTAAATACTCCTGACTGACCGATAGTGAACCAGTACCGTGAGGGAAAGGCGAAAAGAACCCCGGCGAGGGGAGTGAAATAGAACCTGAAACCGTGTACGTACAAGCAGTGGGAGCACCTTCGTGGTGTGACTGCGTACCTTTTGTATAATGGGTCAGCGACTTATATTTTGTAGCAAGGTTAACCGAATAGGGGAGCCGTAGGGAAACCGAGTCTTAACTAGGCGTCTAGTTGCAAGGTATAGACCCGAAACCCGGTGATCTAGCCATGGGCAGGTTGAAGGTTGGGTAACACTAACTGGAGGACCGAACCGACTAATGTTGAAAAATTAGCGGATGACTTGTGGTGGGGGTGAAAGGCCAATCAAACCGGGAGATAGCTGGTTCTCCCCGAAAGCTATTTAGGTAGCGCCTCGTGAACTCATCTTCGGGGGTAGAGCACTGTTTCGGCTAGGGGGCCATCCCGGCTTACCAAACCGATGCAAA");
-		try{
-			BasecallingErrorRate base = new BasecallingErrorRate(1,"default.setting");
-			LengthDistribution length = new LengthDistribution(10);
-		}catch(Exception e){
-			System.err.println("Something went wrong basecalling in pore test main: "+ e.getMessage());
-		}
-		try{
-			p.simulate(seq);
-		}catch(MyException e){
-			System.err.println("In pore class something went wrong in the simulte method : " + e.getErrorMessage());
-		}
-	
+	public Sequence getSequenceFromPore(){
+		return seq;
 	}
+	
+//	/**
+//	 * Test Friederike
+//	 * @param args
+//	 */
+//	public static void main(String[] args){
+//		Pore p = new Pore(10);
+//		Sequence seq = new FastASequence("me","GGTTAAGCGACTAAGCGTACACGGTGGATGCCTAGGCAGTCAGAGGCGATGAAGGGCGTGCTAATCTGCGAAAAGCGTCGGTAAGCTGATATGAAGCGTTATAACCGACGATACCCGAATGGGGAAACCCAGTGCAATACGTTGCACTATCGTTAGATGAATACATAGTCTAACGAGGCGAACCGGGGGAACTGAAACATCTAAGTACCCCGAGGAAAAGAAATCAACCGAGATTCCCCCAGTAGCGGCGAGCGAACGGGGAGGAGCCCAGAGTCTGAATCAGTTTGTGTGTTAGTGGAAGCGTCTGGAAAGTCGCACGGTACAGGGTGATAGTCCCGTACACCAAAATGCACAGGCTGTGAACTCGATGAGTAGGGCGGGACACGTGACATCCTGTCTGAATATGGGGGGACCATCCTCCAAGGCTAAATACTCCTGACTGACCGATAGTGAACCAGTACCGTGAGGGAAAGGCGAAAAGAACCCCGGCGAGGGGAGTGAAATAGAACCTGAAACCGTGTACGTACAAGCAGTGGGAGCACCTTCGTGGTGTGACTGCGTACCTTTTGTATAATGGGTCAGCGACTTATATTTTGTAGCAAGGTTAACCGAATAGGGGAGCCGTAGGGAAACCGAGTCTTAACTAGGCGTCTAGTTGCAAGGTATAGACCCGAAACCCGGTGATCTAGCCATGGGCAGGTTGAAGGTTGGGTAACACTAACTGGAGGACCGAACCGACTAATGTTGAAAAATTAGCGGATGACTTGTGGTGGGGGTGAAAGGCCAATCAAACCGGGAGATAGCTGGTTCTCCCCGAAAGCTATTTAGGTAGCGCCTCGTGAACTCATCTTCGGGGGTAGAGCACTGTTTCGGCTAGGGGGCCATCCCGGCTTACCAAACCGATGCAAAGGTTAAGCGACTAAGCGTACACGGTGGATGCCTAGGCAGTCAGAGGCGATGAAGGGCGTGCTAATCTGCGAAAAGCGTCGGTAAGCTGATATGAAGCGTTATAACCGACGATACCCGAATGGGGAAACCCAGTGCAATACGTTGCACTATCGTTAGATGAATACATAGTCTAACGAGGCGAACCGGGGGAACTGAAACATCTAAGTACCCCGAGGAAAAGAAATCAACCGAGATTCCCCCAGTAGCGGCGAGCGAACGGGGAGGAGCCCAGAGTCTGAATCAGTTTGTGTGTTAGTGGAAGCGTCTGGAAAGTCGCACGGTACAGGGTGATAGTCCCGTACACCAAAATGCACAGGCTGTGAACTCGATGAGTAGGGCGGGACACGTGACATCCTGTCTGAATATGGGGGGACCATCCTCCAAGGCTAAATACTCCTGACTGACCGATAGTGAACCAGTACCGTGAGGGAAAGGCGAAAAGAACCCCGGCGAGGGGAGTGAAATAGAACCTGAAACCGTGTACGTACAAGCAGTGGGAGCACCTTCGTGGTGTGACTGCGTACCTTTTGTATAATGGGTCAGCGACTTATATTTTGTAGCAAGGTTAACCGAATAGGGGAGCCGTAGGGAAACCGAGTCTTAACTAGGCGTCTAGTTGCAAGGTATAGACCCGAAACCCGGTGATCTAGCCATGGGCAGGTTGAAGGTTGGGTAACACTAACTGGAGGACCGAACCGACTAATGTTGAAAAATTAGCGGATGACTTGTGGTGGGGGTGAAAGGCCAATCAAACCGGGAGATAGCTGGTTCTCCCCGAAAGCTATTTAGGTAGCGCCTCGTGAACTCATCTTCGGGGGTAGAGCACTGTTTCGGCTAGGGGGCCATCCCGGCTTACCAAACCGATGCAAA");
+//		try{
+//			BasecallingErrorRate base = new BasecallingErrorRate(1,"default.setting");
+//			LengthDistribution length = new LengthDistribution(10);
+//		}catch(Exception e){
+//			System.err.println("Something went wrong basecalling in pore test main: "+ e.getMessage());
+//		}
+//		try{
+//			System.out.println("Simulation result: "+p.simulate(seq).getSequence());
+//			
+//		}catch(MyException e){
+//			System.err.println("In pore class something went wrong in the simulte method : " + e.getErrorMessage());
+//		}
+//	
+//	}
+	
+	//Exceptions fŸr zu hohes age -> arrayoutofBounds schreiben
+//	public static void main(String[] args) throws MyException, IOException
+//	{
+//		
+//		Pore p = new Pore(700);
+//		
+////		p.sleepTime=10;
+////		p.beenAsleepOnce=true;
+////		p.timeBetweenLastSlumber=400;
+////		p.age=599;
+////		p.numbersOfTimeAsked=5;
+////		p.sequenceLength=10;
+////		p.setStatus("Running");
+////		System.out.println(p.checkStatus());
+////		System.out.println("Pore State: "+p.state);
+////		System.out.println("Age: "+p.age);
+////		System.out.println("Numbers of Times Asked: "+p.numbersOfTimeAsked);
+////		
+//		
+//		Sequence seq = new Sequence(">","ATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG");
+//		try {
+//			p.simulate(seq);
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		//System.out.println(p.simulate(seq).getSequence()); 
+//		
+//
+//		
+//		
+//	}
 
 
 

@@ -24,10 +24,10 @@ import LengthDistribution.LengthDistribution;
  *@output file with results
  */
 /**
- * TODO : comments, class that will create a FastQ read(Kevin?), changing errormodel accroding to time, maybe some kind of tryToChangeModelFunction that gets called and changes accroding to numbers of times aslked(a bit like Pore)
- * Write more testcases, think about if start flowcell is actually needed,  change tests using absolute path, how does pore know what to write
+ * TODO : comments, class that will create a FastQ score(Kevin?), changing errormodel accroding to time, maybe some kind of tryToChangeModelFunction that gets called and changes accroding to numbers of times aslked(a bit like Pore)
+ * Write more testcases, 
  * add contracts
- * @author Friederike
+ * @author Friederike Hanssen
  *
  */
 public class Controller {
@@ -212,7 +212,6 @@ public class Controller {
 	 * @throws MyException
 	 */
 	private void createOutputFormat(String format) throws MyException{
-		
 		if(format == "fasta"){
 			outputFile = new FastA();
 			System.out.println("fastA output created");

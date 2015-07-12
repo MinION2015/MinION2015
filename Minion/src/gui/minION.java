@@ -804,8 +804,7 @@ public class minION extends javax.swing.JFrame {
 		try {
 			cd.run();
 		} catch (MyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.err.println("Error occuring in controller run methode "+e.getErrorMessage());
 		}
 			
 

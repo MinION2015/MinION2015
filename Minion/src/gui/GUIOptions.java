@@ -12,6 +12,7 @@ public class GUIOptions {
 	private String inputFilename;
 	private String outputFilename;
 	private String writeInFileOption;
+	
 	private int basecalling;
 	private int numberOfPores;
 	private int maxAgeOfPores;
