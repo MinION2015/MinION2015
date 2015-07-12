@@ -27,7 +27,12 @@ public enum ErrorCodes {
 	
 	FLOWCELL_EMPTY(4000,"Flowcell is empty.",true),
 	FLOWCELL_CONTAINS_PORES(4001,"Current number of pores in flowcell: ",false),
-	FLOWCELL_Invalid_Pore_Status(4002,"Invalide Pore Status ",false);
+	FLOWCELL_Invalid_Pore_Status(4002,"Invalide Pore Status ",false),
+	
+	CONTROLLER_NOT_RUNNING(5000,"Program doesn't run.",true),
+	CONTROLLER_NOT_PAUSING(5001,"Program deosn't pause",true),
+	CONTROLLER_NOT_RESUMING(5002,"Program doesn't resume",true),
+	CONTROLLER_NOT_STOPPING(5003,"Program doesn't stop",true);
 	
 	private final int identity;
 	private final String message;
