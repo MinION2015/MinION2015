@@ -65,28 +65,28 @@ public class Controller {
 	public void run() throws MyException{
 		System.out.println("Run is called");
 		try{	
-			System.out.println("error here");
 			//Sequence seq = new Sequence("me","GGTTAAGCGACTAAGCGTACACGGTGGATGCCTAGGCAGTCAGAGGCGATGAAGGGCGTGCTAATCTGCGAAAAGCGTCGGTAAGCTGATATGAAGCGTTATAACCGACGATACCCGAATGGGGAAACCCAGTGCAATACGTTGCACTATCGTTAGATGAATACATAGTCTAACGAGGCGAACCGGGGGAACTGAAACATCTAAGTACCCCGAGGAAAAGAAATCAACCGAGATTCCCCCAGTAGCGGCGAGCGAACGGGGAGGAGCCCAGAGTCTGAATCAGTTTGTGTGTTAGTGGAAGCGTCTGGAAAGTCGCACGGTACAGGGTGATAGTCCCGTACACCAAAATGCACAGGCTGTGAACTCGATGAGTAGGGCGGGACACGTGACATCCTGTCTGAATATGGGGGGACCATCCTCCAAGGCTAAATACTCCTGACTGACCGATAGTGAACCAGTACCGTGAGGGAAAGGCGAAAAGAACCCCGGCGAGGGGAGTGAAATAGAACCTGAAACCGTGTACGTACAAGCAGTGGGAGCACCTTCGTGGTGTGACTGCGTACCTTTTGTATAATGGGTCAGCGACTTATATTTTGTAGCAAGGTTAACCGAATAGGGGAGCCGTAGGGAAACCGAGTCTTAACTAGGCGTCTAGTTGCAAGGTATAGACCCGAAACCCGGTGATCTAGCCATGGGCAGGTTGAAGGTTGGGTAACACTAACTGGAGGACCGAACCGACTAATGTTGAAAAATTAGCGGATGACTTGTGGTGGGGGTGAAAGGCCAATCAAACCGGGAGATAGCTGGTTCTCCCCGAAAGCTATTTAGGTAGCGCCTCGTGAACTCATCTTCGGGGGTAGAGCACTGTTTCGGCTAGGGGGCCATCCCGGCTTACCAAACCGATGCAAAGGTTAAGCGACTAAGCGTACACGGTGGATGCCTAGGCAGTCAGAGGCGATGAAGGGCGTGCTAATCTGCGAAAAGCGTCGGTAAGCTGATATGAAGCGTTATAACCGACGATACCCGAATGGGGAAACCCAGTGCAATACGTTGCACTATCGTTAGATGAATACATAGTCTAACGAGGCGAACCGGGGGAACTGAAACATCTAAGTACCCCGAGGAAAAGAAATCAACCGAGATTCCCCCAGTAGCGGCGAGCGAACGGGGAGGAGCCCAGAGTCTGAATCAGTTTGTGTGTTAGTGGAAGCGTCTGGAAAGTCGCACGGTACAGGGTGATAGTCCCGTACACCAAAATGCACAGGCTGTGAACTCGATGAGTAGGGCGGGACACGTGACATCCTGTCTGAATATGGGGGGACCATCCTCCAAGGCTAAATACTCCTGACTGACCGATAGTGAACCAGTACCGTGAGGGAAAGGCGAAAAGAACCCCGGCGAGGGGAGTGAAATAGAACCTGAAACCGTGTACGTACAAGCAGTGGGAGCACCTTCGTGGTGTGACTGCGTACCTTTTGTATAATGGGTCAGCGACTTATATTTTGTAGCAAGGTTAACCGAATAGGGGAGCCGTAGGGAAACCGAGTCTTAACTAGGCGTCTAGTTGCAAGGTATAGACCCGAAACCCGGTGATCTAGCCATGGGCAGGTTGAAGGTTGGGTAACACTAACTGGAGGACCGAACCGACTAATGTTGAAAAATTAGCGGATGACTTGTGGTGGGGGTGAAAGGCCAATCAAACCGGGAGATAGCTGGTTCTCCCCGAAAGCTATTTAGGTAGCGCCTCGTGAACTCATCTTCGGGGGTAGAGCACTGTTTCGGCTAGGGGGCCATCCCGGCTTACCAAACCGATGCAAA");
 			int pos = Chance.getRandInt(0, inputFile.getSequence().size()-1);
+			
 			//when p.simulat is commented out in pore method than it works, why? -> p.simulate seems to give nullpointer
-			flowcell.startFlowcell(inputFile.getSequence().get(pos));
+			//flowcell.startFlowcell(inputFile.getSequence().get(pos));
 
 			while(currentNumberOfTicks < options.getTotalNumberOfTicks() && !status.equals("Stopped")  &&flowcell.getNumberOfPores() > 0){
 
 				pos = Chance.getRandInt(0, inputFile.getSequence().size()-1);
-				flowcell.tick(inputFile.getSequence().get(pos));
+				//flowcell.tick(inputFile.getSequence().get(pos));
 				if(options.getWriteInFileOption().equals("Real-Time")){
 					try{
-						flowcell.getFlowcellOutput().writeInFile(options.getOutputFilename());
+						//flowcell.getFlowcellOutput().writeInFile(options.getOutputFilename());
 						Thread.sleep(options.getDurationOfTick());
 					}catch(Exception e){
 						System.err.println(e.getMessage());
 					}
 				}else if(options.getWriteInFileOption().equals("Write all")){
 					try{
-						for(Sequence s : flowcell.getFlowcellOutput().getSequence()){
-							outputFile.addSeq(s);
-						}
+//						for(Sequence s : flowcell.getFlowcellOutput().getSequence()){
+//							outputFile.addSeq(s);
+//						}
 						Thread.sleep(options.getDurationOfTick());
 					}catch(Exception e){
 						System.err.println(e.getMessage());
@@ -94,17 +94,18 @@ public class Controller {
 				}
 				currentNumberOfTicks++;
 			}
-			if(options.getWriteInFileOption().equals("Write all")){
-				outputFile.writeInFile(options.getOutputFilename());
-			}
+//			if(options.getWriteInFileOption().equals("Write all")){
+//				outputFile.writeInFile(options.getOutputFilename());
+//			}
 
 			
 			System.out.println("Run was executed without throwing errors");
 //		}catch(MyException e){
 //			System.err.println("Run method in Controller "+e.getErrorMessage());
+//			throw new MyException(ErrorCodes.CONTROLLER_NOT_RUNNING);
 		}catch(Exception e){
 			System.err.println("Run method in Controller2: "+e.getMessage());
-			throws new MyException()
+			throw new MyException(ErrorCodes.CONTROLLER_NOT_RUNNING);
 		}	
 	}
 
@@ -270,7 +271,11 @@ public class Controller {
 //		}
 		
 		Controller cd = new Controller(op);
+		try{
 		cd.run();
+		}catch (MyException e){
+			System.err.println("Running thrwos: "+ e.getErrorMessage());
+		}
 	
 	}
 
