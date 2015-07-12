@@ -70,9 +70,11 @@ public class Controller {
 			
 			//when p.simulat is commented out in pore method than it works, why? -> p.simulate seems to give nullpointer
 			//flowcell.startFlowcell(inputFile.getSequence().get(pos));
-
-			while(currentNumberOfTicks < options.getTotalNumberOfTicks() && !status.equals("Stopped")  &&flowcell.getNumberOfPores() > 0){
-
+			
+			System.out.println(checkIfNotStopped());
+			boolean isStopped = checkIfNotStopped();
+			while((currentNumberOfTicks < options.getTotalNumberOfTicks()) && isStopped  && flowcell.getNumberOfPores() > 0){
+				
 				pos = Chance.getRandInt(0, inputFile.getSequence().size()-1);
 				//flowcell.tick(inputFile.getSequence().get(pos));
 				if(options.getWriteInFileOption().equals("Real-Time")){
@@ -93,6 +95,7 @@ public class Controller {
 					}
 				}
 				currentNumberOfTicks++;
+				
 			}
 			if(options.getWriteInFileOption().equals("Write all")){
 				outputFile.writeInFile(options.getOutputFilename());
@@ -109,43 +112,64 @@ public class Controller {
 		}	
 	}
 
-//	public void resume(){
-//		
-//		if(status.equals("Paused")){
-//			status = "Running";
-//			System.out.println("Resumed");
-//			run();
-//			//System.out.println("currentNum Ticks: "+currentNumberOfTicks);
-//		}
-//	}
-//	public void pause(){
-//		//int counter=0;
-//		status = "Paused";
-//		System.out.println("Paused");
-//		while(status.equals("Paused")){
-//			try {
-//				Thread.sleep(1);
-//			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
-//				System.err.println(e.getMessage());
-//			}
-////			counter++;
-////			if(counter == 3000){
-////				System.out.println("resumed");
-////				resume();
-////			}
-//			
-//		}
-//	}
-//	
-//	public void stop(){
-//		status = "Simulation is Stopped";
-//		System.out.println("Stopped");
-//		currentNumberOfTicks = options.getTotalNumberOfTicks();
-//		
-//		
-//	}
-//	
+	public void resume() throws MyException{
+
+		try{
+			if(status.equals("Paused")){
+				status = "Running";
+				System.out.println("Resumed");
+				System.out.println("currentNum Ticks when resuming(should be equal to when pausing): "+currentNumberOfTicks);
+				run();
+				
+			}
+		}catch(MyException e){
+			throw new MyException(ErrorCodes.CONTROLLER_NOT_RESUMING);
+		}
+	}
+	
+	public void pause() throws MyException{
+		int counter=0;
+		try{
+			status = "Paused";
+			System.out.println("Paused");
+			System.out.println("Current number of ticks when pausing: "+currentNumberOfTicks);
+			while(status.equals("Paused")){
+				try {
+					Thread.sleep(1);
+				} catch (InterruptedException e) {
+					System.err.println("Thread.sleep in pause throws following error: "+e.getMessage());
+				}
+				//for testing purposes: after 300 ticks something should happen and controller not be paused anymore
+				counter++;
+				if(counter == 3000){
+					resume();
+				}
+
+			}
+		}catch(MyException e){
+			throw new MyException(ErrorCodes.CONTROLLER_NOT_PAUSING);
+		}
+	}
+	
+	public void stop() throws MyException{
+		
+		status = "Stopped";
+		System.out.println("Stopped");
+		currentNumberOfTicks = options.getTotalNumberOfTicks();	
+	}
+	
+	private boolean checkIfNotStopped() throws MyException{
+		System.out.println("blub");
+		boolean notStopped = true;
+		if(status.equals("Stopped")){
+			notStopped = false;
+			System.out.println(notStopped);
+			throw new MyException(ErrorCodes.CONTROLLER_NOT_RUNNING);
+		}
+		
+		return notStopped;
+	}
+
 	
 	public ArrayList<MyException> getInputFileErrors() {
 		return inputFile.getErrorInSequence();
@@ -271,12 +295,50 @@ public class Controller {
 //		}
 		
 		Controller cd = new Controller(op);
+//		try{
+//			cd.run();
+//		}catch (MyException e){
+//			System.err.println("Running thrwos: "+ e.getErrorMessage());
+//		}
+//		
+//		try{
+//			cd.pause();
+//		}catch(MyException e){
+//			System.err.println("Pause thrwos: "+ e.getErrorMessage());
+//		}
+//		
+//		try{
+//			cd.resume();
+//		}catch(MyException e){
+//			System.err.println("Pause thrwos: "+ e.getErrorMessage());
+//		}
+		
+		try{
+			cd.stop();
+		}catch(MyException e){
+			System.err.println("Stop thrwos: "+ e.getErrorMessage());
+		}
+		//this should now not be able to be executed anymore:
+		System.err.println("There shouldn't be any output after this line.");
+		System.out.println(cd.status);
 		try{
 			cd.run();
 		}catch (MyException e){
 			System.err.println("Running thrwos: "+ e.getErrorMessage());
 		}
-	
+		
+		try{
+			cd.pause();
+		}catch(MyException e){
+			System.err.println("Pause thrwos: "+ e.getErrorMessage());
+		}
+		
+		try{
+			cd.resume();
+		}catch(MyException e){
+			System.err.println("Pause thrwos: "+ e.getErrorMessage());
+		}
+		
 	}
 
 }
