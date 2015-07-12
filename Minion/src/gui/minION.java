@@ -800,8 +800,8 @@ public class minION extends javax.swing.JFrame {
 				Integer.parseInt(numberOfTicksTextField.getText()),
 				Integer.parseInt(windowSizeFormattedTextField.getText()));
 		this.cd = new Controller(options);
-		//System.out.println(options.getInputFilename());
-		//cd.run();
+		System.out.println(options.getInputFilename());
+		cd.run();
 			
 
 	int length= cd.getOutputFileErrors().size();
