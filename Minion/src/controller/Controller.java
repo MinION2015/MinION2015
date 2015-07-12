@@ -94,9 +94,9 @@ public class Controller {
 				}
 				currentNumberOfTicks++;
 			}
-//			if(options.getWriteInFileOption().equals("Write all")){
-//				outputFile.writeInFile(options.getOutputFilename());
-//			}
+			if(options.getWriteInFileOption().equals("Write all")){
+				outputFile.writeInFile(options.getOutputFilename());
+			}
 
 			
 			System.out.println("Run was executed without throwing errors");
@@ -272,7 +272,7 @@ public class Controller {
 		
 		Controller cd = new Controller(op);
 		try{
-		cd.run();
+			cd.run();
 		}catch (MyException e){
 			System.err.println("Running thrwos: "+ e.getErrorMessage());
 		}
