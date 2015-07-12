@@ -46,10 +46,10 @@ public class Pore {
 	public Pore(int ageLimit)
 	{
 		this.ageLimit=ageLimit;
-//		this.deathProbs =new int[ageLimit];
-//		this.deathProbs =setDeathProbs(ageLimit);
-//		this.sleepProbs=setSleepProbs(500); // for now after 500 ticks the Pore will definitely go to sleep
-//		this.wakeProbs=setWakeProbs(100);
+		this.deathProbs =new int[ageLimit];
+		this.deathProbs =setDeathProbs(ageLimit);
+		this.sleepProbs=setSleepProbs(500); // for now after 500 ticks the Pore will definitely go to sleep
+		this.wakeProbs=setWakeProbs(100);
 	}
 	
 	//Exceptions fŸr zu hohes age -> arrayoutofBounds schreiben
@@ -86,7 +86,8 @@ public class Pore {
 //	}
 
 	/**
-	 * @author Albert Langensiepen und Daniel Dehncke und Friederike Hanssen(reorganized somet hings, tried to avoid that no length is getting returned by implementing a do while loop insted of a for loop until 10)
+	 * @author Albert Langensiepen und Daniel Dehncke und Friederike Hanssen(reorganized somethings, tried to avoid that no length is getting returned by implementing a do while loop insted of a for loop until 10,
+	 * but mainly added that the same sequence type the pore got will be returned, so that the pore doesn't have to bother with fasta/fastq format)
 	 * @throws Exception 
 	 * @functionality simulation of a single DNA sequence running through a minION Pore
 	 * 				  first a random starting point in the sequence is generated and a length is given
@@ -117,7 +118,7 @@ public class Pore {
 //				
 //			}
 //		}
-		//Suggestion(Friederike):
+		//Suggestion(Friederike): to avoid that no length will be found
 		boolean lengthFound = false;
 		do{
 			try{
@@ -137,7 +138,7 @@ public class Pore {
 		//random number between 0 and sequenceLength-lenght is created
 		int start = Chance.getRandInt(0,sequence.lengthOfSequence()-sequenceLength);		
 		
-		System.out.println(sequence.getSequence().substring(start, start+sequenceLength));
+//		System.out.println(sequence.getSequence().substring(start, start+sequenceLength));
 		try{
 			sequenceAsString = SimulationError.applyErrorBasecalling((sequence.getSequence().substring(start, start+sequenceLength)));
 		}catch(Exception e){//Should be mYException, but basecalling throws index out of bounds thus left it like this to keep the program running
