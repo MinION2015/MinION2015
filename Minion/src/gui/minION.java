@@ -801,7 +801,12 @@ public class minION extends javax.swing.JFrame {
 				Integer.parseInt(windowSizeFormattedTextField.getText()));
 		this.cd = new Controller(options);
 		System.out.println(options.getInputFilename());
-		cd.run();
+		try {
+			cd.run();
+		} catch (MyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 			
 
 	int length= cd.getOutputFileErrors().size();
@@ -829,12 +834,24 @@ public class minION extends javax.swing.JFrame {
     if(pauseButton.getText()=="Pause"){
     	stopButton.setEnabled(false);
     	pauseButton.setText("Resume");
-        cd.pause();
+        try {
+			cd.pause();
+		} catch (MyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
     else{
     	stopButton.setEnabled(true);
     	pauseButton.setText("Pause");
-    	cd.resume();  
+    	
+    	try {
+			cd.resume();
+		} catch (MyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}  
+    	
     }
 	
     }                                           
@@ -958,7 +975,12 @@ public class minION extends javax.swing.JFrame {
     pauseButton.setText("Pause");
     pauseButton.setEnabled(false);
     stopButton.setEnabled(false);
-    cd.stop();
+    try {
+		cd.stop();
+	} catch (MyException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
     }                                          
 
  

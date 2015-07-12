@@ -255,46 +255,72 @@ public class Controller {
  * Tests
  * @param args
  */
-	public static void main(String[] args){
-		
-		GUIOptions op = new GUIOptions("C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/src/example4.fasta","TestController.txt","Real-Time","fasta","C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/default.setting",1,1,100,10,100,10);
-//		Controller cd = new Controller();
+//	public static void main(String[] args){
 //		
-//		//expected output
-//		try {
-//			cd.createInputFormat("example.fastq"); //expected: new FastQ is created
-//			cd.createInputFormat("example.fasta"); //expected: new FastA is created
-//			cd.createInputFormat("example.txt"); // catch block is expected
-//		} catch (MyException e) {
-//			System.err.println("create inputformat method in controller throws following error: "+ e.getErrorMessage());
-//		}
+//		GUIOptions op = new GUIOptions("C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/src/example4.fasta","TestController.txt","Real-Time","fasta","C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/default.setting",1,1,100,10,100,10);
+////		Controller cd = new Controller();
+////		
+////		//expected output
+////		try {
+////			cd.createInputFormat("example.fastq"); //expected: new FastQ is created
+////			cd.createInputFormat("example.fasta"); //expected: new FastA is created
+////			cd.createInputFormat("example.txt"); // catch block is expected
+////		} catch (MyException e) {
+////			System.err.println("create inputformat method in controller throws following error: "+ e.getErrorMessage());
+////		}
+////		
+////		//expected output
+////		try{
+////			cd.createOutputFormat("fasta"); //expected: new FastA output created
+////			cd.createOutputFormat("fastq"); //expected: new fastQ output created
+////			cd.createOutputFormat("txt"); //catch block expected
+////		}catch(MyException e){
+////			System.err.println("create outputformat method in controller throws following error: "+ e.getErrorMessage());
+////		}
+////		
+////		//TODO unexpected error
+////		try {
+////			setupModel(op.getBasecalling(), op.getBasecallingSetup(), 10);
+////		}  catch (Exception e) {
+////			System.err.println("model excep: "+ e.getMessage());
+////		}
+////		
+////		//expected output
+////		try{
+////			cd.initialize(op); //expected: flowcell is created
+////			System.out.println("current# Ticks: " + cd.currentNumberOfTicks); //expected:0
+////			System.out.println("status of controller: "+ cd.status);//expected: Running
+////		}catch(MyException e){
+////			System.err.println("Initialize method in controller throws following error: "+ e.getErrorMessage()); //expected: setupModel doesnt work
+////		}
 //		
-//		//expected output
+//		Controller cd = new Controller(op);
+////		try{
+////			cd.run();
+////		}catch (MyException e){
+////			System.err.println("Running thrwos: "+ e.getErrorMessage());
+////		}
+////		
+////		try{
+////			cd.pause();
+////		}catch(MyException e){
+////			System.err.println("Pause thrwos: "+ e.getErrorMessage());
+////		}
+////		
+////		try{
+////			cd.resume();
+////		}catch(MyException e){
+////			System.err.println("Pause thrwos: "+ e.getErrorMessage());
+////		}
+//		
 //		try{
-//			cd.createOutputFormat("fasta"); //expected: new FastA output created
-//			cd.createOutputFormat("fastq"); //expected: new fastQ output created
-//			cd.createOutputFormat("txt"); //catch block expected
+//			cd.stop();
 //		}catch(MyException e){
-//			System.err.println("create outputformat method in controller throws following error: "+ e.getErrorMessage());
+//			System.err.println("Stop thrwos: "+ e.getErrorMessage());
 //		}
-//		
-//		//TODO unexpected error
-//		try {
-//			setupModel(op.getBasecalling(), op.getBasecallingSetup(), 10);
-//		}  catch (Exception e) {
-//			System.err.println("model excep: "+ e.getMessage());
-//		}
-//		
-//		//expected output
-//		try{
-//			cd.initialize(op); //expected: flowcell is created
-//			System.out.println("current# Ticks: " + cd.currentNumberOfTicks); //expected:0
-//			System.out.println("status of controller: "+ cd.status);//expected: Running
-//		}catch(MyException e){
-//			System.err.println("Initialize method in controller throws following error: "+ e.getErrorMessage()); //expected: setupModel doesnt work
-//		}
-		
-		Controller cd = new Controller(op);
+//		//this should now not be able to be executed anymore:
+//		System.err.println("There shouldn't be any output after this line.");
+//		System.out.println(cd.status);
 //		try{
 //			cd.run();
 //		}catch (MyException e){
@@ -312,34 +338,8 @@ public class Controller {
 //		}catch(MyException e){
 //			System.err.println("Pause thrwos: "+ e.getErrorMessage());
 //		}
-		
-		try{
-			cd.stop();
-		}catch(MyException e){
-			System.err.println("Stop thrwos: "+ e.getErrorMessage());
-		}
-		//this should now not be able to be executed anymore:
-		System.err.println("There shouldn't be any output after this line.");
-		System.out.println(cd.status);
-		try{
-			cd.run();
-		}catch (MyException e){
-			System.err.println("Running thrwos: "+ e.getErrorMessage());
-		}
-		
-		try{
-			cd.pause();
-		}catch(MyException e){
-			System.err.println("Pause thrwos: "+ e.getErrorMessage());
-		}
-		
-		try{
-			cd.resume();
-		}catch(MyException e){
-			System.err.println("Pause thrwos: "+ e.getErrorMessage());
-		}
-		
-	}
+//		
+//	}
 
 }
 
