@@ -86,7 +86,7 @@ public class Pore {
 //	}
 
 	/**
-	 * @author Albert Langensiepen und Daniel Dehncke
+	 * @author Albert Langensiepen und Daniel Dehncke und Friederike Hanssen(reorganized somet hings, tried to avoid that no length is getting returned by implementing a do while loop insted of a for loop until 10)
 	 * @throws Exception 
 	 * @functionality simulation of a single DNA sequence running through a minION Pore
 	 * 				  first a random starting point in the sequence is generated and a length is given
@@ -126,7 +126,7 @@ public class Pore {
 					lengthFound = true;
 				}
 			}catch(Exception e){
-				//Until LEngthDistribution gets it's problems fixed
+				//TODO LEngthDistribution throws NUllpointers right now
 				sequenceLength = 10;
 				lengthFound = true;
 				System.err.println("Lenght distribution class caused following error: "+ e.getMessage());
