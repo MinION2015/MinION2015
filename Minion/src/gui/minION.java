@@ -792,7 +792,7 @@ public class minION extends javax.swing.JFrame {
 				sourceField.getText(),
 				outputFileTextField.getText(), 
 				(String) outputComboBox.getSelectedItem(),
-				inputFormat,
+				inputFormat,"default.setting",
 				basecalling, 
 				Integer.parseInt(numberOfPoresFormattedTextField1.getText()),
 				Integer.parseInt(maxAgeOfPoresTextField.getText()),

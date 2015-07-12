@@ -5,6 +5,7 @@ import error.ErrorCodes;
 import error.MyException;
 import gui.GUIOptions;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import reader.*;
@@ -43,135 +44,162 @@ public class Controller {
 //		
 //	}
 	public Controller(GUIOptions options){
+		System.out.println("New Controller is created.");
 		this.options = options;
-		//first its determined if a new fasta or fasta file was the input
+		//first its determined if a new fasta or fastq file was the input
+		//then which output the user wishes
+		//all options are inititalized
 		try{
-			checkFileEnding(options.getInputFilename());
-			createOutputFormat();
+			createInputFormat(options.getInputFilename());
+			createOutputFormat(options.getOutputFormat());
 			initialize(options);
-			//TODO options.getSetting or sth like that
-			//TODO create SettingFile
 		}catch(MyException e){
-			System.err.println("Controller constructor: "+e.getErrorMessage());
+			System.err.println("Error in controller constructor: "+e.getErrorMessage());
 		}catch(Exception e){
-			System.err.println("Controller constructor: "+e.getMessage());
+			System.err.println("Error in controller constructor: "+e.getMessage());
 		}
-	}
-
-	private void initialize(GUIOptions options) throws Exception, MyException {
-		String settingPathName = "C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/default.settings";
-		try{
-		setupModel(options.getBasecalling(),settingPathName,options.getWindowSizeForLengthDistribution());
-		}catch(Exception e){
-			System.out.println("SetupModel exception"+ e.getMessage());
-		}
-		currentNumberOfTicks = 0;
-		this.flowcell = new Flowcell(options.getNumberOfPores(),options.getMaxAgeOfPores(),options.getOutputFormat());
-		status = "Running";
-	}
-
-	public void run(){
-		try{	
 		
+	}
+
+
+	public void run() throws MyException{
+		System.out.println("Run is called");
+		try{	
 			//Sequence seq = new Sequence("me","GGTTAAGCGACTAAGCGTACACGGTGGATGCCTAGGCAGTCAGAGGCGATGAAGGGCGTGCTAATCTGCGAAAAGCGTCGGTAAGCTGATATGAAGCGTTATAACCGACGATACCCGAATGGGGAAACCCAGTGCAATACGTTGCACTATCGTTAGATGAATACATAGTCTAACGAGGCGAACCGGGGGAACTGAAACATCTAAGTACCCCGAGGAAAAGAAATCAACCGAGATTCCCCCAGTAGCGGCGAGCGAACGGGGAGGAGCCCAGAGTCTGAATCAGTTTGTGTGTTAGTGGAAGCGTCTGGAAAGTCGCACGGTACAGGGTGATAGTCCCGTACACCAAAATGCACAGGCTGTGAACTCGATGAGTAGGGCGGGACACGTGACATCCTGTCTGAATATGGGGGGACCATCCTCCAAGGCTAAATACTCCTGACTGACCGATAGTGAACCAGTACCGTGAGGGAAAGGCGAAAAGAACCCCGGCGAGGGGAGTGAAATAGAACCTGAAACCGTGTACGTACAAGCAGTGGGAGCACCTTCGTGGTGTGACTGCGTACCTTTTGTATAATGGGTCAGCGACTTATATTTTGTAGCAAGGTTAACCGAATAGGGGAGCCGTAGGGAAACCGAGTCTTAACTAGGCGTCTAGTTGCAAGGTATAGACCCGAAACCCGGTGATCTAGCCATGGGCAGGTTGAAGGTTGGGTAACACTAACTGGAGGACCGAACCGACTAATGTTGAAAAATTAGCGGATGACTTGTGGTGGGGGTGAAAGGCCAATCAAACCGGGAGATAGCTGGTTCTCCCCGAAAGCTATTTAGGTAGCGCCTCGTGAACTCATCTTCGGGGGTAGAGCACTGTTTCGGCTAGGGGGCCATCCCGGCTTACCAAACCGATGCAAAGGTTAAGCGACTAAGCGTACACGGTGGATGCCTAGGCAGTCAGAGGCGATGAAGGGCGTGCTAATCTGCGAAAAGCGTCGGTAAGCTGATATGAAGCGTTATAACCGACGATACCCGAATGGGGAAACCCAGTGCAATACGTTGCACTATCGTTAGATGAATACATAGTCTAACGAGGCGAACCGGGGGAACTGAAACATCTAAGTACCCCGAGGAAAAGAAATCAACCGAGATTCCCCCAGTAGCGGCGAGCGAACGGGGAGGAGCCCAGAGTCTGAATCAGTTTGTGTGTTAGTGGAAGCGTCTGGAAAGTCGCACGGTACAGGGTGATAGTCCCGTACACCAAAATGCACAGGCTGTGAACTCGATGAGTAGGGCGGGACACGTGACATCCTGTCTGAATATGGGGGGACCATCCTCCAAGGCTAAATACTCCTGACTGACCGATAGTGAACCAGTACCGTGAGGGAAAGGCGAAAAGAACCCCGGCGAGGGGAGTGAAATAGAACCTGAAACCGTGTACGTACAAGCAGTGGGAGCACCTTCGTGGTGTGACTGCGTACCTTTTGTATAATGGGTCAGCGACTTATATTTTGTAGCAAGGTTAACCGAATAGGGGAGCCGTAGGGAAACCGAGTCTTAACTAGGCGTCTAGTTGCAAGGTATAGACCCGAAACCCGGTGATCTAGCCATGGGCAGGTTGAAGGTTGGGTAACACTAACTGGAGGACCGAACCGACTAATGTTGAAAAATTAGCGGATGACTTGTGGTGGGGGTGAAAGGCCAATCAAACCGGGAGATAGCTGGTTCTCCCCGAAAGCTATTTAGGTAGCGCCTCGTGAACTCATCTTCGGGGGTAGAGCACTGTTTCGGCTAGGGGGCCATCCCGGCTTACCAAACCGATGCAAA");
 			int pos = Chance.getRandInt(0, inputFile.getSequence().size()-1);
+			
 			//when p.simulat is commented out in pore method than it works, why? -> p.simulate seems to give nullpointer
-			flowcell.startFlowcell(inputFile.getSequence().get(pos));
-
-			while(currentNumberOfTicks < options.getTotalNumberOfTicks() && !status.equals("Stopped")  &&flowcell.getNumberOfPores() > 0){
-
+			//flowcell.startFlowcell(inputFile.getSequence().get(pos));
+			
+			System.out.println(checkIfNotStopped());
+			boolean isStopped = checkIfNotStopped();
+			while((currentNumberOfTicks < options.getTotalNumberOfTicks()) && isStopped  && flowcell.getNumberOfPores() > 0){
+				
 				pos = Chance.getRandInt(0, inputFile.getSequence().size()-1);
-				flowcell.tick(inputFile.getSequence().get(pos));
+				//flowcell.tick(inputFile.getSequence().get(pos));
 				if(options.getWriteInFileOption().equals("Real-Time")){
 					try{
-						flowcell.getFlowcellOutput().writeInFile(options.getOutputFilename());
+						//flowcell.getFlowcellOutput().writeInFile(options.getOutputFilename());
 						Thread.sleep(options.getDurationOfTick());
 					}catch(Exception e){
 						System.err.println(e.getMessage());
 					}
 				}else if(options.getWriteInFileOption().equals("Write all")){
 					try{
-						for(Sequence s : flowcell.getFlowcellOutput().getSequence()){
-							outputFile.addSeq(s);
-						}
+//						for(Sequence s : flowcell.getFlowcellOutput().getSequence()){
+//							outputFile.addSeq(s);
+//						}
 						Thread.sleep(options.getDurationOfTick());
 					}catch(Exception e){
 						System.err.println(e.getMessage());
 					}
 				}
 				currentNumberOfTicks++;
-//				if(currentNumberOfTicks == 50){
-//					System.out.println("currentNum Ticks: "+currentNumberOfTicks);
-//					pause();
-//				}
-
-
-
+				
 			}
 			if(options.getWriteInFileOption().equals("Write all")){
 				outputFile.writeInFile(options.getOutputFilename());
 			}
 
 			
-
-		}catch(MyException e){
-			System.err.println("Controller "+e.getErrorMessage());
+			System.out.println("Run was executed without throwing errors");
+//		}catch(MyException e){
+//			System.err.println("Run method in Controller "+e.getErrorMessage());
+//			throw new MyException(ErrorCodes.CONTROLLER_NOT_RUNNING);
 		}catch(Exception e){
-			//for some reason it catches this
-			System.err.println("Controller "+e.getMessage());
+			System.err.println("Run method in Controller2: "+e.getMessage());
+			throw new MyException(ErrorCodes.CONTROLLER_NOT_RUNNING);
 		}	
 	}
-	//TODO maybe change start button to resume after pause is pressed or pause button to resume or sth
-	public void resume(){
-		
-		if(status.equals("Paused")){
-			status = "Running";
-			System.out.println("Resumed");
-			run();
-			//System.out.println("currentNum Ticks: "+currentNumberOfTicks);
-		}
-	}
-	public void pause(){
-		//int counter=0;
-		status = "Paused";
-		System.out.println("Paused");
-		while(status.equals("Paused")){
-			try {
-				Thread.sleep(1);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				System.err.println(e.getMessage());
+
+	public void resume() throws MyException{
+
+		try{
+			if(status.equals("Paused")){
+				status = "Running";
+				System.out.println("Resumed");
+				System.out.println("currentNum Ticks when resuming(should be equal to when pausing): "+currentNumberOfTicks);
+				run();
+				
 			}
-//			counter++;
-//			if(counter == 3000){
-//				System.out.println("resumed");
-//				resume();
-//			}
-			
+		}catch(MyException e){
+			throw new MyException(ErrorCodes.CONTROLLER_NOT_RESUMING);
 		}
 	}
 	
-	public void stop(){
-		status = "Simulation is Stopped";
+	public void pause() throws MyException{
+		int counter=0;
+		try{
+			status = "Paused";
+			System.out.println("Paused");
+			System.out.println("Current number of ticks when pausing: "+currentNumberOfTicks);
+			while(status.equals("Paused")){
+				try {
+					Thread.sleep(1);
+				} catch (InterruptedException e) {
+					System.err.println("Thread.sleep in pause throws following error: "+e.getMessage());
+				}
+				//for testing purposes: after 300 ticks something should happen and controller not be paused anymore
+				counter++;
+				if(counter == 3000){
+					resume();
+				}
+
+			}
+		}catch(MyException e){
+			throw new MyException(ErrorCodes.CONTROLLER_NOT_PAUSING);
+		}
+	}
+	
+	public void stop() throws MyException{
+		
+		status = "Stopped";
 		System.out.println("Stopped");
-		currentNumberOfTicks = options.getTotalNumberOfTicks();
-		
-		
+		currentNumberOfTicks = options.getTotalNumberOfTicks();	
 	}
 	
-	
-	public static void setupModel(int basecalling, String settingfile, int windowSize) throws Exception{
-		BasecallingErrorRate basecallingError = new BasecallingErrorRate(basecalling,settingfile);
-		LengthDistribution lengthDistribution = new LengthDistribution(windowSize);	
+	private boolean checkIfNotStopped() throws MyException{
+		System.out.println("blub");
+		boolean notStopped = true;
+		if(status.equals("Stopped")){
+			notStopped = false;
+			System.out.println(notStopped);
+			throw new MyException(ErrorCodes.CONTROLLER_NOT_RUNNING);
+		}
+		
+		return notStopped;
 	}
+
 	
+	public ArrayList<MyException> getInputFileErrors() {
+		return inputFile.getErrorInSequence();
+	}
+	public ArrayList<MyException> getOutputFileErrors(){
+		return outputFile.getErrorInSequence();
+	}
+	public Flowcell getFlowcell()
+	{
+		return flowcell;
+	}
+
+	//throws error: For input string: "0.1#"
+	private static void setupModel(int basecalling, String settingfile, int windowSize) throws Exception{
+		
+			LengthDistribution lengthDistribution = new LengthDistribution(windowSize);
+			System.out.println("SetupModel method in Controller created new length distribution.");
+		
+			//TODO error occurs when trying to set up basecalling method
+			BasecallingErrorRate basecallingError = new BasecallingErrorRate(basecalling,settingfile);
+			System.out.println("SetupModel method in Controller created new basecalling error rate.");
+		
+	}
 	
 	/**
 	 * Either a new fasta or fastq inputFile is created depending on gui input
 	 * @param filename
 	 * @throws MyException
 	 */
-	private void checkFileEnding(String filename) throws MyException{
+	private void createInputFormat(String filename) throws MyException{
 		if(filename.endsWith(".fasta")){
 			inputFile = new FastA();
 			System.out.println("new FastA file created");
@@ -182,58 +210,135 @@ public class Controller {
 			throw new MyException(ErrorCodes.BAD_FILETYPE);
 		}
 	}
-	
-	private void createOutputFormat() throws MyException{
+
+	/**
+	 * According to user input a new output format filetype is created (is still stored as txt, but the user can choose in the controller if he wants fasta or fastq as output and accordingly the sequencing should happen
+	 * @param format fasta or fastq as String
+	 * @throws MyException
+	 */
+	private void createOutputFormat(String format) throws MyException{
 		
-		if(options.getOutputFormat() == "fasta"){
+		if(format == "fasta"){
 			outputFile = new FastA();
-		}else if(options.getOutputFormat() == "fastq"){
+			System.out.println("fastA output created");
+		}else if(format == "fastq"){
 			outputFile = new FastQ();
+			System.out.println("fastq output created");
 		}else{
 			throw new MyException(ErrorCodes.BAD_FILETYPE);
 		}
 	}
 	
-	public ArrayList<MyException> getInputFileErrors() {
-		return inputFile.getErrorInSequence();
-	}
-	
-	public ArrayList<MyException> getOutputFileErrors(){
-		return outputFile.getErrorInSequence();
+	/**
+	 * Flowcell, current number of Ticks and status of Controller is set. Model is created
+	 * @param options
+	 * @throws MyException
+	 */
+	private void initialize(GUIOptions options) throws MyException{
+
+		currentNumberOfTicks = 0;
+		status = "Running";
+		this.flowcell = new Flowcell(options.getNumberOfPores(),options.getMaxAgeOfPores(),options.getOutputFormat());
+		System.out.println("New flowcell object is created in controller");
+		//doens't work: error message: For input string: "0.1#" looks like sth isn't formatted correctly for cretae setting, maybe kevin knows better, can't find the error in the file
+		//setting up new length distribuiton works
+		try{
+			setupModel(options.getBasecalling(),options.getBasecallingSetup(),options.getWindowSizeForLengthDistribution());
+			/**********************/
+		}catch(Exception e){
+			System.err.println("Error in setupModel method" + e.getMessage());
+		}
+
 	}
 
-//	public static void main(String[] args){
-//		
-//		//GUIOptions op = new GUIOptions("C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/src/example4.fasta","TestController.txt","Real-Time","fastq",1,1,100,10,100,10);
+/**
+ * Tests
+ * @param args
+ */
+	public static void main(String[] args){
+		
+		GUIOptions op = new GUIOptions("C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/src/example4.fasta","TestController.txt","Real-Time","fasta","C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/default.setting",1,1,100,10,100,10);
 //		Controller cd = new Controller();
 //		
-////		try{
-////			cd.checkFileEnding(".fasta");
-////		}catch(MyException e){
-////			System.out.println("Controller test checkfileEnding: "+ e.getErrorMessage());
-////		}
-////		try{
-////			cd.checkFileEnding(".fastq");
-////		}catch(MyException e){
-////			System.out.println("Controller test checkfileEnding: "+ e.getErrorMessage());
-////		}
-////		try{
-////			cd.checkFileEnding(".notRightFiletype");
-////		}catch(MyException e){
-////			System.out.println("Controller test checkfileEnding: "+ e.getErrorMessage());
-////		}
-////		try{
-////			setupModel(1,"C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/src/default.setting",10);
-////		}catch(Exception e){
-////			System.out.println("SetupMOdel test " + e.getMessage());
-////		}
-//		//cd.run();
-//	
-//	}
-
-	public Flowcell getFlowcell()
-	{
-		return flowcell;
+//		//expected output
+//		try {
+//			cd.createInputFormat("example.fastq"); //expected: new FastQ is created
+//			cd.createInputFormat("example.fasta"); //expected: new FastA is created
+//			cd.createInputFormat("example.txt"); // catch block is expected
+//		} catch (MyException e) {
+//			System.err.println("create inputformat method in controller throws following error: "+ e.getErrorMessage());
+//		}
+//		
+//		//expected output
+//		try{
+//			cd.createOutputFormat("fasta"); //expected: new FastA output created
+//			cd.createOutputFormat("fastq"); //expected: new fastQ output created
+//			cd.createOutputFormat("txt"); //catch block expected
+//		}catch(MyException e){
+//			System.err.println("create outputformat method in controller throws following error: "+ e.getErrorMessage());
+//		}
+//		
+//		//TODO unexpected error
+//		try {
+//			setupModel(op.getBasecalling(), op.getBasecallingSetup(), 10);
+//		}  catch (Exception e) {
+//			System.err.println("model excep: "+ e.getMessage());
+//		}
+//		
+//		//expected output
+//		try{
+//			cd.initialize(op); //expected: flowcell is created
+//			System.out.println("current# Ticks: " + cd.currentNumberOfTicks); //expected:0
+//			System.out.println("status of controller: "+ cd.status);//expected: Running
+//		}catch(MyException e){
+//			System.err.println("Initialize method in controller throws following error: "+ e.getErrorMessage()); //expected: setupModel doesnt work
+//		}
+		
+		Controller cd = new Controller(op);
+//		try{
+//			cd.run();
+//		}catch (MyException e){
+//			System.err.println("Running thrwos: "+ e.getErrorMessage());
+//		}
+//		
+//		try{
+//			cd.pause();
+//		}catch(MyException e){
+//			System.err.println("Pause thrwos: "+ e.getErrorMessage());
+//		}
+//		
+//		try{
+//			cd.resume();
+//		}catch(MyException e){
+//			System.err.println("Pause thrwos: "+ e.getErrorMessage());
+//		}
+		
+		try{
+			cd.stop();
+		}catch(MyException e){
+			System.err.println("Stop thrwos: "+ e.getErrorMessage());
+		}
+		//this should now not be able to be executed anymore:
+		System.err.println("There shouldn't be any output after this line.");
+		System.out.println(cd.status);
+		try{
+			cd.run();
+		}catch (MyException e){
+			System.err.println("Running thrwos: "+ e.getErrorMessage());
+		}
+		
+		try{
+			cd.pause();
+		}catch(MyException e){
+			System.err.println("Pause thrwos: "+ e.getErrorMessage());
+		}
+		
+		try{
+			cd.resume();
+		}catch(MyException e){
+			System.err.println("Pause thrwos: "+ e.getErrorMessage());
+		}
+		
 	}
 
 }

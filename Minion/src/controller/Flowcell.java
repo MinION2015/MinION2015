@@ -51,7 +51,7 @@ public class Flowcell{
 		for(Pore p : poreList){
 			try{
 				//TODO comment in
-				p.simulate(seq);
+				//p.simulate(seq);
 				System.out.println("Pore is simulated");
 				checkFlowcellState();
 				System.out.println("flowcellstatecheck is executed");
