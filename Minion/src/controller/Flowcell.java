@@ -2,15 +2,16 @@ package controller;
 
 
 import java.util.ArrayList;
-import java.util.List;
 
 import reader.FastA;
 import reader.FastASequence;
 import reader.FastQ;
 import reader.FiletypeContainingSequences;
 import reader.Sequence;
+import error.Chance;
 import error.ErrorCodes;
 import error.MyException;
+//TODO LEngthDistribution is returning nullpointers!
 
 /**
  * 
@@ -28,9 +29,9 @@ public class Flowcell{
 	private int currentSumOfReads; //needed for already recorded Reads
 	private String outputFormat;
 	
-	public Flowcell(){
-		//for testing reasons
-	}
+//	public Flowcell(){
+//		//for testing reasons
+//	}
 	public Flowcell(int numberOfPores,int maxAgeOfPores,String outputFormat) throws MyException{
 		System.out.println("A new flowcell is created");
 		currentSumOfReads = 0;
@@ -38,14 +39,18 @@ public class Flowcell{
 		this.maxAgeOfPores = maxAgeOfPores;
 		try{
 			addPores(numberOfPores);
-			setFlowcellOutputFormat();
+			setFlowcellOutputFormat(outputFormat);
 		}catch(MyException e){
 			System.err.println("Flowcell constructor throws: "+e.getErrorMessage());
 		}
 		
 	}
 	
-	private void setFlowcellOutputFormat() throws MyException{
+	/**
+	 * Sets the outputformat to what was specified by the user: fasta or fastq
+	 * @throws MyException
+	 */
+	private void setFlowcellOutputFormat(String outputFormat) throws MyException{
 		if(outputFormat == "fasta"){
 			outputSequence = new FastA();
 		}else if(outputFormat == "fastq"){
@@ -106,11 +111,21 @@ public class Flowcell{
 	public void tick(Sequence seq){
 		
 		try{
-			setFlowcellOutputFormat();
+			setFlowcellOutputFormat(outputFormat);
 			checkFlowcellState();
 			for(Pore p : poreList){
 				
 				String statusOfPore = p.checkStatus();//"Running"//"Bored"//"Finished"//"Dead"//"sleeping"
+				
+				//just for playing around with the status;
+				double rand = Chance.getRand();
+				if(rand<0.3){
+					statusOfPore = "Running";
+				}else if(rand < 0.6){
+					statusOfPore= "Bored";
+				}else{
+					statusOfPore = "Finished";
+				}
 				
 				if(statusOfPore.equals("Running") || statusOfPore.equals("Dead") || statusOfPore.equals("Sleeping")){
 					System.out.println("This pore is busy with running or being dead or sleeping");
@@ -119,14 +134,17 @@ public class Flowcell{
 					System.out.println("This pore is bored, thus should be simulated");
 					try{
 						p.simulate(seq);
+						System.out.println("Pore was simulated in flowcell");
 					}catch(MyException e){
 						System.err.println("Pore could not be simulated because: " +e.getErrorMessage());
 					}
 				}else if(statusOfPore.equals("Finished")){
 					//collecting output
+					//TODO if pore claims it's done right away but hasn't simulated anything yet null will be returned obviously. Problem? In that case startFlowcell needs to be back to simualte each pore at last once
 					System.out.println("This pore is done.");
 					try{
-						outputSequence.addSeq(p.getSequenceFromPore());
+						//seq = p.getSequenceFromPore();
+						outputSequence.addSeq(seq);
 					}catch(Exception e){
 						System.err.println("Error in tick-collecting output: "+e.getMessage());
 					}
@@ -155,6 +173,7 @@ public class Flowcell{
 		}
 		return numAlivePores;
 	}
+	
 	public double[] getStates() throws MyException
 	{
 		//TODO return lengths of finished sequences?
@@ -195,59 +214,63 @@ public class Flowcell{
 	/*
 	 * tests
 	 */
-	public static void main(String[] args) throws MyException{
-		
-	Flowcell g = new Flowcell();
-	g.currentSumOfReads = 0;
-	
-	g.maxAgeOfPores = 100;
-	
-	try{
-		g.checkFlowcellState();
-	}catch(MyException e){
-		System.err.println("Checkflowcell should return 'empty flowcell': "+ e.getErrorMessage());
-	}
-	
-	try{
-		g.addPores(0);
-	}catch(MyException e){
-		System.err.println(e.getErrorMessage());
-	}
-	
-	try{
-		g.addPores(5);
-	}catch(MyException e){
-		System.err.println(e.getErrorMessage());
-	}
-	
-//	g.outputFormat = "txt";
-	g.outputFormat = "fasta";
-//	g.outputFormat = "fastq";
-	try{
-		g.setFlowcellOutputFormat();
-	}catch(MyException e){
-		System.err.println(e.getErrorMessage());
-	}
-	
-	
-//	try{
-//		BasecallingErrorRate err = new BasecallingErrorRate(1, "default");
-//		LengthDistribution lenght = new LengthDistribution(10);
-//	}catch(Exception e){
-//		System.err.println(e.getMessage());
-//	}
-//	Sequence seq = new Sequence("me","GGTTAAGCGACTAAGCGTACACGGTGGATGCCTAGGCAGTCAGAGGCGATGAAGGGCGTGCTAATCTGCGAAAAGCGTCGGTAAGCTGATATGAAGCGTTATAACCGACGATACCCGAATGGGGAAACCCAGTGCAATACGTTGCACTATCGTTAGATGAATACATAGTCTAACGAGGCGAACCGGGGGAACTGAAACATCTAAGTACCCCGAGGAAAAGAAATCAACCGAGATTCCCCCAGTAGCGGCGAGCGAACGGGGAGGAGCCCAGAGTCTGAATCAGTTTGTGTGTTAGTGGAAGCGTCTGGAAAGTCGCACGGTACAGGGTGATAGTCCCGTACACCAAAATGCACAGGCTGTGAACTCGATGAGTAGGGCGGGACACGTGACATCCTGTCTGAATATGGGGGGACCATCCTCCAAGGCTAAATACTCCTGACTGACCGATAGTGAACCAGTACCGTGAGGGAAAGGCGAAAAGAACCCCGGCGAGGGGAGTGAAATAGAACCTGAAACCGTGTACGTACAAGCAGTGGGAGCACCTTCGTGGTGTGACTGCGTACCTTTTGTATAATGGGTCAGCGACTTATATTTTGTAGCAAGGTTAACCGAATAGGGGAGCCGTAGGGAAACCGAGTCTTAACTAGGCGTCTAGTTGCAAGGTATAGACCCGAAACCCGGTGATCTAGCCATGGGCAGGTTGAAGGTTGGGTAACACTAACTGGAGGACCGAACCGACTAATGTTGAAAAATTAGCGGATGACTTGTGGTGGGGGTGAAAGGCCAATCAAACCGGGAGATAGCTGGTTCTCCCCGAAAGCTATTTAGGTAGCGCCTCGTGAACTCATCTTCGGGGGTAGAGCACTGTTTCGGCTAGGGGGCCATCCCGGCTTACCAAACCGATGCAAAGGTTAAGCGACTAAGCGTACACGGTGGATGCCTAGGCAGTCAGAGGCGATGAAGGGCGTGCTAATCTGCGAAAAGCGTCGGTAAGCTGATATGAAGCGTTATAACCGACGATACCCGAATGGGGAAACCCAGTGCAATACGTTGCACTATCGTTAGATGAATACATAGTCTAACGAGGCGAACCGGGGGAACTGAAACATCTAAGTACCCCGAGGAAAAGAAATCAACCGAGATTCCCCCAGTAGCGGCGAGCGAACGGGGAGGAGCCCAGAGTCTGAATCAGTTTGTGTGTTAGTGGAAGCGTCTGGAAAGTCGCACGGTACAGGGTGATAGTCCCGTACACCAAAATGCACAGGCTGTGAACTCGATGAGTAGGGCGGGACACGTGACATCCTGTCTGAATATGGGGGGACCATCCTCCAAGGCTAAATACTCCTGACTGACCGATAGTGAACCAGTACCGTGAGGGAAAGGCGAAAAGAACCCCGGCGAGGGGAGTGAAATAGAACCTGAAACCGTGTACGTACAAGCAGTGGGAGCACCTTCGTGGTGTGACTGCGTACCTTTTGTATAATGGGTCAGCGACTTATATTTTGTAGCAAGGTTAACCGAATAGGGGAGCCGTAGGGAAACCGAGTCTTAACTAGGCGTCTAGTTGCAAGGTATAGACCCGAAACCCGGTGATCTAGCCATGGGCAGGTTGAAGGTTGGGTAACACTAACTGGAGGACCGAACCGACTAATGTTGAAAAATTAGCGGATGACTTGTGGTGGGGGTGAAAGGCCAATCAAACCGGGAGATAGCTGGTTCTCCCCGAAAGCTATTTAGGTAGCGCCTCGTGAACTCATCTTCGGGGGTAGAGCACTGTTTCGGCTAGGGGGCCATCCCGGCTTACCAAACCGATGCAAA");
-//	//g.startFlowcell(seq);
-//	g.tick(seq);
-//	g.removeDeadPores();
-//	FastA f = g.getFlowcellOutput();
-//	f.writeInFile("TestFlowcell.txt");
+//	public static void main(String[] args) throws MyException{
+//		
+//	Flowcell g = new Flowcell();
+//	g.currentSumOfReads = 0;
+//	g.maxAgeOfPores = 100;
 //	
-	
-	//Flowcell f = new Flowcell(0);
-	//Flowcell t = new Flowcell(-10);
-	//Flowcell d = new Flowcell(10);
-	
-	
-	}
+//	//expected output
+//	try{
+//		g.checkFlowcellState();
+//	}catch(MyException e){
+//		System.err.println("Checkflowcell should return 'empty flowcell': "+ e.getErrorMessage());
+//	}
+//	
+//	//expected output
+//	try{
+//		g.addPores(0);
+//	}catch(MyException e){
+//		System.err.println(e.getErrorMessage());
+//	}
+//	
+//	//expected output
+//	try{
+//		g.addPores(5);
+//	}catch(MyException e){
+//		System.err.println(e.getErrorMessage());
+//	}
+//	//expected output
+////	g.outputFormat = "txt";
+//	g.outputFormat = "fasta";
+////	g.outputFormat = "fastq";
+//	try{
+//		g.setFlowcellOutputFormat("fasta");
+//	}catch(MyException e){
+//		System.err.println(e.getErrorMessage());
+//	}
+//	
+//	//expected
+//	System.out.println("# all pores: " + g.getNumberOfAllPores()); //5
+//	System.out.println("# alive pores: " + g.getNumberOfAlivePores()); //5
+//	
+//	
+//	
+//	try{
+//		LengthDistribution length = new LengthDistribution(10);
+//		BasecallingErrorRate err = new BasecallingErrorRate(1, "default.setting");
+//	}catch(Exception e){
+//		System.err.println("CReating Basecaling and Lengthdistribution causes errors in flowcell tests: " +e.getMessage());
+//	}
+//	Sequence seq = new FastASequence("me","GGTTAAGCGACTAAGCGTACACGGTGGATGCCTAGGCAGTCAGAGGCGATGAAGGGCGTGCTAATCTGCGAAAAGCGTCGGTAAGCTGATATGAAGCGTTATAACCGACGATACCCGAATGGGGAAACCCAGTGCAATACGTTGCACTATCGTTAGATGAATACATAGTCTAACGAGGCGAACCGGGGGAACTGAAACATCTAAGTACCCCGAGGAAAAGAAATCAACCGAGATTCCCCCAGTAGCGGCGAGCGAACGGGGAGGAGCCCAGAGTCTGAATCAGTTTGTGTGTTAGTGGAAGCGTCTGGAAAGTCGCACGGTACAGGGTGATAGTCCCGTACACCAAAATGCACAGGCTGTGAACTCGATGAGTAGGGCGGGACACGTGACATCCTGTCTGAATATGGGGGGACCATCCTCCAAGGCTAAATACTCCTGACTGACCGATAGTGAACCAGTACCGTGAGGGAAAGGCGAAAAGAACCCCGGCGAGGGGAGTGAAATAGAACCTGAAACCGTGTACGTACAAGCAGTGGGAGCACCTTCGTGGTGTGACTGCGTACCTTTTGTATAATGGGTCAGCGACTTATATTTTGTAGCAAGGTTAACCGAATAGGGGAGCCGTAGGGAAACCGAGTCTTAACTAGGCGTCTAGTTGCAAGGTATAGACCCGAAACCCGGTGATCTAGCCATGGGCAGGTTGAAGGTTGGGTAACACTAACTGGAGGACCGAACCGACTAATGTTGAAAAATTAGCGGATGACTTGTGGTGGGGGTGAAAGGCCAATCAAACCGGGAGATAGCTGGTTCTCCCCGAAAGCTATTTAGGTAGCGCCTCGTGAACTCATCTTCGGGGGTAGAGCACTGTTTCGGCTAGGGGGCCATCCCGGCTTACCAAACCGATGCAAAGGTTAAGCGACTAAGCGTACACGGTGGATGCCTAGGCAGTCAGAGGCGATGAAGGGCGTGCTAATCTGCGAAAAGCGTCGGTAAGCTGATATGAAGCGTTATAACCGACGATACCCGAATGGGGAAACCCAGTGCAATACGTTGCACTATCGTTAGATGAATACATAGTCTAACGAGGCGAACCGGGGGAACTGAAACATCTAAGTACCCCGAGGAAAAGAAATCAACCGAGATTCCCCCAGTAGCGGCGAGCGAACGGGGAGGAGCCCAGAGTCTGAATCAGTTTGTGTGTTAGTGGAAGCGTCTGGAAAGTCGCACGGTACAGGGTGATAGTCCCGTACACCAAAATGCACAGGCTGTGAACTCGATGAGTAGGGCGGGACACGTGACATCCTGTCTGAATATGGGGGGACCATCCTCCAAGGCTAAATACTCCTGACTGACCGATAGTGAACCAGTACCGTGAGGGAAAGGCGAAAAGAACCCCGGCGAGGGGAGTGAAATAGAACCTGAAACCGTGTACGTACAAGCAGTGGGAGCACCTTCGTGGTGTGACTGCGTACCTTTTGTATAATGGGTCAGCGACTTATATTTTGTAGCAAGGTTAACCGAATAGGGGAGCCGTAGGGAAACCGAGTCTTAACTAGGCGTCTAGTTGCAAGGTATAGACCCGAAACCCGGTGATCTAGCCATGGGCAGGTTGAAGGTTGGGTAACACTAACTGGAGGACCGAACCGACTAATGTTGAAAAATTAGCGGATGACTTGTGGTGGGGGTGAAAGGCCAATCAAACCGGGAGATAGCTGGTTCTCCCCGAAAGCTATTTAGGTAGCGCCTCGTGAACTCATCTTCGGGGGTAGAGCACTGTTTCGGCTAGGGGGCCATCCCGGCTTACCAAACCGATGCAAA");
+//	g.tick(seq);
+//	
+//	Flowcell f = new Flowcell(5,100,"fasta");
+//	f.tick(seq);
+//	f.getNumberOfAlivePores();
+//	f.getNumberOfAllPores();
+//	f.getcurrentSumOfReads();
+//	FiletypeContainingSequences blub = f.getFlowcellOutput();
+//	blub.writeInFile("TestFlowcell.txt");
+//	}
 }
