@@ -10,10 +10,13 @@ public class FastASequence implements Sequence{
 	
 	private String header;
 	private String sequence;
+	private String score;
 	
 	public FastASequence(String header, String sequence){
 		this.header = header;
 		this.sequence = sequence;
+		score = null;
+		
 	}
 
 	public String getHeader() {
@@ -34,9 +37,20 @@ public class FastASequence implements Sequence{
 
 	@Override
 	public String getScore() {
-		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public void setSequence(String seq) {
+		this.sequence = seq;
+	}
+
+	@Override
+	public void setScore(String score) {
+		this.score = score;	
+	}
+
+	
 	
 	
 	/**

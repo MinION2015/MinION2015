@@ -3,11 +3,11 @@ package controller;
 
 import java.util.Random;
 
-import reader.FastASequence;
-import reader.Sequence;
+import reader.*;
+import Basecalling.BasecallingErrorRate;
 import Basecalling.SimulationError;
 import LengthDistribution.LengthDistribution;
-import error.ErrorCodes;
+import error.Chance;
 import error.MyException;
 
 /**
@@ -46,10 +46,10 @@ public class Pore {
 	public Pore(int ageLimit)
 	{
 		this.ageLimit=ageLimit;
-		this.deathProbs =new int[ageLimit];
-		this.deathProbs =setDeathProbs(ageLimit);
-		this.sleepProbs=setSleepProbs(500); // for now after 500 ticks the Pore will definitely go to sleep
-		this.wakeProbs=setWakeProbs(100);
+//		this.deathProbs =new int[ageLimit];
+//		this.deathProbs =setDeathProbs(ageLimit);
+//		this.sleepProbs=setSleepProbs(500); // for now after 500 ticks the Pore will definitely go to sleep
+//		this.wakeProbs=setWakeProbs(100);
 	}
 	
 	//Exceptions fŸr zu hohes age -> arrayoutofBounds schreiben
@@ -99,59 +99,58 @@ public class Pore {
 	 */
 	public Sequence simulate(Sequence sequence) throws MyException
 	{
-		Random rand = new Random();
-
-		int length = (int) LengthDistribution.getRandLength();
-		
+		this.state = "Running";
+		sequenceLength = 0;
+//		int length = (int) LengthDistribution.getRandLength();
 		//checks if the random lengths are feasible
-		for(int i=0;i<10;i++)
-		{
-			if(length>=sequence.lengthOfSequence())
-			{
-				length =(int) LengthDistribution.getRandLength();
+		//TODO why is the number 10 chosen?
+//		for(int i=0;i<10;i++)
+//		{
+//			if(length>=sequence.lengthOfSequence())
+//			{
+//				length =(int) LengthDistribution.getRandLength();
+//			}
+//			else break;
+//			if(i==9)
+//			{
+//				throw new MyException(ErrorCodes.PORE_NO_CAPABLE_SEQUENCE_LENGTH);
+//				
+//			}
+//		}
+		//Suggestion(Friederike):
+		boolean lengthFound = false;
+		do{
+			try{
+				sequenceLength = (int) LengthDistribution.getRandLength();
+				if (sequenceLength < sequence.lengthOfSequence()){
+					lengthFound = true;
+				}
+			}catch(Exception e){
+				//Until LEngthDistribution gets it's problems fixed
+				sequenceLength = 10;
+				lengthFound = true;
+				System.err.println("Lenght distribution class caused following error: "+ e.getMessage());
 			}
-			else break;
-			if(i==9)
-			{
-				throw new MyException(ErrorCodes.Pore_NOCAPABLESEQUENCELENGTH);
-				
-			}
-		}
+		}while(!lengthFound);
+		
 		
 		//random number between 0 and sequenceLength-lenght is created
-		int start = rand.nextInt(sequence.lengthOfSequence()-length);
+		int start = Chance.getRandInt(0,sequence.lengthOfSequence()-sequenceLength);		
 		
-		System.out.println(start);
-		
-		
-		/*
-		 * SequenceLengthThreshold is for the checkStatus-method
-		 */
-		sequenceLength = length;
-	
-
-		String subseq = sequence.getSequence().substring(start, start+length);
-		
-		System.out.println(subseq);
-
-
-//		String fasta = errorModel.applyErrorBasecalling(subseq, basecalling,"setting/default.setting");
+		System.out.println(sequence.getSequence().substring(start, start+sequenceLength));
 		try{
-			sequenceAsString = SimulationError.applyErrorBasecalling(subseq);
-		}catch(Exception e){
-			System.err.println("Error occurs in pore class");
+			sequenceAsString = SimulationError.applyErrorBasecalling((sequence.getSequence().substring(start, start+sequenceLength)));
+		}catch(Exception e){//Should be mYException, but basecalling throws index out of bounds thus left it like this to keep the program running
+			sequenceAsString = "ACTG";
+			System.err.println("Following error occurrs in pore class when simulate tries to apply basecalling error rate :" + e.getMessage());
 		}
 		
-		if(sequenceAsString.isEmpty()) System.out.println("Sequence is empty");
+		if(sequenceAsString.isEmpty()){
+			System.out.println("Pore had trouble sequencing. Could not produce any output.");
+		}
 
-		//Sequence seq = new Sequence(sequence.,fasta);
-		//will leave it like this for now, sinc it is getting late and github threw me back an hour, will think about it tomoorrow, Rike
-		seq = new FastASequence(sequence.getHeader(),sequenceAsString);
-		this.state = "Running";
-		
-		
-		return seq;
-
+		sequence.setSequence(sequenceAsString);	
+		return sequence;
 	}
 	
 	public Sequence getSequenceFromPore(){
@@ -418,11 +417,23 @@ public class Pore {
 		return numbersOfTimeAsked;
 	}
 	
+//	
+	public static void main(String[] args){
+		Pore p = new Pore(10);
+		Sequence seq = new FastASequence("me","GGTTAAGCGACTAAGCGTACACGGTGGATGCCTAGGCAGTCAGAGGCGATGAAGGGCGTGCTAATCTGCGAAAAGCGTCGGTAAGCTGATATGAAGCGTTATAACCGACGATACCCGAATGGGGAAACCCAGTGCAATACGTTGCACTATCGTTAGATGAATACATAGTCTAACGAGGCGAACCGGGGGAACTGAAACATCTAAGTACCCCGAGGAAAAGAAATCAACCGAGATTCCCCCAGTAGCGGCGAGCGAACGGGGAGGAGCCCAGAGTCTGAATCAGTTTGTGTGTTAGTGGAAGCGTCTGGAAAGTCGCACGGTACAGGGTGATAGTCCCGTACACCAAAATGCACAGGCTGTGAACTCGATGAGTAGGGCGGGACACGTGACATCCTGTCTGAATATGGGGGGACCATCCTCCAAGGCTAAATACTCCTGACTGACCGATAGTGAACCAGTACCGTGAGGGAAAGGCGAAAAGAACCCCGGCGAGGGGAGTGAAATAGAACCTGAAACCGTGTACGTACAAGCAGTGGGAGCACCTTCGTGGTGTGACTGCGTACCTTTTGTATAATGGGTCAGCGACTTATATTTTGTAGCAAGGTTAACCGAATAGGGGAGCCGTAGGGAAACCGAGTCTTAACTAGGCGTCTAGTTGCAAGGTATAGACCCGAAACCCGGTGATCTAGCCATGGGCAGGTTGAAGGTTGGGTAACACTAACTGGAGGACCGAACCGACTAATGTTGAAAAATTAGCGGATGACTTGTGGTGGGGGTGAAAGGCCAATCAAACCGGGAGATAGCTGGTTCTCCCCGAAAGCTATTTAGGTAGCGCCTCGTGAACTCATCTTCGGGGGTAGAGCACTGTTTCGGCTAGGGGGCCATCCCGGCTTACCAAACCGATGCAAAGGTTAAGCGACTAAGCGTACACGGTGGATGCCTAGGCAGTCAGAGGCGATGAAGGGCGTGCTAATCTGCGAAAAGCGTCGGTAAGCTGATATGAAGCGTTATAACCGACGATACCCGAATGGGGAAACCCAGTGCAATACGTTGCACTATCGTTAGATGAATACATAGTCTAACGAGGCGAACCGGGGGAACTGAAACATCTAAGTACCCCGAGGAAAAGAAATCAACCGAGATTCCCCCAGTAGCGGCGAGCGAACGGGGAGGAGCCCAGAGTCTGAATCAGTTTGTGTGTTAGTGGAAGCGTCTGGAAAGTCGCACGGTACAGGGTGATAGTCCCGTACACCAAAATGCACAGGCTGTGAACTCGATGAGTAGGGCGGGACACGTGACATCCTGTCTGAATATGGGGGGACCATCCTCCAAGGCTAAATACTCCTGACTGACCGATAGTGAACCAGTACCGTGAGGGAAAGGCGAAAAGAACCCCGGCGAGGGGAGTGAAATAGAACCTGAAACCGTGTACGTACAAGCAGTGGGAGCACCTTCGTGGTGTGACTGCGTACCTTTTGTATAATGGGTCAGCGACTTATATTTTGTAGCAAGGTTAACCGAATAGGGGAGCCGTAGGGAAACCGAGTCTTAACTAGGCGTCTAGTTGCAAGGTATAGACCCGAAACCCGGTGATCTAGCCATGGGCAGGTTGAAGGTTGGGTAACACTAACTGGAGGACCGAACCGACTAATGTTGAAAAATTAGCGGATGACTTGTGGTGGGGGTGAAAGGCCAATCAAACCGGGAGATAGCTGGTTCTCCCCGAAAGCTATTTAGGTAGCGCCTCGTGAACTCATCTTCGGGGGTAGAGCACTGTTTCGGCTAGGGGGCCATCCCGGCTTACCAAACCGATGCAAA");
+		try{
+			BasecallingErrorRate base = new BasecallingErrorRate(1,"default.setting");
+			LengthDistribution length = new LengthDistribution(10);
+		}catch(Exception e){
+			System.err.println("Something went wrong basecalling in pore test main: "+ e.getMessage());
+		}
+		try{
+			p.simulate(seq);
+		}catch(MyException e){
+			System.err.println("In pore class something went wrong in the simulte method : " + e.getErrorMessage());
+		}
 	
-//	public static void main(String[] args){
-//		Pore p = new Pore(10);
-//		System.out.println(p.checkStatus());
-//	}
+	}
 
 
 

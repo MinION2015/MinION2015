@@ -143,6 +143,7 @@ public class Flowcell{
 					//TODO if pore claims it's done right away but hasn't simulated anything yet null will be returned obviously. Problem? In that case startFlowcell needs to be back to simualte each pore at last once
 					System.out.println("This pore is done.");
 					try{
+						//TODO needs to be commented in again, but not sure if this is working properly
 						//seq = p.getSequenceFromPore();
 						outputSequence.addSeq(seq);
 					}catch(Exception e){

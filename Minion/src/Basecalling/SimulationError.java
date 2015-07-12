@@ -1,6 +1,7 @@
 package Basecalling;
 
 import error.Chance;
+import error.MyException;
 
 
 /**
@@ -17,7 +18,7 @@ public class SimulationError{
 		
 	}
 
-	public static String applyErrorBasecalling(String seq) throws Exception {
+	public static String applyErrorBasecalling(String seq) throws MyException {
 		
 		String err = "";
 		String cache = "";

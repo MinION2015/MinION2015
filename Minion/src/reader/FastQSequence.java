@@ -50,6 +50,19 @@ public class FastQSequence implements Sequence{
 		public int lengthOfScore(){
 			return score.length();
 		}
+
+
+		@Override
+		public void setSequence(String seq) {
+			this.sequence = seq;
+		}
+
+
+		@Override
+		public void setScore(String score) {
+			// TODO Auto-generated method stub
+			this.score = score;
+		}
 	}
 
 

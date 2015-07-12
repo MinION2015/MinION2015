@@ -23,7 +23,7 @@ public enum ErrorCodes {
 	PORE_HAS_DIED(3000,"Pore has died.",true),
 	PORE_INITIATED(3001,"The Pore has started sequencing.",true),
 	PORE_FINISHED(3002,"The Pore has finished without problems.",true),
-	Pore_NOCAPABLESEQUENCELENGTH(3003,"Die Sequenz ist zu kurz!", true),
+	PORE_NO_CAPABLE_SEQUENCE_LENGTH(3003,"Die Sequenz ist zu kurz!", true),
 	
 	FLOWCELL_EMPTY(4000,"Flowcell is empty.",true),
 	FLOWCELL_CONTAINS_PORES(4001,"Current number of pores in flowcell: ",false),

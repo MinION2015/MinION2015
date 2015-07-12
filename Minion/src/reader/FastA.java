@@ -208,7 +208,7 @@ public class FastA implements FiletypeContainingSequences {
 	 * Test
 	 */
 
-	public static void main(String[] args) throws IOException, MyException{
+//	public static void main(String[] args) throws IOException, MyException{
 //////		if(args.length != 1){
 //////			System.err.println("You should specify a FastA file as input!");
 //////			System.exit(1);
@@ -221,8 +221,8 @@ public class FastA implements FiletypeContainingSequences {
 ////		/**
 ////		 * TEsts	
 ////		 */
-			FastA pfastA = new FastA();
-			Sequence seq = new FastASequence ("me", "ACTG-");
+//			FastA pfastA = new FastA();
+//			Sequence seq = new FastASequence ("me", "ACTG-");
 ////			pfastA.addSeq (seq);
 ////			ArrayList<Sequence> arr = pfastA.getSequence();
 ////			ArrayList<MyException> err = pfastA.getErrorInSequence();
@@ -235,13 +235,13 @@ public class FastA implements FiletypeContainingSequences {
 ////				//expected: sequence contains gaps
 ////				System.out.println(e.getErrorMessage());
 ////			}
-			pfastA.processRead("me", "ACT-GA");
-			System.out.println(pfastA.getSequence().get(0).getHeader());
-			System.out.println(pfastA.getSequence().get(0).getSequence());
-			System.out.println(pfastA.getSequence().size());
+//			pfastA.processRead("me", "ACT-GA");
+//			System.out.println(pfastA.getSequence().get(0).getHeader());
+//			System.out.println(pfastA.getSequence().get(0).getSequence());
+//			System.out.println(pfastA.getSequence().size());
 //			pfastA.parse("C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/src/example4.fasta");
 //			pfastA.writeInFile("TestFastAWirteInfile.txt");
-			 
-		}
+//		 
+//		}
 
 }

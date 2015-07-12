@@ -10,5 +10,9 @@ public interface Sequence {
 	public String getSequence();
 	public String getScore();
 	
+	public void setSequence(String seq);
+	public void setScore(String score);
+	
 	public int lengthOfSequence();
+	
 }
