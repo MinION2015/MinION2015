@@ -51,9 +51,9 @@ public class Flowcell{
 	 * @throws MyException
 	 */
 	private void setFlowcellOutputFormat(String outputFormat) throws MyException{
-		if(outputFormat == "fasta"){
+		if(outputFormat.endsWith("fasta")){
 			outputSequence = new FastA();
-		}else if(outputFormat == "fastq"){
+		}else if(outputFormat.endsWith("fastq")){
 			outputSequence = new FastQ();
 		}else{
 			throw new MyException(ErrorCodes.FLOWCELL_OUTPUT_FORMAT_COULD_NOT_BE_CREATED);

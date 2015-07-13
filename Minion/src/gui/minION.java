@@ -747,14 +747,14 @@ public class minION extends javax.swing.JFrame {
 
 	String message= "";
 	int basecalling = 0;
-	String inputFormat = "fasta";
+	String inputFormat = ".fasta";
 	
 	//Check which Input format is chosen
     if(fastA.isSelected()){
-        inputFormat="fasta";
+        inputFormat=".fasta";
     }
     else if(fastQ.isSelected()){
-        inputFormat="fastq";
+        inputFormat=".fastq";
     }
 
     //Check which dimension is chosen
@@ -804,7 +804,7 @@ public class minION extends javax.swing.JFrame {
 		try {
 			cd.run();
 		} catch (MyException e) {
-			System.err.println("Error occuring in controller run methode "+e.getErrorMessage());
+			e.printStackTrace();
 		}
 			
 
