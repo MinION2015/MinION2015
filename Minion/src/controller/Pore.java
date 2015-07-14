@@ -30,10 +30,10 @@ public class Pore {
 	private static int [] deathProbs = new int[ageLimit];// the probabilities if the pore dies depending on ageLimit 
 	private static int [] sleepProbs = new int[500];// the probabilities if the pore goes to sleep depending on the time it last slept
 	private static int [] wakeProbs = new int[100];
-	private boolean beenAsleepOnce=false;
-	private int timeBetweenLastSlumber=0;
+	private static boolean beenAsleepOnce=false;
+	private static int timeBetweenLastSlumber=0;
 	private int sleepTime=0; //time it has been sleeping
-	private boolean wokeUp=false;
+	private static boolean wokeUp=false;
 	
 	/**
 	 * @author Albert Langensiepen
@@ -128,6 +128,8 @@ public class Pore {
 	 * @return String state
 	 * checks ths state of the pore and returns the fitting state. Depending on the state some values are changed
 	 */
+	
+	
 	public String checkStatus()
 	{
 		if(wokeUp)
@@ -135,101 +137,166 @@ public class Pore {
 			timeBetweenLastSlumber++;
 		}
 		
-		if(state.equals("Dead"))
-			return "Dead";
-		
-		if(state.equals("Finished"))
-			return "Bored";
-		
-		if(state.equals("Running"))
-		{	
-			// nur wŠhrend running? ? noch unklar!
-			if(numbersOfTimeAsked > sequenceLength) 
-			{
-				setStatus("Finished");
-				return "Finished";
-			}
-			else
-			{
-				
-
-				boolean dead=tryToDie(age);
-				
-				if(dead)
-				{
-					setStatus("Dead");
-					return "Dead";
-				}
-//				else if(state.equals("Finished"))
-//				{
-//					setStatus("Bored");
-//					return "Bored";
-//				}
-				else{
-					age++;
-					numbersOfTimeAsked++;
-					return "Running";
-				}
-			}
-			
-			
-//			age++;
-//			numbersOfTimeAsked++;
-//			return "Running";
-		}
-		
-		if(state.equals("Sleeping"))
+		switch(state)
 		{
-			boolean wake= tryToWake(sleepTime);
-			if(wake)
-			{
-				timeBetweenLastSlumber++;
-				wokeUp=true;
-				setStatus("Bored");
-				return "Bored";
-			}
-			else{
-				sleepTime++;
-				return "Sleeping";
-			
-			}
-			
-		}
+		case "Dead": return "Dead";
+		case "Finished": setStatus("Bored");
+							return "Bored";
+		case "Running": 	if(numbersOfTimeAsked >= sequenceLength) 
+							{
+								setStatus("Finished");
+								return "Finished";
+							}
+							else
+							{
+								boolean dead=tryToDie(age);
+								
+								if(dead)
+								{
+									setStatus("Dead");
+									return "Dead";
+								}
+					
+								else{
+									age++;
+									numbersOfTimeAsked++;
+									return "Running";
+								}
+							}
+							
+		case "Sleeping":  	age++;
+							boolean wake= tryToWake(sleepTime);
+							if(wake)
+							{
+								timeBetweenLastSlumber++;
+								wokeUp=true;
+								setStatus("Bored");
+								return "Bored";
+							}
+							else{
+								sleepTime++;
+								return "Sleeping";
+							}
+							
+		case "Bored":		if(state.equals("Bored"))
+							{
+								
+								boolean asleep=tryToSleep(age);
+								
+								if(asleep)
+								{
+									setStatus("Sleeping");
+									timeBetweenLastSlumber=0;
+									return "Sleeping";
+								}
+								else return "Bored";
+							}
+		default: return "empty";
 		
-		if(state.equals("Bored"))
-		{
-			if(!beenAsleepOnce)
-			{	
-			boolean asleep=tryToSleep(age);
-			
-			if(asleep)
-			{
-				setStatus("Sleeping");
-				timeBetweenLastSlumber=0;
-				beenAsleepOnce=true;
-				wokeUp=false;
-				return "Sleeping";
-			}
-			else return "Bored";
-			}
-			
-			else
-			{	
-			boolean asleep=tryToSleep2(timeBetweenLastSlumber);
-			
-			if(asleep)
-			{
-				setStatus("Sleeping");
-				timeBetweenLastSlumber=0;
-				return "Sleeping";
-			}
-			else return "Bored";
-			}
 		}
-		//not sure about this
-		else return "Bored";
-		
 	}
+//	public String checkStatus()
+//	{
+//		if(wokeUp)
+//		{
+//			timeBetweenLastSlumber++;
+//		}
+//		
+//		if(state.equals("Dead"))
+//			return "Dead";
+//		
+//		if(state.equals("Finished"))
+//			return "Bored";
+//		
+//		if(state.equals("Running"))
+//		{	
+//			// nur wŠhrend running? ? noch unklar!
+//			if(numbersOfTimeAsked > sequenceLength) 
+//			{
+//				setStatus("Finished");
+//				return "Finished";
+//			}
+//			else
+//			{
+//				
+//
+//				boolean dead=tryToDie(age);
+//				
+//				if(dead)
+//				{
+//					setStatus("Dead");
+//					return "Dead";
+//				}
+////				else if(state.equals("Finished"))
+////				{
+////					setStatus("Bored");
+////					return "Bored";
+////				}
+//				else{
+//					age++;
+//					numbersOfTimeAsked++;
+//					return "Running";
+//				}
+//			}
+//			
+//			
+////			age++;
+////			numbersOfTimeAsked++;
+////			return "Running";
+//		}
+//		
+//		if(state.equals("Sleeping"))
+//		{
+//			boolean wake= tryToWake(sleepTime);
+//			if(wake)
+//			{
+//				timeBetweenLastSlumber++;
+//				wokeUp=true;
+//				setStatus("Bored");
+//				return "Bored";
+//			}
+//			else{
+//				sleepTime++;
+//				return "Sleeping";
+//			
+//			}
+//			
+//		}
+//		
+//		if(state.equals("Bored"))
+//		{
+//			if(!beenAsleepOnce)
+//			{	
+//			boolean asleep=tryToSleep(age);
+//			
+//			if(asleep)
+//			{
+//				setStatus("Sleeping");
+//				timeBetweenLastSlumber=0;
+//				beenAsleepOnce=true;
+//				wokeUp=false;
+//				return "Sleeping";
+//			}
+//			else return "Bored";
+//			}
+//			
+//			else
+//			{	
+//			boolean asleep=tryToSleep2(timeBetweenLastSlumber);
+//			
+//			if(asleep)
+//			{
+//				setStatus("Sleeping");
+//				timeBetweenLastSlumber=0;
+//				return "Sleeping";
+//			}
+//			else return "Bored";
+//			}
+//		}
+//		//not sure about this
+//		else return "Bored";
+//		
+//	}
 	
 	/**
 	 * @author: Albert Langensiepen
@@ -253,7 +320,7 @@ public class Pore {
 	
 	/**
 	 * @author: Albert Langensiepen
-	 * @input: age of a Pore 
+	 * @input: age of a Pore or time between the last time the Pore slept
 	 * @output: boolean if the pore goes to sleep
 	 * @functionality:  a random integer between 1 and 100 is generated and depending on the age of the Pore the possibility
 	 * 					at this index in the array is taken and if the number is less or equal to this number the pore goes to sleep  					
@@ -263,31 +330,28 @@ public class Pore {
 		boolean sleep=false;
 		Random rand = new Random();
 		int r = rand.nextInt(100)+1; 
-		System.out.println("zufallszahl: "+r);
-		System.out.println("Intervallsobergrenze: "+sleepProbs[age]);
-		
-		if(r<=sleepProbs[age]) return sleep=true;
-		else return sleep=false;
-	}
 	
-	/**
-	 * @author: Albert Langensiepen
-	 * @input: time between last time the Pore was asleep  
-	 * @output: boolean if the pore goes to sleep
-	 * @functionality:  a random integer between 1 and 100 is generated and depending on the last time the Pore was asleep, the possibility
-	 * 					at this index in the array is taken and if the number is less or equal to this number the pore goes to sleep  					
-	 */
-	private static boolean tryToSleep2(int timeBetweenLastSlumber)
-	{
+		if(!beenAsleepOnce)
+		{
+			if(r<=sleepProbs[age])
+			{
+				wokeUp=false;
+				beenAsleepOnce=true;
+				return sleep=true;
+			}
+			else return sleep=false;
+		}
+		else
+		{
+			if(r<=sleepProbs[timeBetweenLastSlumber])
+			{	
+				return sleep=true;
+			}
+			else return sleep=false;
+			
+		}
 		
-		boolean sleep=false;
-		Random rand = new Random();
-		int r = rand.nextInt(100)+1; 
 		
-		System.out.println("zufallszahl: "+r);
-		System.out.println("Intervallsobergrenze: "+sleepProbs[timeBetweenLastSlumber]);
-		if(r<=sleepProbs[timeBetweenLastSlumber]) return sleep=true;
-		else return sleep=false;
 	}
 	
 	private static boolean tryToWake(int sleepTime)
