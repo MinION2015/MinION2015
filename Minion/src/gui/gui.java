@@ -17,6 +17,7 @@ import javax.swing.JTextField;
 
 import controller.Controller;
 import error.MyException;
+import guiStatistics.guiStatistics;
 import Basecalling.createSetting;
 
 /**
@@ -1083,18 +1084,38 @@ public class gui extends javax.swing.JFrame {
     private javax.swing.JFormattedTextField windowSizeFormattedTextField;
     // End of variables declaration                   
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws MyException {
         gui sim = new gui();
         sim.setVisible(true);
+        sim.statistics();
     }
 
-    public void statistics() throws MyException
-    {
-    	
-    	//gets a double array with the values (number of Reads), Quality, dead pores, running pores, sleeping pores, alive pores, bored pores usw.
-    	double[] porestates = cd.getFlowcell().getStates();//[0] Running, [1]Bored, [2] Dead,[3] Finished, [4] Sleeping,[5] sum of Pores
-    	int currentSumOfReads = cd.getFlowcell().getcurrentSumOfReads();
-    }
+    
+    
+  public void statistics() throws MyException
+  {
+  	//TODO cd bekommt eine nullpointerException, darf erst aktiv werden wenn mINIon aktiv
+  	
+  	//gets a double array with the values (number of Reads), Quality, dead pores, running pores, sleeping pores, alive pores, bored pores usw.
+//  	double[] porestates = cd.getFlowcell().getStates();//[0] Running, [1]Bored, [2] Dead,[3] Finished, [4] Sleeping,[5] sum of Pores
+//  	int currentSumOfReads = cd.getFlowcell().getcurrentSumOfReads();
+//  	guiStatistics chart = new guiStatistics("Pore Statistics", "Pore States", porestates[0],porestates[1], porestates[2], porestates[3],porestates[4]);
+	   double[] test ={1,1,1,1,2};
+  	 guiStatistics chart = new guiStatistics("Pore Statistics", "Pore States", test);
+	      chart.pack();
+	      chart.setVisible(true);
+	      
+	      for(int i = 0; i < 10000; i++)
+	      {
+	    	  test[0] = i;
+	    	  test[3] = i*0.5;
+	    	  chart.updateData(test);
+	      }
+  	
+	      
+	      
+  }
+
 
 
 }
