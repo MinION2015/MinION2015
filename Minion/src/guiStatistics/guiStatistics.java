@@ -69,7 +69,19 @@ public class guiStatistics extends JFrame{		//not sure if this.chartPanel is nee
 		        
 
 		    }
-		  
+		  /**
+		   * @author Albert and Daniel
+		   * @param applicationTitle
+		   * @param chartTitle
+		   * @param running
+		   * @param bored
+		   * @param dead
+		   * @param finished
+		   * @param sleeping
+		   * @return JFreeChart
+		   * Gets the chartTitle and the title of the generated field. Generates as JFreeChart containing the given information
+		   * 
+		   * */
 		   private JFreeChart createDataset(String applicationTitle, String chartTitle, double running, double bored, double dead, double finished, double sleeping) {
 		     
 		      // row keys...
@@ -96,6 +108,12 @@ public class guiStatistics extends JFrame{		//not sure if this.chartPanel is nee
 		      return pieChart;
 		     
 		  }
+		   /**
+		    * @author Albert and Daniel
+		    * @param porestates
+		    * gets called every tick and updates the output chart. Gets the current states of the pores(running, bored,....)
+		    */
+		  
 		   public void updateData(double[] porestates)
 		   {
 			   		JFreeChart JFreetemp = createDataset("Pore Statistics", "Pore States",porestates[0],porestates[1], porestates[2], porestates[3],porestates[4]);
