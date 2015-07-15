@@ -24,7 +24,7 @@ public class createSetting {
 	double deletionProb;
 	double deletionExtProb;
 	
-	public createSetting(String sourcepath, String outputPath, int dimension) throws IOException{
+	public void createSettingFile(String sourcepath, String outputPath, int dimension) throws IOException{
 		calculate(sourcepath);
 		print(outputPath,dimension);
 	}
@@ -217,7 +217,7 @@ public class createSetting {
 	
 public static void main(String args[]){
 	try {
-		createSetting test = new createSetting("/Users/kevinlindner/Documents/workspace/lambda_analyse/run08_4_-5_5_5.txt","/Users/kevinlindner/Documents/test.setting",1);
+		createSetting test = new createSetting("/Users/kevinlindner/Documents/workspace/lambda_analyse/run08_4_-5_5_5.txt","/Users/kevinlindner/git/MinION2015/Minion/setting files/default.setting",1);
 	} catch (IOException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
