@@ -2,6 +2,8 @@ package gui;
 
 
 
+import java.io.IOException;
+
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -25,6 +27,7 @@ import Basecalling.createSetting;
  */
 public class gui extends javax.swing.JFrame {
     
+	
     javax.swing.JFileChooser mainFileChooser = new javax.swing.JFileChooser();
     javax.swing.JFileChooser lengthDistributionChooser = new javax.swing.JFileChooser();
     javax.swing.JFileChooser baseCallingChooser = new javax.swing.JFileChooser();
@@ -1003,11 +1006,18 @@ public class gui extends javax.swing.JFrame {
         // TODO add your handling code here:
     }                                              
 
-    private void bCreateButtonActionPerformed(java.awt.event.ActionEvent evt) {                                              
-    	
+    private void bCreateButtonActionPerformed(java.awt.event.ActionEvent evt){                                              
+    	try {
+			createSetting.createSettingFile(bBlastPathTextField.getText(),settingFileDirectoryTextField.getText(),1);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }                                             
 
-    private void numberOfTicksTextFieldActionPerformed(java.awt.event.ActionEvent evt) {                                                       
+ 
+
+	private void numberOfTicksTextFieldActionPerformed(java.awt.event.ActionEvent evt) {                                                       
         // TODO add your handling code here:
     }                                                      
 
