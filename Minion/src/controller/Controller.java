@@ -84,7 +84,7 @@ public class Controller {
 		try{	
 			//Sequence seq = new FastASequence("me","GGTTAAGCGACTAAGCGTACACGGTGGATGCCTAGGCAGTCAGAGGCGATGAAGGGCGTGCTAATCTGCGAAAAGCGTCGGTAAGCTGATATGAAGCGTTATAACCGACGATACCCGAATGGGGAAACCCAGTGCAATACGTTGCACTATCGTTAGATGAATACATAGTCTAACGAGGCGAACCGGGGGAACTGAAACATCTAAGTACCCCGAGGAAAAGAAATCAACCGAGATTCCCCCAGTAGCGGCGAGCGAACGGGGAGGAGCCCAGAGTCTGAATCAGTTTGTGTGTTAGTGGAAGCGTCTGGAAAGTCGCACGGTACAGGGTGATAGTCCCGTACACCAAAATGCACAGGCTGTGAACTCGATGAGTAGGGCGGGACACGTGACATCCTGTCTGAATATGGGGGGACCATCCTCCAAGGCTAAATACTCCTGACTGACCGATAGTGAACCAGTACCGTGAGGGAAAGGCGAAAAGAACCCCGGCGAGGGGAGTGAAATAGAACCTGAAACCGTGTACGTACAAGCAGTGGGAGCACCTTCGTGGTGTGACTGCGTACCTTTTGTATAATGGGTCAGCGACTTATATTTTGTAGCAAGGTTAACCGAATAGGGGAGCCGTAGGGAAACCGAGTCTTAACTAGGCGTCTAGTTGCAAGGTATAGACCCGAAACCCGGTGATCTAGCCATGGGCAGGTTGAAGGTTGGGTAACACTAACTGGAGGACCGAACCGACTAATGTTGAAAAATTAGCGGATGACTTGTGGTGGGGGTGAAAGGCCAATCAAACCGGGAGATAGCTGGTTCTCCCCGAAAGCTATTTAGGTAGCGCCTCGTGAACTCATCTTCGGGGGTAGAGCACTGTTTCGGCTAGGGGGCCATCCCGGCTTACCAAACCGATGCAAAGGTTAAGCGACTAAGCGTACACGGTGGATGCCTAGGCAGTCAGAGGCGATGAAGGGCGTGCTAATCTGCGAAAAGCGTCGGTAAGCTGATATGAAGCGTTATAACCGACGATACCCGAATGGGGAAACCCAGTGCAATACGTTGCACTATCGTTAGATGAATACATAGTCTAACGAGGCGAACCGGGGGAACTGAAACATCTAAGTACCCCGAGGAAAAGAAATCAACCGAGATTCCCCCAGTAGCGGCGAGCGAACGGGGAGGAGCCCAGAGTCTGAATCAGTTTGTGTGTTAGTGGAAGCGTCTGGAAAGTCGCACGGTACAGGGTGATAGTCCCGTACACCAAAATGCACAGGCTGTGAACTCGATGAGTAGGGCGGGACACGTGACATCCTGTCTGAATATGGGGGGACCATCCTCCAAGGCTAAATACTCCTGACTGACCGATAGTGAACCAGTACCGTGAGGGAAAGGCGAAAAGAACCCCGGCGAGGGGAGTGAAATAGAACCTGAAACCGTGTACGTACAAGCAGTGGGAGCACCTTCGTGGTGTGACTGCGTACCTTTTGTATAATGGGTCAGCGACTTATATTTTGTAGCAAGGTTAACCGAATAGGGGAGCCGTAGGGAAACCGAGTCTTAACTAGGCGTCTAGTTGCAAGGTATAGACCCGAAACCCGGTGATCTAGCCATGGGCAGGTTGAAGGTTGGGTAACACTAACTGGAGGACCGAACCGACTAATGTTGAAAAATTAGCGGATGACTTGTGGTGGGGGTGAAAGGCCAATCAAACCGGGAGATAGCTGGTTCTCCCCGAAAGCTATTTAGGTAGCGCCTCGTGAACTCATCTTCGGGGGTAGAGCACTGTTTCGGCTAGGGGGCCATCCCGGCTTACCAAACCGATGCAAA");
 	
-			while((currentNumberOfTicks < options.getTotalNumberOfTicks()) && !checkIfStoppedYet()  && flowcell.getNumberOfAlivePores() > 0){
+			while((currentNumberOfTicks < options.getTotalNumberOfTicks()) && !checkIfStoppedYet()  && flowcell.getNumberOfAlivePores() > 0 && !status.equals("Paused")){
 				
 				int pos = Chance.getRandInt(0, inputFile.getSequence().size()-1);
 				flowcell.tick(inputFile.getSequence().get(pos));
@@ -123,11 +123,11 @@ public class Controller {
 		
 		
 		//TODO Correct?
-		guiStatistics GuiStatisticsObject = new guiStatistics("Pore Statistics", "Pore States", flowcell.getStates());
-		GuiStatisticsObject.pack();
-	    GuiStatisticsObject.setVisible(true);
-	    //updateData must be updated every tick
-		GuiStatisticsObject.updateData(flowcell.getStates());
+//		guiStatistics GuiStatisticsObject = new guiStatistics("Pore Statistics", "Pore States", flowcell.getStates());
+//		GuiStatisticsObject.pack();
+//	    GuiStatisticsObject.setVisible(true);
+//	    //updateData must be updated every tick
+//		GuiStatisticsObject.updateData(flowcell.getStates());
 	}
 
 	public void resume() throws MyException{
@@ -136,6 +136,7 @@ public class Controller {
 				checkIfStoppedYet();
 				if(status.equals("Paused")){
 					status = "Running";
+					flowcell.setStatus("Running");
 					System.out.println("Program resumed");
 					System.out.println("currentNum Ticks when resuming(should be equal to when pausing): "+currentNumberOfTicks);
 					run();
@@ -147,25 +148,13 @@ public class Controller {
 	}
 	
 	public void pause() throws MyException{
-		//int counter=0; //used for testing
+		
 		try{
 			checkIfStoppedYet();
 			status = "Paused";
 			System.out.println("Program paused");
 			System.out.println("Current number of ticks when pausing: "+currentNumberOfTicks);
-			while(status.equals("Paused")){
-				try {
-					Thread.sleep(1);
-				} catch (InterruptedException e) {
-					System.err.println("Thread.sleep in pause throws following error: "+e.getMessage());
-				}
-				//for testing purposes: after 300 ticks something should happen and controller not be paused anymore
-//				counter++;
-//				if(counter == 3000){
-//					resume();
-//				}
-
-			}
+			flowcell.setStatus("Paused");
 		}catch(MyException e){
 			throw new MyException(ErrorCodes.CONTROLLER_NOT_PAUSING);
 		}
@@ -174,6 +163,7 @@ public class Controller {
 	public void stop() throws MyException{
 		
 		status = "Stopped";
+		flowcell.setStatus("Stopped");
 		System.out.println("Program stopped");
 		currentNumberOfTicks = options.getTotalNumberOfTicks();	
 	}

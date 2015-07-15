@@ -28,6 +28,7 @@ public class Flowcell{
 	private int maxAgeOfPores;
 	private int currentSumOfReads; //needed for already recorded Reads
 	private String outputFormat;
+	private String status;
 	
 //	public Flowcell(){
 //		//for testing reasons
@@ -35,6 +36,7 @@ public class Flowcell{
 	public Flowcell(int numberOfPores,int maxAgeOfPores,String outputFormat) throws MyException{
 		System.out.println("A new flowcell is created");
 		currentSumOfReads = 0;
+		status = "Running";
 		this.outputFormat = outputFormat;
 		this.maxAgeOfPores = maxAgeOfPores;
 		try{
@@ -109,54 +111,59 @@ public class Flowcell{
 	 * In each tick all pores are checked and either given work , if their are bored, else they are left alone. If one is finished the output is added to the FastA object, so later it can be printed to a file
 	 */
 	public void tick(Sequence seq){
-		
-		try{
-			setFlowcellOutputFormat(outputFormat);
-			checkFlowcellState();
-			for(Pore p : poreList){
-				
-				String statusOfPore = p.checkStatus();//"Running"//"Bored"//"Finished"//"Dead"//"sleeping"
-				
-				//just for playing around with the status;
-				double rand = Chance.getRand();
-				if(rand<0.3){
-					statusOfPore = "Running";
-				}else if(rand < 0.6){
-					statusOfPore= "Bored";
-				}else{
-					statusOfPore = "Finished";
-				}
-				
-				if(statusOfPore.equals("Running") || statusOfPore.equals("Dead") || statusOfPore.equals("Sleeping")){
-					System.out.println("This pore is busy with running or being dead or sleeping");
-					continue;
-				}else if(statusOfPore.equals("Bored")){
-					System.out.println("This pore is bored, thus should be simulated");
-					try{
-						p.simulate(seq);
-						System.out.println("Pore was simulated in flowcell");
-					}catch(MyException e){
-						System.err.println("Pore could not be simulated because: " +e.getErrorMessage());
+		if(status.equals("Running")){
+			try{
+				setFlowcellOutputFormat(outputFormat);
+				checkFlowcellState();
+				for(Pore p : poreList){
+
+					String statusOfPore = p.checkStatus();//"Running"//"Bored"//"Finished"//"Dead"//"sleeping"
+
+					//just for playing around with the status;
+					double rand = Chance.getRand();
+					if(rand<0.3){
+						statusOfPore = "Running";
+					}else if(rand < 0.6){
+						statusOfPore= "Bored";
+					}else{
+						statusOfPore = "Finished";
 					}
-				}else if(statusOfPore.equals("Finished")){
-					//collecting output
-					//TODO if pore claims it's done right away but hasn't simulated anything yet null will be returned obviously. Problem? In that case startFlowcell needs to be back to simualte each pore at last once
-					System.out.println("This pore is done.");
-					try{
-						//TODO needs to be commented in again, but not sure if this is working properly
-						//seq = p.getSequenceFromPore();
-						outputSequence.addSeq(seq);
-					}catch(Exception e){
-						System.err.println("Error in tick-collecting output: "+e.getMessage());
+
+					if(statusOfPore.equals("Running") || statusOfPore.equals("Dead") || statusOfPore.equals("Sleeping")){
+						System.out.println("This pore is busy with running or being dead or sleeping");
+						continue;
+					}else if(statusOfPore.equals("Bored")){
+						System.out.println("This pore is bored, thus should be simulated");
+						try{
+							p.simulate(seq);
+							System.out.println("Pore was simulated in flowcell");
+						}catch(MyException e){
+							System.err.println("Pore could not be simulated because: " +e.getErrorMessage());
+						}
+					}else if(statusOfPore.equals("Finished")){
+						//collecting output
+						//TODO if pore claims it's done right away but hasn't simulated anything yet null will be returned obviously. Problem? In that case startFlowcell needs to be back to simualte each pore at last once
+						System.out.println("This pore is done.");
+						try{
+							//TODO needs to be commented in again, but not sure if this is working properly
+							//seq = p.getSequenceFromPore();
+							outputSequence.addSeq(seq);
+						}catch(Exception e){
+							System.err.println("Error in tick-collecting output: "+e.getMessage());
+						}
 					}
 				}
+			}catch(MyException e){
+				System.err.println("This error occurs in the flowcell tick method: "+ e.getErrorMessage());
+
 			}
-		}catch(MyException e){
-			System.err.println("This error occurs in the flowcell tick method: "+ e.getErrorMessage());
-			
 		}
 	}
 	
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
 	public FiletypeContainingSequences getFlowcellOutput(){
 		return outputSequence;
 	}
