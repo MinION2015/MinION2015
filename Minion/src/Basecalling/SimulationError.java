@@ -22,12 +22,12 @@ public class SimulationError{
 		
 		String err = "";
 		String cache = "";
+		double prob;
+		int rand;
 		for(int i = 0; i < seq.length();i++){
-			
 			cache = callBase(seq.charAt(i));
 			if(cache=="add"){
 				i--;
-				int rand;
 				rand = Chance.getRandInt(1, 4);
 				switch(rand){
 				case 1: err = err.concat("A");
@@ -39,8 +39,30 @@ public class SimulationError{
 				case 4: err = err.concat("C");
 				break;
 				}
+				do{
+					prob = Chance.getRand();
+					if(prob<=BasecallingErrorRate.getInsertionExtProb()){
+						i--;
+						rand = Chance.getRandInt(1, 4);
+						switch(rand){
+						case 1: err = err.concat("A");
+						break;
+						case 2: err = err.concat("T");
+						break;
+						case 3: err = err.concat("G");
+						break;
+						case 4: err = err.concat("C");
+						break;
+						}
+					}
+				}while(prob<=BasecallingErrorRate.getInsertionExtProb());
 			}else if(cache=="del"){
-				
+				do{
+					prob = Chance.getRand();
+					if(prob<=BasecallingErrorRate.getDeletionExtProb()){
+						i++;
+					}
+				}while(prob<=BasecallingErrorRate.getDeletionExtProb());
 			}else
 				err = err.concat(cache);
 			//Test: expected: t
@@ -74,12 +96,9 @@ public class SimulationError{
 			}else if(probBase > BasecallingErrorRate.getValue(row, 1) && probBase <= BasecallingErrorRate.getValue(row, 2)){
 				//System.out.println(rate.getBase(2));
 				return BasecallingErrorRate.getBase(2);
-			}else if(probBase > BasecallingErrorRate.getValue(row, 2) && probBase <=BasecallingErrorRate.getValue(row, 3)){
+			}else if(probBase > BasecallingErrorRate.getValue(row, 2)){
 				//System.out.println(rate.getBase(3));
 				return BasecallingErrorRate.getBase(3);
-			}else if(probBase > BasecallingErrorRate.getValue(row, 3) && probBase <=BasecallingErrorRate.getValue(row, 4)){
-				//System.out.println(rate.getBase(4));
-				return BasecallingErrorRate.getBase(4);
 			}
 		}
 		return "";

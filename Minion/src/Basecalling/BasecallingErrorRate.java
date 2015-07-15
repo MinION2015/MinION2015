@@ -27,71 +27,82 @@ public class BasecallingErrorRate {
 	private static double[][] transProbMatrix = new double[4][4];
 	private static char[] base = {'A','T','G','C'};
 	private static double insertionProb = 0;
+	private static double insertionExtProb = 0;
 	private static double deletionProb = 0;
+	private static double deletionExtProb = 0;
 	
 	public BasecallingErrorRate(int dimension,String settingFilePath) throws Exception{
 		generate(dimension, settingFilePath);
-		
 	}
 	
 	
 	private static void generate(int dimension,String settingFilePath) throws Exception{
 		char cacheChar = ' ';
-		String Value = "";
+		String Value;
 		BufferedReader Input = new BufferedReader(new FileReader(settingFilePath));
-			if(dimension == 1){
-				Input.readLine();
-				Input.readLine();
-			}else if(dimension == 2)
-				for(int i=0;i<10;i++)
-					Input.readLine();
-			
+			Input.readLine();
 			for(int i=0;i<4;i++){
 				cacheChar=' ';
-				Value = "";
 				while(cacheChar!='#')
 					cacheChar=(char) Input.read();
 				for(int j=0;j<4;j++){
 					cacheChar=' ';
-					while(cacheChar!='#'&&cacheChar!='I'){
+					Value = "";
+					while(cacheChar!='#'){
 						cacheChar=(char) Input.read();
-						Value = Value+cacheChar;
-						transProbMatrix[i][j] = Double.parseDouble(Value);
+						if(cacheChar!='#')
+							Value = Value+cacheChar;
 					}
+					if(i!=0)
+						transProbMatrix[i][j] = Double.parseDouble(Value)+transProbMatrix[i-1][j];
+					else
+						transProbMatrix[i][j] = Double.parseDouble(Value);
 				}
 			}
 			while(cacheChar!='#')
 				cacheChar=(char) Input.read();
-			Value = "";
-			cacheChar = ' ';
-			while(cacheChar!='#'&&cacheChar!='O'){
-				cacheChar=(char) Input.read();
-				Value = Value+cacheChar;
-			}
+			Value = Input.readLine();
 			insertionProb = Double.parseDouble(Value);
-			Value = "";
-			cacheChar = ' ';
 			while(cacheChar!='#')
 				cacheChar=(char) Input.read();
-			while(cacheChar!='#'){
+			Value = Input.readLine();
+			insertionExtProb = Double.parseDouble(Value);
+			while(cacheChar!='#')
 				cacheChar=(char) Input.read();
-				Value = Value+cacheChar;
-			}
+			Value = Input.readLine();
 			deletionProb = Double.parseDouble(Value);
+			while(cacheChar!='#')
+				cacheChar=(char) Input.read();
+			Value = Input.readLine();
+			deletionExtProb = Double.parseDouble(Value);
 			Input.close();
 	}
-	/*
+	
 	public static void age(){
-		insertionProb=insertionProb*1.1;
-		deletionProb=deletionProb*1.1;
+		double percentageReduction = 0;
+		double baseFalseProb = 0;
+		insertionProb=insertionProb*1.05;
+		insertionExtProb=insertionExtProb*1.05;
+		deletionProb=deletionProb*1.05;
+		deletionExtProb=deletionExtProb*1.05;
 		for(int i=0;i<4;i++){
-			transProbMatrix[i][]
+			for(int j=0;j<4;j++){
+				if(i==j)
+					percentageReduction=transProbMatrix[i][j]-(transProbMatrix[i][j]*0.95);
+				else
+					baseFalseProb += transProbMatrix[i][j];
+			}
+			for(int j=0;j<4;j++){
+				if(i==j)
+					transProbMatrix[i][j]=transProbMatrix[i][j]-percentageReduction;
+				else
+					transProbMatrix[i][j]=transProbMatrix[i][j]+(percentageReduction*(transProbMatrix[i][j]/baseFalseProb));
+			}
 		}
-		*/	
-				
-				
+	}
 	
-	
+
+			
 	public static double getValue(int i, int j){
 		return transProbMatrix[i][j];
 	}
@@ -104,8 +115,16 @@ public class BasecallingErrorRate {
 		return insertionProb;
 	}
 	
+	public static double getInsertionExtProb(){
+		return insertionExtProb;
+	}
+	
 	public static double getDeletionProb(){
 		return deletionProb;
+	}
+	
+	public static double getDeletionExtProb(){
+		return deletionExtProb;
 	}
 	
 	public static  int getRow(char a){

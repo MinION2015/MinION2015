@@ -17,6 +17,7 @@ import javax.swing.JTextField;
 
 import controller.Controller;
 import error.MyException;
+import Basecalling.createSetting;
 
 /**
  * @author Sven
@@ -1002,7 +1003,7 @@ public class gui extends javax.swing.JFrame {
     }                                              
 
     private void bCreateButtonActionPerformed(java.awt.event.ActionEvent evt) {                                              
-        // TODO add your handling code here:
+    	
     }                                             
 
     private void numberOfTicksTextFieldActionPerformed(java.awt.event.ActionEvent evt) {                                                       
