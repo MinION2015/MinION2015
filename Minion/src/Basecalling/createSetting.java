@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+
 /**
  * 
  * @author kevinlindner
@@ -56,15 +57,17 @@ public class createSetting {
 			while(!(cacheString.contains("Query") && !(cacheString.contains("Query=")))){
 				Input.mark(1000);
 				cacheString = Input.readLine();
-				Input.reset();
 			}
+			Input.reset();
 			do {
 			query = Input.readLine();
+			if(!query.contains("Query"))
+				break;
 			Input.readLine();
 			sbjct = Input.readLine();
 			Input.readLine();
 
-			for(int i=1;i<sbjct.length()-4;i++){
+			for(int i=1;i<sbjct.length()-17;i++){
 				if(query.charAt(i)=='A'&&sbjct.charAt(i)=='A'){
 					matrix[0][0]++;
 				countA++;}
@@ -125,7 +128,7 @@ public class createSetting {
 			} while (query.contains("Query"));
 			
 			Input.mark(50000);
-			for(int i=0;i<50000;i++){
+			for(int i=0;i<5000;i++){
 			endInt = Input.read();
 			}
 			Input.reset();	
@@ -151,11 +154,16 @@ public class createSetting {
 				}
 			}
 		}
-		
-		insertionProb=countInsertion/countAll;
-		insertionExtProb=(countInsertionExt/countInsertion)/(countInsertionExt/countInsertion)+1;
-		deletionProb=countDeletion/countAll;
-		deletionExtProb=(countDeletionExt/countDeletion)/(countDeletionExt/countDeletion)+1;
+		double cache2=0;
+		double cache3=0;
+		insertionProb=countInsertion/(double)countAll;
+		cache2=(countInsertionExt/(double)countInsertion);
+		cache3=(countInsertionExt/(double)countInsertion)+1;
+		insertionExtProb=cache2/(double)cache3;
+		deletionProb=countDeletion/(double)countAll;
+		cache2=(countDeletionExt/(double)countDeletion);
+		cache3=(countDeletionExt/(double)countDeletion)+1;
+		deletionExtProb=cache2/(double)cache3;
 		percentageMatrix=matrix;
 	}
 	
@@ -189,24 +197,32 @@ public class createSetting {
 				Output.write("C#");
 				break;
 			}
-			for(int j=0;j<4;j++){
-				Output.write(Double.toString(percentageMatrix[i][j])+"#");
-			}
+			
+			Output.write(Double.toString(percentageMatrix[i][0])+"#");
+			Output.write(Double.toString(percentageMatrix[i][0]+percentageMatrix[i][1])+"#");
+			Output.write(Double.toString(percentageMatrix[i][0]+percentageMatrix[i][1]+percentageMatrix[i][2])+"#");
+			Output.write(Double.toString(percentageMatrix[i][0]+percentageMatrix[i][1]+percentageMatrix[i][2]+percentageMatrix[i][3])+"#");
+	
 		}
 		Output.newLine();
 		Output.write("IN#"+insertionProb);
 		Output.newLine();
 		Output.write("IN_ext#"+insertionExtProb);
 		Output.newLine();
-		Output.write("OUT#"+insertionProb);
+		Output.write("OUT#"+deletionProb);
 		Output.newLine();
 		Output.write("OUT_ext#"+deletionExtProb);
 		Output.close();
 	}
 	
-/*public void main(String args[]){
-	createSettingFile(,,1)
-}*/
+public static void main(String args[]){
+	try {
+		createSetting test = new createSetting("/Users/kevinlindner/Documents/workspace/lambda_analyse/run08_4_-5_5_5.txt","/Users/kevinlindner/Documents/test.setting",1);
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+}
 	
 	
 	/* CONFIGURATION OF BASECALLING SETTING FILES
