@@ -1008,7 +1008,7 @@ public class gui extends javax.swing.JFrame {
 
     private void bCreateButtonActionPerformed(java.awt.event.ActionEvent evt){                                              
     	try {
-			createSetting.createSettingFile(bBlastPathTextField.getText(),settingFileDirectoryTextField.getText(),1);
+			createSetting.createSettingFile(bBlastPathTextField.getText(),settingFileDirectoryTextField.getText()+"\\"+bNameTextField.getText(),1);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
