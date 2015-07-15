@@ -4,6 +4,7 @@ import error.Chance;
 import error.ErrorCodes;
 import error.MyException;
 import gui.GUIOptions;
+import guiStatistics.guiStatistics;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -118,6 +119,15 @@ public class Controller {
 			System.err.println("Run method in Controller2: "+e.getMessage());
 			throw new MyException(ErrorCodes.CONTROLLER_NOT_RUNNING);
 		}	
+		
+		
+		
+		//TODO Correct?
+		guiStatistics GuiStatisticsObject = new guiStatistics("Pore Statistics", "Pore States", flowcell.getStates());
+		GuiStatisticsObject.pack();
+	    GuiStatisticsObject.setVisible(true);
+	    //updateData must be updated every tick
+		GuiStatisticsObject.updateData(flowcell.getStates());
 	}
 
 	public void resume() throws MyException{
@@ -263,6 +273,30 @@ public class Controller {
 		}
 
 	}
+	
+	
+	
+//    public guiStatistics statistics(Flowcell flowcell) throws MyException
+//    {
+//    	//TODO cd bekommt eine nullpointerException, darf erst aktiv werden wenn mINIon aktiv
+//    	
+//    	//gets a double array with the values (number of Reads), Quality, dead pores, running pores, sleeping pores, alive pores, bored pores usw.
+////    	double[] porestates = flowcell.getStates();//[0] Running, [1]Bored, [2] Dead,[3] Finished, [4] Sleeping,[5] sum of Pores
+//    	int currentSumOfReads = flowcell.getcurrentSumOfReads();
+//    	guiStatistics chart = new guiStatistics("Pore Statistics", "Pore States", flowcell.getStates());
+//
+////    	 guiStatistics chart = new guiStatistics("Pore Statistics", "Pore States", 1,1,1,1,2);
+//	      
+////	      
+////	      for(int i = 0; i < 10000; i++)
+////	      {
+////	    	  chart.updateData(i,1,1,1,2);
+////	      }
+//    	return chart;
+//	      
+//	      
+//    }
+
 
 ///**
 // * Tests
