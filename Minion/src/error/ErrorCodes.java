@@ -34,7 +34,8 @@ public enum ErrorCodes {
 	CONTROLLER_NOT_RUNNING(5000,"Program doesn't run.",true),
 	CONTROLLER_NOT_PAUSING(5001,"Program deosn't pause",true),
 	CONTROLLER_NOT_RESUMING(5002,"Program doesn't resume",true),
-	CONTROLLER_NOT_STOPPING(5003,"Program doesn't stop",true);
+	CONTROLLER_NOT_STOPPING(5003,"Program doesn't stop",true),	
+	LENGTHRATE_NO_INTEGER_FOUND(6000,"There was no integer found at this place when parsing the length input file",true);
 	
 	private final int identity;
 	private final String message;

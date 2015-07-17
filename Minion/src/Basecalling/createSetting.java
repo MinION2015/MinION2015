@@ -18,18 +18,18 @@ import java.io.IOException;
 public class createSetting {
 	
 	
-	double percentageMatrix[][] = new double[4][4];
-	double insertionProb;
-	double insertionExtProb;
-	double deletionProb;
-	double deletionExtProb;
+	static double percentageMatrix[][] = new double[4][4];
+	static double insertionProb;
+	static double insertionExtProb;
+	static double deletionProb;
+	static double deletionExtProb;
 	
-	public createSetting(String sourcepath, String outputPath, int dimension) throws IOException{
+	public static void createSettingFile(String sourcepath, String outputPath, int dimension) throws IOException{
 		calculate(sourcepath);
 		print(outputPath,dimension);
 	}
 	
-	private void calculate(String sourcepath) throws IOException{
+	private static void calculate(String sourcepath) throws IOException{
 
 		BufferedReader Input = new BufferedReader(new FileReader(sourcepath));
 		String cacheString = "";
@@ -168,7 +168,7 @@ public class createSetting {
 	}
 	
 	
-	private void print(String outputPath, int dimension) throws IOException{
+	private static void print(String outputPath, int dimension) throws IOException{
 		BufferedWriter Output = new BufferedWriter(new FileWriter(outputPath));
 		switch(dimension){
 		case 1:
@@ -214,15 +214,15 @@ public class createSetting {
 		Output.write("OUT_ext#"+deletionExtProb);
 		Output.close();
 	}
-	
+	/*
 public static void main(String args[]){
 	try {
-		createSetting test = new createSetting("/Users/kevinlindner/Documents/workspace/lambda_analyse/run08_4_-5_5_5.txt","/Users/kevinlindner/Documents/test.setting",1);
+		createSetting test = new createSetting("/Users/kevinlindner/Documents/workspace/lambda_analyse/run08_4_-5_5_5.txt","/Users/kevinlindner/git/MinION2015/Minion/setting files/default.setting",1);
 	} catch (IOException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
-}
+}*/
 	
 	
 	/* CONFIGURATION OF BASECALLING SETTING FILES
