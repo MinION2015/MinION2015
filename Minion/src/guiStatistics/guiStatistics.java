@@ -125,9 +125,10 @@ public class guiStatistics extends JFrame{		//not sure if this.chartPanel is nee
 		   
 
 
-//		   public static void main(String[] args) {
-//		      guiStatistics chart = new guiStatistics("Pore Statistics", "Pore States", 2 , 3 , 4 , 5 ,6);
-//		      chart.pack();
-//		      chart.setVisible(true);
-//		   }
+		   public static void main(String[] args) {
+			   double[] testary = {1,1,1,1,2};
+		      guiStatistics chart = new guiStatistics("Pore Statistics", "Pore States", testary);
+		      chart.pack();
+		      chart.setVisible(true);
+		   }
 }
