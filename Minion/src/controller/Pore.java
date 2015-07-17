@@ -25,12 +25,10 @@ public class Pore {
 	private int numbersOfTimeAsked;
 	private int sequenceLength; //for checking if more ticks are are done then sequence length sf
 	
-	private static boolean beenAsleepOnce;
 	private static int timeBetweenLastSlumber;
 	private int sleepTime; //time it has been sleeping
 	private static boolean wokeUp;
-	
-	
+
 	private static int  ageLimit;
 	private static int [] deathProbs;// = new int[ageLimit];// the probabilities if the pore dies depending on ageLimit 
 	private static int [] sleepProbs;// = new int[500];// the probabilities if the pore goes to sleep depending on the time it last slept
@@ -54,17 +52,18 @@ public class Pore {
 		
 		this.timeBetweenLastSlumber = 0;
 		this.sleepTime = 0;
-		this.beenAsleepOnce = false;
 		this.wokeUp = false;
 		
-		
+		int sleepForSure =(int)Math.round(ageLimit*0.5) ; //number of ticks at which the Pore will sleep with 100% prob
+		int wakeForSure =(int)Math.round(ageLimit*0.25) ;
+			
 		Pore.ageLimit=ageLimit;
 		Pore.deathProbs =new int[ageLimit];
-		Pore.sleepProbs = new int[ageLimit];
-		Pore.wakeProbs = new int [ageLimit];
-		Pore.deathProbs =setDeathProbs(ageLimit);
-		Pore.sleepProbs=setSleepProbs(ageLimit); // for now after 500 ticks the Pore will definitely go to sleep
-		Pore.wakeProbs=setWakeProbs(ageLimit);
+		Pore.sleepProbs = new int[sleepForSure];
+		Pore.wakeProbs = new int [wakeForSure];
+		Pore.deathProbs =setProbs(ageLimit,deathProbs);
+		Pore.sleepProbs=setProbs(sleepForSure,sleepProbs); // for now after 500 ticks the Pore will definitely go to sleep
+		Pore.wakeProbs=setProbs(wakeForSure,wakeProbs);
 	}
 	
 
@@ -162,6 +161,8 @@ public class Pore {
 		case "Dead": return "Dead";
 		case "Finished": setStatus("Bored");
 							return "Bored";
+							//when the Pore has been asked more often than the length of the sequence its processed it is finished
+							//when its still processing it can always die, which depends on its age
 		case "Running": 	if(numbersOfTimeAsked >= sequenceLength) 
 							{
 								setStatus("Finished");
@@ -174,6 +175,7 @@ public class Pore {
 								if(dead)
 								{
 									setStatus("Dead");
+									wokeUp=false;
 									return "Dead";
 								}
 					
@@ -183,12 +185,12 @@ public class Pore {
 									return "Running";
 								}
 							}
-							
+		//the Pore can wake if its sleeping or continue to sleep					
 		case "Sleeping":  	age++;
 							boolean wake= tryToWake(sleepTime);
 							if(wake)
 							{
-								timeBetweenLastSlumber++;
+								//timeBetweenLastSlumber++;
 								wokeUp=true;
 								setStatus("Bored");
 								return "Bored";
@@ -198,10 +200,12 @@ public class Pore {
 								return "Sleeping";
 							}
 							
+							//when the Pore is bored it can go to sleep or it will simulate again and process another read
+							// question is if its return
 		case "Bored":		if(state.equals("Bored"))
 							{
 								
-								boolean asleep=tryToSleep(age);
+								boolean asleep=tryToSleep(timeBetweenLastSlumber);
 								
 								if(asleep)
 								{
@@ -209,114 +213,18 @@ public class Pore {
 									timeBetweenLastSlumber=0;
 									return "Sleeping";
 								}
-								else return "Bored";
+								else
+								{
+									timeBetweenLastSlumber++;
+									return "Running";
+									// or return "Bored" ??
+								}
 							}
-		default: return "empty";
+		default: return "undefined";
 		
 		}
 	}
-//	public String checkStatus()
-//	{
-//		if(wokeUp)
-//		{
-//			timeBetweenLastSlumber++;
-//		}
-//		
-//		if(state.equals("Dead"))
-//			return "Dead";
-//		
-//		if(state.equals("Finished"))
-//			return "Bored";
-//		
-//		if(state.equals("Running"))
-//		{	
-//			// nur wŠhrend running? ? noch unklar!
-//			if(numbersOfTimeAsked > sequenceLength) 
-//			{
-//				setStatus("Finished");
-//				return "Finished";
-//			}
-//			else
-//			{
-//				
-//
-//				boolean dead=tryToDie(age);
-//				
-//				if(dead)
-//				{
-//					setStatus("Dead");
-//					return "Dead";
-//				}
-////				else if(state.equals("Finished"))
-////				{
-////					setStatus("Bored");
-////					return "Bored";
-////				}
-//				else{
-//					age++;
-//					numbersOfTimeAsked++;
-//					return "Running";
-//				}
-//			}
-//			
-//			
-////			age++;
-////			numbersOfTimeAsked++;
-////			return "Running";
-//		}
-//		
-//		if(state.equals("Sleeping"))
-//		{
-//			boolean wake= tryToWake(sleepTime);
-//			if(wake)
-//			{
-//				timeBetweenLastSlumber++;
-//				wokeUp=true;
-//				setStatus("Bored");
-//				return "Bored";
-//			}
-//			else{
-//				sleepTime++;
-//				return "Sleeping";
-//			
-//			}
-//			
-//		}
-//		
-//		if(state.equals("Bored"))
-//		{
-//			if(!beenAsleepOnce)
-//			{	
-//			boolean asleep=tryToSleep(age);
-//			
-//			if(asleep)
-//			{
-//				setStatus("Sleeping");
-//				timeBetweenLastSlumber=0;
-//				beenAsleepOnce=true;
-//				wokeUp=false;
-//				return "Sleeping";
-//			}
-//			else return "Bored";
-//			}
-//			
-//			else
-//			{	
-//			boolean asleep=tryToSleep2(timeBetweenLastSlumber);
-//			
-//			if(asleep)
-//			{
-//				setStatus("Sleeping");
-//				timeBetweenLastSlumber=0;
-//				return "Sleeping";
-//			}
-//			else return "Bored";
-//			}
-//		}
-//		//not sure about this
-//		else return "Bored";
-//		
-//	}
+
 	
 	/**
 	 * @author: Albert Langensiepen
@@ -331,9 +239,6 @@ public class Pore {
 		boolean dead=false;
 		Random rand = new Random();
 		int r = rand.nextInt(100)+1; 
-		System.out.println("zufallszahl: "+r);
-		System.out.println("Intervallsobergrenze: "+deathProbs[age]);
-		
 		if(r<=deathProbs[age]) return dead=true;
 		else return dead=false;
 	}
@@ -351,27 +256,14 @@ public class Pore {
 		Random rand = new Random();
 		int r = rand.nextInt(100)+1; 
 	
-		if(!beenAsleepOnce)
-		{
-			if(r<=sleepProbs[age])
+
+			if(r<=sleepProbs[timeBetweenLastSlumber])
 			{
 				wokeUp=false;
-				beenAsleepOnce=true;
-				return sleep=true;
-			}
-			else return sleep=false;
-		}
-		else
-		{
-			if(r<=sleepProbs[timeBetweenLastSlumber])
-			{	
 				return sleep=true;
 			}
 			else return sleep=false;
 			
-		}
-		
-		
 	}
 	
 	private static boolean tryToWake(int sleepTime)
@@ -380,8 +272,6 @@ public class Pore {
 		boolean wake=false;
 		Random rand = new Random();
 		int r = rand.nextInt(100)+1;
-		//System.out.println("zufallszahl: "+r);
-		//System.out.println("Intervallsobergrenze: "+wakeProbs[sleepTime]);
 		if(r<=wakeProbs[sleepTime]) return wake=true;
 		else return wake=false;
 	}
@@ -395,63 +285,26 @@ public class Pore {
 	 * @functionality: depending on the age of a pore the probability that it dies increases
 	 * 					an array is generated where with 5-10%-intervals of AgeLimit the Probability to die increases
 	**/
-	private static int[] setDeathProbs(int ageLimit)
+	private static int[] setProbs(int ageLimit, int [] probs)
 	{
 		for(int i=0; i<ageLimit;i++)
 		{
-			if(i<ageLimit*0.1) deathProbs[i]=0;
-			if(ageLimit*0.1<=i && i <ageLimit*0.2) deathProbs[i]=1;
-			if(ageLimit*0.2<=i && i<ageLimit*0.3) deathProbs[i]=3;
-			if(ageLimit*0.3<=i &&i<ageLimit*0.4) deathProbs[i]=4;
-			if(ageLimit*0.4<=i &&i<ageLimit*0.5) deathProbs[i]=5;
-			if(ageLimit*0.5<=i &&i<ageLimit*0.6) deathProbs[i]=10;
-			if(ageLimit*0.6<=i &&i<ageLimit*0.7) deathProbs[i]=20;
-			if(ageLimit*0.7<=i &&i<ageLimit*0.8) deathProbs[i]=40;
-			if(ageLimit*0.8<=i &&i<ageLimit*0.9) deathProbs[i]=60;
-			if(ageLimit*0.9<=i &&i<ageLimit*0.95) deathProbs[i]=90;
-			if(ageLimit*0.95<=i &&i<ageLimit) deathProbs[i]=100;
+			if(i<ageLimit*0.1) probs[i]=0;
+			if(ageLimit*0.1<=i && i <ageLimit*0.2) probs[i]=1;
+			if(ageLimit*0.2<=i && i<ageLimit*0.3) probs[i]=3;
+			if(ageLimit*0.3<=i &&i<ageLimit*0.4) probs[i]=4;
+			if(ageLimit*0.4<=i &&i<ageLimit*0.5) probs[i]=5;
+			if(ageLimit*0.5<=i &&i<ageLimit*0.6) probs[i]=10;
+			if(ageLimit*0.6<=i &&i<ageLimit*0.7) probs[i]=20;
+			if(ageLimit*0.7<=i &&i<ageLimit*0.8) probs[i]=40;
+			if(ageLimit*0.8<=i &&i<ageLimit*0.9) probs[i]=60;
+			if(ageLimit*0.9<=i &&i<ageLimit*0.95) probs[i]=90;
+			if(ageLimit*0.95<=i &&i<ageLimit) probs[i]=100;
 			
 		}
-		return deathProbs;
+		return probs;
 	}
-	private static int[] setSleepProbs(int age)
-	{
-		for(int i=0; i<age;i++)
-		{
-			if(i<age*0.1) sleepProbs[i]=0;
-			if(age*0.1<=i && i <age*0.2) sleepProbs[i]=1;
-			if(age*0.2<=i && i<age*0.3) sleepProbs[i]=3;
-			if(age*0.3<=i &&i<age*0.4) sleepProbs[i]=4;
-			if(age*0.4<=i &&i<age*0.5) sleepProbs[i]=5;
-			if(age*0.5<=i &&i<age*0.6) sleepProbs[i]=10;
-			if(age*0.6<=i &&i<age*0.7) sleepProbs[i]=20;
-			if(age*0.7<=i &&i<age*0.8) sleepProbs[i]=40;
-			if(age*0.8<=i &&i<age*0.9) sleepProbs[i]=60;
-			if(age*0.9<=i &&i<age*0.95) sleepProbs[i]=90;
-			if(age*0.95<=i &&i<age) sleepProbs[i]=100;
-			
-		}
-		return sleepProbs;
-	}
-	private static int[] setWakeProbs(int age)
-	{
-		for(int i=0; i<age;i++)
-		{
-			if(i<age*0.1) wakeProbs[i]=0;
-			if(age*0.1<=i && i <age*0.2) wakeProbs[i]=1;
-			if(age*0.2<=i && i<age*0.3) wakeProbs[i]=3;
-			if(age*0.3<=i &&i<age*0.4) wakeProbs[i]=4;
-			if(age*0.4<=i &&i<age*0.5) wakeProbs[i]=5;
-			if(age*0.5<=i &&i<age*0.6) wakeProbs[i]=10;
-			if(age*0.6<=i &&i<age*0.7) wakeProbs[i]=20;
-			if(age*0.7<=i &&i<age*0.8) wakeProbs[i]=40;
-			if(age*0.8<=i &&i<age*0.9) wakeProbs[i]=60;
-			if(age*0.9<=i &&i<age*0.95) wakeProbs[i]=90;
-			if(age*0.95<=i &&i<age) wakeProbs[i]=100;
-			
-		}
-		return wakeProbs;
-	}
+
 	public void setStatus(String state)
 	{
 		this.state = state;
@@ -474,55 +327,18 @@ public class Pore {
 	 * @param args
 	 */
 //	public static void main(String[] args){
-//		Pore p = new Pore(10);
-//		Sequence seq = new FastASequence("me","GGTTAAGCGACTAAGCGTACACGGTGGATGCCTAGGCAGTCAGAGGCGATGAAGGGCGTGCTAATCTGCGAAAAGCGTCGGTAAGCTGATATGAAGCGTTATAACCGACGATACCCGAATGGGGAAACCCAGTGCAATACGTTGCACTATCGTTAGATGAATACATAGTCTAACGAGGCGAACCGGGGGAACTGAAACATCTAAGTACCCCGAGGAAAAGAAATCAACCGAGATTCCCCCAGTAGCGGCGAGCGAACGGGGAGGAGCCCAGAGTCTGAATCAGTTTGTGTGTTAGTGGAAGCGTCTGGAAAGTCGCACGGTACAGGGTGATAGTCCCGTACACCAAAATGCACAGGCTGTGAACTCGATGAGTAGGGCGGGACACGTGACATCCTGTCTGAATATGGGGGGACCATCCTCCAAGGCTAAATACTCCTGACTGACCGATAGTGAACCAGTACCGTGAGGGAAAGGCGAAAAGAACCCCGGCGAGGGGAGTGAAATAGAACCTGAAACCGTGTACGTACAAGCAGTGGGAGCACCTTCGTGGTGTGACTGCGTACCTTTTGTATAATGGGTCAGCGACTTATATTTTGTAGCAAGGTTAACCGAATAGGGGAGCCGTAGGGAAACCGAGTCTTAACTAGGCGTCTAGTTGCAAGGTATAGACCCGAAACCCGGTGATCTAGCCATGGGCAGGTTGAAGGTTGGGTAACACTAACTGGAGGACCGAACCGACTAATGTTGAAAAATTAGCGGATGACTTGTGGTGGGGGTGAAAGGCCAATCAAACCGGGAGATAGCTGGTTCTCCCCGAAAGCTATTTAGGTAGCGCCTCGTGAACTCATCTTCGGGGGTAGAGCACTGTTTCGGCTAGGGGGCCATCCCGGCTTACCAAACCGATGCAAAGGTTAAGCGACTAAGCGTACACGGTGGATGCCTAGGCAGTCAGAGGCGATGAAGGGCGTGCTAATCTGCGAAAAGCGTCGGTAAGCTGATATGAAGCGTTATAACCGACGATACCCGAATGGGGAAACCCAGTGCAATACGTTGCACTATCGTTAGATGAATACATAGTCTAACGAGGCGAACCGGGGGAACTGAAACATCTAAGTACCCCGAGGAAAAGAAATCAACCGAGATTCCCCCAGTAGCGGCGAGCGAACGGGGAGGAGCCCAGAGTCTGAATCAGTTTGTGTGTTAGTGGAAGCGTCTGGAAAGTCGCACGGTACAGGGTGATAGTCCCGTACACCAAAATGCACAGGCTGTGAACTCGATGAGTAGGGCGGGACACGTGACATCCTGTCTGAATATGGGGGGACCATCCTCCAAGGCTAAATACTCCTGACTGACCGATAGTGAACCAGTACCGTGAGGGAAAGGCGAAAAGAACCCCGGCGAGGGGAGTGAAATAGAACCTGAAACCGTGTACGTACAAGCAGTGGGAGCACCTTCGTGGTGTGACTGCGTACCTTTTGTATAATGGGTCAGCGACTTATATTTTGTAGCAAGGTTAACCGAATAGGGGAGCCGTAGGGAAACCGAGTCTTAACTAGGCGTCTAGTTGCAAGGTATAGACCCGAAACCCGGTGATCTAGCCATGGGCAGGTTGAAGGTTGGGTAACACTAACTGGAGGACCGAACCGACTAATGTTGAAAAATTAGCGGATGACTTGTGGTGGGGGTGAAAGGCCAATCAAACCGGGAGATAGCTGGTTCTCCCCGAAAGCTATTTAGGTAGCGCCTCGTGAACTCATCTTCGGGGGTAGAGCACTGTTTCGGCTAGGGGGCCATCCCGGCTTACCAAACCGATGCAAA");
-//		try{
-//			BasecallingErrorRate base = new BasecallingErrorRate(1,"default.setting");
-//			LengthDistribution length = new LengthDistribution(10);
-//		}catch(Exception e){
-//			System.err.println("Something went wrong basecalling in pore test main: "+ e.getMessage());
-//		}
-//		try{
-//			System.out.println("Simulation result: "+p.simulate(seq).getSequence());
-//			
-//		}catch(MyException e){
-//			System.err.println("In pore class something went wrong in the simulte method : " + e.getErrorMessage());
-//		}
+//		Pore p = new Pore(300);
+//		
+//		p.age=280;
+//		p.state="Running";
+//		p.numbersOfTimeAsked=10;
+//		p.sequenceLength=20;
+//		System.out.println(p.checkStatus());
+//		
+//		
 //	
 //	}
-	
-	//Exceptions fŸr zu hohes age -> arrayoutofBounds schreiben
-//	public static void main(String[] args) throws MyException, IOException
-//	{
-//		
-//		Pore p = new Pore(700);
-//		
-////		p.sleepTime=10;
-////		p.beenAsleepOnce=true;
-////		p.timeBetweenLastSlumber=400;
-////		p.age=599;
-////		p.numbersOfTimeAsked=5;
-////		p.sequenceLength=10;
-////		p.setStatus("Running");
-////		System.out.println(p.checkStatus());
-////		System.out.println("Pore State: "+p.state);
-////		System.out.println("Age: "+p.age);
-////		System.out.println("Numbers of Times Asked: "+p.numbersOfTimeAsked);
-////		
-//		
-//		Sequence seq = new Sequence(">","ATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG");
-//		try {
-//			p.simulate(seq);
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		//System.out.println(p.simulate(seq).getSequence()); 
-//		
-//
-//		
-//		
-//	}
+
 
 
 
