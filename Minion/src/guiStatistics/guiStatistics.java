@@ -24,18 +24,25 @@ import org.jfree.ui.RefineryUtilities;
 public class guiStatistics extends ApplicationFrame {
 
 	private ChartPanel chartPanel;
+	private double[][] porestates = new double[24][5];
+	private double[] reads = new double[24];
+	private int tick;
     /**
      * @author Daniel and Albert
      * @input gets the porestates containing the states of teh pore, the reads, containing the reads that are made at a special tick and the tick 
      * 		  are at the moment
      * @function generates two chartPanels
      */
-    public guiStatistics(double[][] porestates, double[] reads, int tick) {
+    public guiStatistics(double[] porestates, double reads) {
 
         super("Minion Simulation");
+        
+        this.porestates[tick] = porestates;
+        this.reads[tick] = reads;
+        this.tick = 0;
 
         // add the chart to a panel...
-        chartPanel = new ChartPanel(createChart(porestates, reads, tick));
+        chartPanel = new ChartPanel(createChart());
         chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
         setContentPane(chartPanel);
 
@@ -47,7 +54,7 @@ public class guiStatistics extends ApplicationFrame {
      * @return A dataset
      * @function computes a database containing the reads due the ticks. Every update the whole database is computed new
      */
-    public CategoryDataset createDataset1(double[] reads, int tick) {
+    public CategoryDataset createDataset1() {
 
         final DefaultCategoryDataset result = new DefaultCategoryDataset();
         
@@ -74,7 +81,7 @@ public class guiStatistics extends ApplicationFrame {
      * @return A dataset
      * @function computes a database containing the porestates due the ticks. Every update the whole database is computed new
      */
-    public CategoryDataset createDataset2(double[][] porestates, int tick) {
+    public CategoryDataset createDataset2() {
 //		porestates[i]
 //    	[0] Running, [1]Bored, [2] Dead,[3] Finished, [4] Sleeping,[5]
         final DefaultCategoryDataset result = new DefaultCategoryDataset();
@@ -104,16 +111,16 @@ public class guiStatistics extends ApplicationFrame {
     }
 
     /**
-     * @author Daniel and Albert
+     * @author Daniel
      * @input porestates, reads, ticks
      * @function calls the createdatabase functions. Gets back 2 databases and compute a LineAndShapeRenderer and a StackedBarRenderer. Mereges them
      * 	       into one CombinedDomainCategoryPlot.
      *
      * @return A chart.
      */
-    private JFreeChart createChart(double[][] porestates, double[] reads, int tick) {
+    private JFreeChart createChart() {
 
-        final CategoryDataset dataset1 = createDataset1(reads,tick);
+        final CategoryDataset dataset1 = createDataset1();
         final NumberAxis rangeAxis1 = new NumberAxis("Length of Reads");
         rangeAxis1.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
         final LineAndShapeRenderer renderer1 = new LineAndShapeRenderer();
@@ -121,7 +128,7 @@ public class guiStatistics extends ApplicationFrame {
         final CategoryPlot subplot1 = new CategoryPlot(dataset1, null, rangeAxis1, renderer1);
         subplot1.setDomainGridlinesVisible(true);
         
-        final CategoryDataset dataset2 = createDataset2(porestates,tick);
+        final CategoryDataset dataset2 = createDataset2();
         final NumberAxis rangeAxis2 = new NumberAxis("Number of Pores");
         rangeAxis2.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
         final StackedBarRenderer renderer11 = new StackedBarRenderer();
@@ -152,67 +159,55 @@ public class guiStatistics extends ApplicationFrame {
      * @param args  ignored.
      */
 //    public static void main(final String[] args) {
-//    	int tick = 4;
 //    	//reads.length and porestates[0].length must be the same
-//        double[] reads = {200,3343,1234,123,51,0,0};
-//        double[][] porestates = {{1,1,1,1,1},{2,2,2,2,2},{3,3,3,3,3},{1,4,1,2,3},{1,4,1,2,3},{1,4,1,2,3},{1,4,1,2,3}};
+//        double[] porestates = {1,1,1,1,2};
+//        double reads = 3;
 //        
-//        
-//        
-//       
-//        final guiStatistics demo = new guiStatistics(porestates, reads, tick);
+//    	final guiStatistics demo = new guiStatistics(porestates, reads);
 //        demo.pack();
 //        RefineryUtilities.centerFrameOnScreen(demo);
 //        demo.setVisible(true);
-//       
-//        boolean yes = true;
-//        for(int i = 0; i < 10000; i++)
+//        
+//        for(int i = 0; i< 10; i++)
 //        {
-//        	demo.updateData(porestates,reads, tick);
-//        	if(yes)
-//        	{
-//        		tick--;
-//        		yes = false;
-//        	}else
-//        	{
-//        		tick++;
-//        		yes = true;
-//        	}
+//        	demo.updateData(porestates, reads+i);
 //        }
-//        
-//        
 //
 //    }
     
     /**
-     * @author Daniel and Albert
+     * @author Daniel
      * @input porestates, reads, ticks
      * @function creates a guiStatisticsObject and visualizes it
      * 
      */
-    public void createguiStatistics(double[][] porestates, double[] reads, int tick)
+    public void createguiStatistics(double[] porestates, double reads)
     {
-    	final guiStatistics demo = new guiStatistics(porestates, reads, tick);
+    	final guiStatistics demo = new guiStatistics(porestates, reads);
     	demo.pack();
     	 RefineryUtilities.centerFrameOnScreen(demo);
     	 demo.setVisible(true);
     }
     
     /**
-     * @author Daniel and Albert
+     * @author Daniel
      * @param porestates 
      * @param reads
      * @param tick
      * @function updates the chart by computing a new one everytime.
      */
-    public void updateData(double[][] porestates, double[] reads, int tick)
+    public void updateData(double[] porestates, double reads)
 	   {
-    			
-		   		JFreeChart JFreetemp = createChart(porestates, reads, tick);
+    			this.tick++;
+    			this.porestates[tick] = porestates;
+    			this.reads[tick] = reads;
+		   		JFreeChart JFreetemp = createChart();
 //		   		chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
 		        this.chartPanel.setChart(JFreetemp);
 		        chartPanel.updateUI();
 
 	   }
+    
+    
 
 }
