@@ -3,6 +3,7 @@ package guiStatistics;
 import java.awt.Font;
 
 
+
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
@@ -15,6 +16,7 @@ import org.jfree.chart.renderer.category.StackedBarRenderer;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.ui.ApplicationFrame;
+import org.jfree.ui.RefineryUtilities;
 
 /**
  * Holds a ChartPanel
@@ -157,8 +159,8 @@ public class guiStatistics extends ApplicationFrame {
 //        
 //        
 //        
-//        final String title = "Combined Category Plot Demo 1";
-//        final guiStatistics demo = new guiStatistics(title, porestates, reads, tick);
+//       
+//        final guiStatistics demo = new guiStatistics(porestates, reads, tick);
 //        demo.pack();
 //        RefineryUtilities.centerFrameOnScreen(demo);
 //        demo.setVisible(true);
@@ -181,6 +183,21 @@ public class guiStatistics extends ApplicationFrame {
 //        
 //
 //    }
+    
+    /**
+     * @author Daniel and Albert
+     * @input porestates, reads, ticks
+     * @function creates a guiStatisticsObject and visualizes it
+     * 
+     */
+    public void createguiStatistics(double[][] porestates, double[] reads, int tick)
+    {
+    	final guiStatistics demo = new guiStatistics(porestates, reads, tick);
+    	demo.pack();
+    	 RefineryUtilities.centerFrameOnScreen(demo);
+    	 demo.setVisible(true);
+    }
+    
     /**
      * @author Daniel and Albert
      * @param porestates 

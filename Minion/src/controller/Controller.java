@@ -120,14 +120,10 @@ public class Controller {
 			throw new MyException(ErrorCodes.CONTROLLER_NOT_RUNNING);
 		}	
 		
-		
-		
-		//TODO Correct?
-//		guiStatistics GuiStatisticsObject = new guiStatistics("Pore Statistics", "Pore States", flowcell.getStates());
-//		GuiStatisticsObject.pack();
-//	    GuiStatisticsObject.setVisible(true);
-//	    //updateData must be updated every tick
-//		GuiStatisticsObject.updateData(flowcell.getStates());
+		//TODO
+		//createguiStatistics(double[][] porestates, double[] reads, int tick);
+		//updateData(double[][] porestates, double[] reads, int tick)
+
 	}
 
 	public void resume() throws MyException{
