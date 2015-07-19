@@ -68,8 +68,7 @@ public class Pore {
 	
 
 	/**
-	 * @author Albert Langensiepen und Daniel Dehncke und Friederike Hanssen(reorganized somethings, tried to avoid that no length is getting returned by implementing a do while loop insted of a for loop until 10,
-	 * but mainly added that the same sequence type the pore got will be returned, so that the pore doesn't have to bother with fasta/fastq format)
+	 * @author Albert Langensiepen und Daniel Dehncke und Friederike Hanssen(reorganized somethings, added that the same sequence type the pore got will be returned, so that the pore doesn't have to bother with fasta/fastq format)
 	 * @throws Exception 
 	 * @functionality simulation of a single DNA sequence running through a minION Pore
 	 * 				  first a random starting point in the sequence is generated and a length is given
@@ -80,7 +79,7 @@ public class Pore {
 	 * @input a DNA sequence, an error model chosen by the user, a random sequence length from the Length Distribution and a basecalling code
 	 * @output a Sequence object
 	 */
-	public Sequence simulate(Sequence sequence) throws MyException
+	public Sequence simulate(Sequence sequence, String seqType) throws MyException
 	{
 		this.state = "Running";
 		sequenceLength = 0;
@@ -108,9 +107,13 @@ public class Pore {
 		int start = Chance.getRandInt(0,seqInPore.lengthOfSequence()-sequenceLength);		
 
 		//	System.out.println(sequence.getSequence().substring(start, start+sequenceLength));
+		String[] mutation;
 		String seqMutated = "";
+		String score ="";
 		try{
-			seqMutated = SimulationError.applyErrorBasecalling((seqInPore.getSequence().substring(start, start+sequenceLength)));
+			mutation = SimulationError.applyErrorBasecalling(seqType,(seqInPore.getSequence().substring(start, start+sequenceLength)));
+			seqMutated = mutation[0];
+			score = mutation[1];
 		}catch(Exception e){//Should be mYException, but basecalling throws index out of bounds thus left it like this to keep the program running
 			seqMutated = "ACTG";
 			System.err.println("Following error occurrs in pore class when simulate tries to apply basecalling error rate :" + e.getMessage());
@@ -121,8 +124,7 @@ public class Pore {
 		}
 
 		seqInPore.setSequence(seqMutated);
-
-		//TODO sequence.setScore(sequence.assignScore); //sth like this
+		seqInPore.setScore(score);
 		return sequence;
 	}
 	

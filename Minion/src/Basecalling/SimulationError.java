@@ -17,10 +17,13 @@ public class SimulationError{
 	public SimulationError(){
 		
 	}
-
-	public static String applyErrorBasecalling(String seq) throws MyException {
+	//String seqtype determins fasta/fastq
+	public static String[] applyErrorBasecalling(String seqType,String seq) throws MyException {
 		
 		String err = "";
+		String score ="";
+		String[] output = new String[2];
+		
 		String cache = "";
 		double prob;
 		int rand;
@@ -68,8 +71,9 @@ public class SimulationError{
 			//Test: expected: t
 			//err = err.concat("t");
 		}
-		
-		return err;
+		output[0] = err;
+		output[1] = score;
+		return output;
 	}
 
 	

@@ -111,7 +111,7 @@ public class Flowcell{
 	 * In each tick all pores are checked and either given work , if their are bored, else they are left alone. If one is finished the output is added to the FastA object, so later it can be printed to a file
 	 */
 	public void tick(Sequence seq){
-		if(status.equals("Running")){
+		
 			try{
 				setFlowcellOutputFormat(outputFormat);
 				checkFlowcellState();
@@ -135,7 +135,7 @@ public class Flowcell{
 					}else if(statusOfPore.equals("Bored")){
 						System.out.println("This pore is bored, thus should be simulated");
 						try{
-							p.simulate(seq);
+							p.simulate(seq,outputFormat);
 							System.out.println("Pore was simulated in flowcell");
 						}catch(MyException e){
 							System.err.println("Pore could not be simulated because: " +e.getErrorMessage());
@@ -157,7 +157,7 @@ public class Flowcell{
 				System.err.println("This error occurs in the flowcell tick method: "+ e.getErrorMessage());
 
 			}
-		}
+		
 	}
 	
 	public void setStatus(String status) {
