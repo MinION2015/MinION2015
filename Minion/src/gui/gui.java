@@ -1008,7 +1008,7 @@ public class gui extends javax.swing.JFrame {
 
     private void bCreateButtonActionPerformed(java.awt.event.ActionEvent evt){                                              
     	try {
-			createSetting.createSettingFile(bBlastPathTextField.getText(),settingFileDirectoryTextField.getText()+"\\"+bNameTextField.getText(),1);
+			createSetting.createSettingFile(bBlastPathTextField.getText(),settingFileDirectoryTextField.getText()+"\\"+bNameTextField.getText(),bComboBox.getSelectedIndex()+1);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1106,7 +1106,7 @@ public class gui extends javax.swing.JFrame {
      * @throws MyException
      * @function computes a new guistatistics object. 
      */
-  public void statistics() throws MyException
+ /* public void statistics() throws MyException
   { 	//TODO reads need to be implemented
   	//gets a double array with the values (number of Reads), Quality, dead pores, running pores, sleeping pores, alive pores, bored pores usw.
   	//[0] Running, [1]Bored, [2] Dead,[3] Finished, [4] Sleeping,[5] sum of Pores
@@ -1120,8 +1120,8 @@ public class gui extends javax.swing.JFrame {
 	chart.updateData(porestates, reads);
   	
 	      
-	      
-  }
+	     
+  }*/ 
 
 
 
