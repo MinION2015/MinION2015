@@ -822,7 +822,7 @@ public class gui extends javax.swing.JFrame {
     			this.cd = new Controller(options);
     			System.out.println(options.getInputFilename());
     			try {
-    				cd.run();
+    				cd.startController();
     			} catch (MyException e) {
     				e.printStackTrace();
     			}

@@ -37,9 +37,9 @@ public class Controller {
 	private FiletypeContainingSequences inputFile;
 	private FiletypeContainingSequences outputFile;
 	private Flowcell flowcell;
-	private String status; //"Running","Paused","Stopped"
-	private int currentNumberOfTicks;
+	
 	private boolean hasBeenStopped =false;
+	private boolean isPaused = false;
 	private Runner runningThread;
 	
 //	public Controller(){
@@ -75,109 +75,69 @@ public class Controller {
 		}catch(Exception e){
 			System.err.println("Error in controller constructor intilaize: "+e.getMessage());
 		}
-		runningThread = new Runner(inputFile, outputFile, flowcell, options);
+		runningThread = new Runner(this);
 		
 	}
 
 
-	public void run() throws MyException{
-		System.out.println("Run is called");
-		System.out.println(options.getOutputFormat());
-		runningThread.start();
-//		try{	
-//			//Sequence seq = new FastASequence("me","GGTTAAGCGACTAAGCGTACACGGTGGATGCCTAGGCAGTCAGAGGCGATGAAGGGCGTGCTAATCTGCGAAAAGCGTCGGTAAGCTGATATGAAGCGTTATAACCGACGATACCCGAATGGGGAAACCCAGTGCAATACGTTGCACTATCGTTAGATGAATACATAGTCTAACGAGGCGAACCGGGGGAACTGAAACATCTAAGTACCCCGAGGAAAAGAAATCAACCGAGATTCCCCCAGTAGCGGCGAGCGAACGGGGAGGAGCCCAGAGTCTGAATCAGTTTGTGTGTTAGTGGAAGCGTCTGGAAAGTCGCACGGTACAGGGTGATAGTCCCGTACACCAAAATGCACAGGCTGTGAACTCGATGAGTAGGGCGGGACACGTGACATCCTGTCTGAATATGGGGGGACCATCCTCCAAGGCTAAATACTCCTGACTGACCGATAGTGAACCAGTACCGTGAGGGAAAGGCGAAAAGAACCCCGGCGAGGGGAGTGAAATAGAACCTGAAACCGTGTACGTACAAGCAGTGGGAGCACCTTCGTGGTGTGACTGCGTACCTTTTGTATAATGGGTCAGCGACTTATATTTTGTAGCAAGGTTAACCGAATAGGGGAGCCGTAGGGAAACCGAGTCTTAACTAGGCGTCTAGTTGCAAGGTATAGACCCGAAACCCGGTGATCTAGCCATGGGCAGGTTGAAGGTTGGGTAACACTAACTGGAGGACCGAACCGACTAATGTTGAAAAATTAGCGGATGACTTGTGGTGGGGGTGAAAGGCCAATCAAACCGGGAGATAGCTGGTTCTCCCCGAAAGCTATTTAGGTAGCGCCTCGTGAACTCATCTTCGGGGGTAGAGCACTGTTTCGGCTAGGGGGCCATCCCGGCTTACCAAACCGATGCAAAGGTTAAGCGACTAAGCGTACACGGTGGATGCCTAGGCAGTCAGAGGCGATGAAGGGCGTGCTAATCTGCGAAAAGCGTCGGTAAGCTGATATGAAGCGTTATAACCGACGATACCCGAATGGGGAAACCCAGTGCAATACGTTGCACTATCGTTAGATGAATACATAGTCTAACGAGGCGAACCGGGGGAACTGAAACATCTAAGTACCCCGAGGAAAAGAAATCAACCGAGATTCCCCCAGTAGCGGCGAGCGAACGGGGAGGAGCCCAGAGTCTGAATCAGTTTGTGTGTTAGTGGAAGCGTCTGGAAAGTCGCACGGTACAGGGTGATAGTCCCGTACACCAAAATGCACAGGCTGTGAACTCGATGAGTAGGGCGGGACACGTGACATCCTGTCTGAATATGGGGGGACCATCCTCCAAGGCTAAATACTCCTGACTGACCGATAGTGAACCAGTACCGTGAGGGAAAGGCGAAAAGAACCCCGGCGAGGGGAGTGAAATAGAACCTGAAACCGTGTACGTACAAGCAGTGGGAGCACCTTCGTGGTGTGACTGCGTACCTTTTGTATAATGGGTCAGCGACTTATATTTTGTAGCAAGGTTAACCGAATAGGGGAGCCGTAGGGAAACCGAGTCTTAACTAGGCGTCTAGTTGCAAGGTATAGACCCGAAACCCGGTGATCTAGCCATGGGCAGGTTGAAGGTTGGGTAACACTAACTGGAGGACCGAACCGACTAATGTTGAAAAATTAGCGGATGACTTGTGGTGGGGGTGAAAGGCCAATCAAACCGGGAGATAGCTGGTTCTCCCCGAAAGCTATTTAGGTAGCGCCTCGTGAACTCATCTTCGGGGGTAGAGCACTGTTTCGGCTAGGGGGCCATCCCGGCTTACCAAACCGATGCAAA");
-//	
-//			while((currentNumberOfTicks < options.getTotalNumberOfTicks()) && !checkIfStoppedYet()  && flowcell.getNumberOfAlivePores() > 0 && !status.equals("Paused")){
-//				
-//				int pos = Chance.getRandInt(0, inputFile.getSequence().size()-1);
-//				flowcell.tick(inputFile.getSequence().get(pos));
-//				if(options.getWriteInFileOption().equals("Real-Time")){
-//					try{
-//						flowcell.getFlowcellOutput().writeInFile(options.getOutputFilename());
-//						Thread.sleep(options.getDurationOfTick());
-//					}catch(Exception e){
-//						System.err.println(e.getMessage());
-//					}
-//				}else if(options.getWriteInFileOption().equals("Write all")){
-//					try{
-//						for(Sequence s : flowcell.getFlowcellOutput().getSequence()){
-//							outputFile.addSeq(s);
-//						}
-//						Thread.sleep(options.getDurationOfTick());
-//					}catch(Exception e){
-//						System.err.println(e.getMessage());
-//					}
-//				}
-//				currentNumberOfTicks++;
-//				
-//			}
-//			if(options.getWriteInFileOption().equals("Write all")){
-//				outputFile.writeInFile(options.getOutputFilename());
-//			}
-//			System.out.println("Run was executed without throwing errors");
-//		}catch(MyException e){
-//			System.err.println("Run method in Controller: "+e.getErrorMessage());
-//			throw new MyException(ErrorCodes.CONTROLLER_NOT_RUNNING);
-//		}catch(Exception e){
-//			System.err.println("Run method in Controller2: "+e.getMessage());
-//			throw new MyException(ErrorCodes.CONTROLLER_NOT_RUNNING);
-//		}	
-		
+	public void startController() throws MyException{
+		try{
+			checkIfPaused();
+			runningThread.start();
+			System.out.println("Run is started");
+		}catch(MyException e){
+			System.err.println(e.getErrorMessage() +". Please press stop before starting a new run.");
+		}
+
 		//TODO
 		//createguiStatistics(double[][] porestates, double[] reads, int tick);
 		//updateData(double[][] porestates, double[] reads, int tick)
 
 	}
 
+
+
 	public void resume() throws MyException{
-		runningThread.resume();
-//		try{
-//				checkIfStoppedYet();
-//				if(status.equals("Paused")){
-//					status = "Running";
-//					flowcell.setStatus("Running");
-//					System.out.println("Program resumed");
-//					System.out.println("currentNum Ticks when resuming(should be equal to when pausing): "+currentNumberOfTicks);
-//					run();
-//
-//				}
-//		}catch(MyException e){
-//			throw new MyException(ErrorCodes.CONTROLLER_NOT_RESUMING);
-//		}
+		try{
+			checkIfStoppedYet();
+			runningThread.resume();
+			System.out.println("Program resumed");
+		}catch(MyException e){
+			System.err.println("Run is not resuming. It was stopped already. A new one has to be initialized first");
+		}
 	}
 	
 	public void pause() throws MyException{
-		runningThread.suspend();
-//		try{
-//			checkIfStoppedYet();
-//			status = "Paused";
-//			System.out.println("Program paused");
-//			System.out.println("Current number of ticks when pausing: "+currentNumberOfTicks);
-//			flowcell.setStatus("Paused");
-//		}catch(MyException e){
-//			throw new MyException(ErrorCodes.CONTROLLER_NOT_PAUSING);
-//		}
+		try{
+			checkIfStoppedYet();
+			runningThread.suspend();
+			System.out.println("Program paused");
+		}catch(MyException e){
+			throw new MyException(ErrorCodes.CONTROLLER_NOT_PAUSING);
+		}
 	}
 	
 	public void stop() throws MyException{
 		runningThread.suspend();
-//		status = "Stopped";
-//		flowcell.setStatus("Stopped");
-//		System.out.println("Program stopped");
-//		currentNumberOfTicks = options.getTotalNumberOfTicks();	
+		hasBeenStopped = true;
+		System.out.println("Program stopped");
+
 	}
 	
-	private boolean checkIfStoppedYet() throws MyException{
-		if(status.equals("Stopped")){
-			hasBeenStopped = true;
+	private void checkIfStoppedYet() throws MyException{
+		if(hasBeenStopped){
 			System.out.println("Program has been stopped: "+hasBeenStopped);
 			throw new MyException(ErrorCodes.CONTROLLER_NOT_RUNNING);
 		}
-		
-		return hasBeenStopped;
 	}
 
-	
+	private void checkIfPaused() throws MyException {
+		if(isPaused){
+			throw new MyException(ErrorCodes.CONTROLLER_IS_PAUSING);
+		}
+		
+	}
+
 	public ArrayList<MyException> getInputFileErrors() {
 		return inputFile.getErrorInSequence();
 	}
@@ -187,6 +147,28 @@ public class Controller {
 	public Flowcell getFlowcell()
 	{
 		return flowcell;
+	}
+	public GUIOptions getOptions(){
+		return options;
+	}
+
+	public FiletypeContainingSequences getOutputFile() {
+		return outputFile;
+	}
+
+
+	public void setOutputFile(FiletypeContainingSequences outputFile) {
+		this.outputFile = outputFile;
+	}
+
+
+	public FiletypeContainingSequences getInputFile() {
+		return inputFile;
+	}
+
+
+	public boolean isHasBeenStopped() {
+		return hasBeenStopped;
 	}
 
 	//throws error: For input string: "0.1#"
@@ -242,11 +224,9 @@ public class Controller {
 	 */
 	private void initialize(GUIOptions options) throws MyException{
 
-		currentNumberOfTicks = 0;
-		status = "Running";
 		this.flowcell = new Flowcell(options.getNumberOfPores(),options.getMaxAgeOfPores(),options.getOutputFormat());
-		
 		System.out.println("New flowcell object is created in controller");
+		
 		try{
 			inputFile.parse(options.getInputFilename());
 		}catch(IOException e){
@@ -333,27 +313,7 @@ public class Controller {
 //		}catch(MyException e){
 //			System.err.println("Stop throws: "+ e.getErrorMessage());
 //		}
-//		//this should now not be able to be executed anymore:
-//		System.err.println("There shouldn't be any output after this line.");
-//		System.out.println(cd.status);
-//		System.out.println("cur#Ticks vs. maxNumberOfTicks : "+ cd.currentNumberOfTicks + " "+ op.getTotalNumberOfTicks());
-//		try{
-//			cd.run();
-//		}catch (MyException e){
-//			System.err.println("Catch in main for run() throws: "+ e.getErrorMessage());
-//		}
 //		
-//		try{
-//			cd.pause();
-//		}catch(MyException e){
-//			System.err.println("Pause thrwos: "+ e.getErrorMessage());
-//		}
-//		
-//		try{
-//			cd.resume();
-//		}catch(MyException e){
-//			System.err.println("Resume thrwos: "+ e.getErrorMessage());
-//		}
 //		
 //	}
 

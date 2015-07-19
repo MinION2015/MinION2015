@@ -84,45 +84,30 @@ public class Pore {
 	{
 		this.state = "Running";
 		sequenceLength = 0;
-//		int length = (int) LengthDistribution.getRandLength();
-		//checks if the random lengths are feasible
-		//TODO why is the number 10 chosen?
-//		for(int i=0;i<10;i++)
-//		{
-//			if(length>=sequence.lengthOfSequence())
-//			{
-//				length =(int) LengthDistribution.getRandLength();
-//			}
-//			else break;
-//			if(i==9)
-//			{
-//				throw new MyException(ErrorCodes.PORE_NO_CAPABLE_SEQUENCE_LENGTH);
-//				
-//			}
-//		}
-		this.state = "Running";
 		seqInPore = sequence;
-		//Suggestion(Friederike): to avoid that no length will be found
 		boolean lengthFound = false;
-		do{
-			try{
+		for(int i = 0; i < 10; i++){
+			if(!lengthFound){
 				sequenceLength = (int) LengthDistribution.getRandLength();
-				if (sequenceLength < seqInPore.lengthOfSequence()){
+				try{
+					if (sequenceLength < seqInPore.lengthOfSequence()){
+						lengthFound = true;
+					}
+				}catch(Exception e){
+					//TODO LEngthDistribution throws NUllpointers right now
+					sequenceLength = 4;
 					lengthFound = true;
+					System.err.println("Lenght distribution class caused following error: "+ e.getMessage());
 				}
-			}catch(Exception e){
-				//TODO LEngthDistribution throws NUllpointers right now
-				sequenceLength = 10;
-				lengthFound = true;
-				System.err.println("Lenght distribution class caused following error: "+ e.getMessage());
 			}
-		}while(!lengthFound);
-		
-		
+		}
+
+
+
 		//random number between 0 and sequenceLength-lenght is created
 		int start = Chance.getRandInt(0,seqInPore.lengthOfSequence()-sequenceLength);		
-		
-//		System.out.println(sequence.getSequence().substring(start, start+sequenceLength));
+
+		//	System.out.println(sequence.getSequence().substring(start, start+sequenceLength));
 		String seqMutated = "";
 		try{
 			seqMutated = SimulationError.applyErrorBasecalling((seqInPore.getSequence().substring(start, start+sequenceLength)));
@@ -130,13 +115,13 @@ public class Pore {
 			seqMutated = "ACTG";
 			System.err.println("Following error occurrs in pore class when simulate tries to apply basecalling error rate :" + e.getMessage());
 		}
-		
+
 		if(seqMutated.isEmpty()){
 			System.out.println("Pore had trouble sequencing. Could not produce any output.");
 		}
 
 		seqInPore.setSequence(seqMutated);
-		
+
 		//TODO sequence.setScore(sequence.assignScore); //sth like this
 		return sequence;
 	}

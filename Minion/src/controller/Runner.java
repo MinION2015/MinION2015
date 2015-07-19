@@ -1,9 +1,9 @@
 package controller;
 
-import error.Chance;
-import gui.GUIOptions;
 import reader.FiletypeContainingSequences;
 import reader.Sequence;
+import error.Chance;
+
 
 /**
  * 
@@ -11,18 +11,18 @@ import reader.Sequence;
 */
 public class Runner extends Thread{
 	
-	private  FiletypeContainingSequences inputFile;
-	private Flowcell flowcell;
-	private GUIOptions options;
-	private int currentNumberOfTicks;
+	private  Controller cd;
+	private FiletypeContainingSequences inputFile;
 	private FiletypeContainingSequences outputFile;
+	private Flowcell flowcell;
+	private int totalNumberOfTicks;
+	private int currentNumberOfTicks;
 	
 	
-	public Runner(FiletypeContainingSequences inputFile, FiletypeContainingSequences outputFile,Flowcell flowcell, GUIOptions options){
-		this.inputFile = inputFile;
-		this.outputFile = outputFile;
-		this.flowcell = flowcell;
-		this.options = options;
+	
+	public Runner(Controller cd){
+		this.cd = cd;
+		initiliazeRun();
 		currentNumberOfTicks = 0;
 	}
 	
@@ -32,22 +32,22 @@ public class Runner extends Thread{
 			//Sequence seq = new FastASequence("me","GGTTAAGCGACTAAGCGTACACGGTGGATGCCTAGGCAGTCAGAGGCGATGAAGGGCGTGCTAATCTGCGAAAAGCGTCGGTAAGCTGATATGAAGCGTTATAACCGACGATACCCGAATGGGGAAACCCAGTGCAATACGTTGCACTATCGTTAGATGAATACATAGTCTAACGAGGCGAACCGGGGGAACTGAAACATCTAAGTACCCCGAGGAAAAGAAATCAACCGAGATTCCCCCAGTAGCGGCGAGCGAACGGGGAGGAGCCCAGAGTCTGAATCAGTTTGTGTGTTAGTGGAAGCGTCTGGAAAGTCGCACGGTACAGGGTGATAGTCCCGTACACCAAAATGCACAGGCTGTGAACTCGATGAGTAGGGCGGGACACGTGACATCCTGTCTGAATATGGGGGGACCATCCTCCAAGGCTAAATACTCCTGACTGACCGATAGTGAACCAGTACCGTGAGGGAAAGGCGAAAAGAACCCCGGCGAGGGGAGTGAAATAGAACCTGAAACCGTGTACGTACAAGCAGTGGGAGCACCTTCGTGGTGTGACTGCGTACCTTTTGTATAATGGGTCAGCGACTTATATTTTGTAGCAAGGTTAACCGAATAGGGGAGCCGTAGGGAAACCGAGTCTTAACTAGGCGTCTAGTTGCAAGGTATAGACCCGAAACCCGGTGATCTAGCCATGGGCAGGTTGAAGGTTGGGTAACACTAACTGGAGGACCGAACCGACTAATGTTGAAAAATTAGCGGATGACTTGTGGTGGGGGTGAAAGGCCAATCAAACCGGGAGATAGCTGGTTCTCCCCGAAAGCTATTTAGGTAGCGCCTCGTGAACTCATCTTCGGGGGTAGAGCACTGTTTCGGCTAGGGGGCCATCCCGGCTTACCAAACCGATGCAAAGGTTAAGCGACTAAGCGTACACGGTGGATGCCTAGGCAGTCAGAGGCGATGAAGGGCGTGCTAATCTGCGAAAAGCGTCGGTAAGCTGATATGAAGCGTTATAACCGACGATACCCGAATGGGGAAACCCAGTGCAATACGTTGCACTATCGTTAGATGAATACATAGTCTAACGAGGCGAACCGGGGGAACTGAAACATCTAAGTACCCCGAGGAAAAGAAATCAACCGAGATTCCCCCAGTAGCGGCGAGCGAACGGGGAGGAGCCCAGAGTCTGAATCAGTTTGTGTGTTAGTGGAAGCGTCTGGAAAGTCGCACGGTACAGGGTGATAGTCCCGTACACCAAAATGCACAGGCTGTGAACTCGATGAGTAGGGCGGGACACGTGACATCCTGTCTGAATATGGGGGGACCATCCTCCAAGGCTAAATACTCCTGACTGACCGATAGTGAACCAGTACCGTGAGGGAAAGGCGAAAAGAACCCCGGCGAGGGGAGTGAAATAGAACCTGAAACCGTGTACGTACAAGCAGTGGGAGCACCTTCGTGGTGTGACTGCGTACCTTTTGTATAATGGGTCAGCGACTTATATTTTGTAGCAAGGTTAACCGAATAGGGGAGCCGTAGGGAAACCGAGTCTTAACTAGGCGTCTAGTTGCAAGGTATAGACCCGAAACCCGGTGATCTAGCCATGGGCAGGTTGAAGGTTGGGTAACACTAACTGGAGGACCGAACCGACTAATGTTGAAAAATTAGCGGATGACTTGTGGTGGGGGTGAAAGGCCAATCAAACCGGGAGATAGCTGGTTCTCCCCGAAAGCTATTTAGGTAGCGCCTCGTGAACTCATCTTCGGGGGTAGAGCACTGTTTCGGCTAGGGGGCCATCCCGGCTTACCAAACCGATGCAAA");
 //			checkIfPaused();
 //			checkIfStoppedYet();
-			while((currentNumberOfTicks < options.getTotalNumberOfTicks()) && flowcell.getNumberOfAlivePores() > 0){
+			while((currentNumberOfTicks < totalNumberOfTicks) && flowcell.getNumberOfAlivePores() > 0){
 				int pos = Chance.getRandInt(0, inputFile.getSequence().size()-1);
 				flowcell.tick(inputFile.getSequence().get(pos));
-				if(options.getWriteInFileOption().equals("Real-Time")){
+				if(cd.getOptions().getWriteInFileOption().equals("Real-Time")){
 					try{
-						flowcell.getFlowcellOutput().writeInFile(options.getOutputFilename());
-						Thread.sleep(options.getDurationOfTick());
+						flowcell.getFlowcellOutput().writeInFile(cd.getOptions().getOutputFilename());
+						Thread.sleep(cd.getOptions().getDurationOfTick());
 					}catch(Exception e){
 						System.err.println(e.getMessage());
 					}
-				}else if(options.getWriteInFileOption().equals("Write all")){
+				}else if(cd.getOptions().getWriteInFileOption().equals("Write all")){
 					try{
 						for(Sequence s : flowcell.getFlowcellOutput().getSequence()){
 							outputFile.addSeq(s);
 						}
-						Thread.sleep(options.getDurationOfTick());
+						Thread.sleep(cd.getOptions().getDurationOfTick());
 					}catch(Exception e){
 						System.err.println(e.getMessage());
 					}
@@ -55,16 +55,22 @@ public class Runner extends Thread{
 				currentNumberOfTicks++;
 				
 			}
-			if(options.getWriteInFileOption().equals("Write all")){
-				outputFile.writeInFile(options.getOutputFilename());
+			if(cd.getOptions().getWriteInFileOption().equals("Write all")){
+				outputFile.writeInFile(cd.getOptions().getOutputFilename());
 			}
-			
 			
 			System.out.println("Run was executed without throwing errors");
 		}catch(Exception e){
 			System.err.println("Run method in Controller2: "+e.getMessage());
-			//throw new MyException(ErrorCodes.CONTROLLER_NOT_RUNNING);
 		}
+	}
+
+	private void initiliazeRun() {
+		this.inputFile = cd.getInputFile();
+		this.flowcell = cd.getFlowcell();
+		this.totalNumberOfTicks = cd.getOptions().getTotalNumberOfTicks();
+		this.outputFile = cd.getOutputFile();
+		
 	}
 	
 }	
