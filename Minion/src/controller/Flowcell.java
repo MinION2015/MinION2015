@@ -98,6 +98,7 @@ public class Flowcell{
 				//String s = "Dead";//p.checkstatus() //works in case all pores are dead
 				if(!p.checkStatus().equals("Dead")){
 					alivePoresLeft = true;
+					break;
 				}
 			}
 			if(!alivePoresLeft){
@@ -111,23 +112,13 @@ public class Flowcell{
 	 * In each tick all pores are checked and either given work , if their are bored, else they are left alone. If one is finished the output is added to the FastA object, so later it can be printed to a file
 	 */
 	public void tick(Sequence seq){
-		
+
 			try{
 				setFlowcellOutputFormat(outputFormat);
 				checkFlowcellState();
 				for(Pore p : poreList){
-
-					String statusOfPore = p.checkStatus();//"Running"//"Bored"//"Finished"//"Dead"//"sleeping"
-
-					//just for playing around with the status;
-					double rand = Chance.getRand();
-					if(rand<0.3){
-						statusOfPore = "Running";
-					}else if(rand < 0.6){
-						statusOfPore= "Bored";
-					}else{
-						statusOfPore = "Finished";
-					}
+					//TODO Status hard gecoded
+					String statusOfPore = "Finished";//"Finished"//"Dead"//"sleeping"
 
 					if(statusOfPore.equals("Running") || statusOfPore.equals("Dead") || statusOfPore.equals("Sleeping")){
 						System.out.println("This pore is busy with running or being dead or sleeping");
@@ -142,11 +133,8 @@ public class Flowcell{
 						}
 					}else if(statusOfPore.equals("Finished")){
 						//collecting output
-						//TODO if pore claims it's done right away but hasn't simulated anything yet null will be returned obviously. Problem? In that case startFlowcell needs to be back to simualte each pore at last once
-						System.out.println("This pore is done.");
 						try{
-							//TODO needs to be commented in again, but not sure if this is working properly
-							//seq = p.getSequenceFromPore();
+							//System.out.println(p.getSequenceFromPore().getSequence());
 							outputSequence.addSeq(seq);
 						}catch(Exception e){
 							System.err.println("Error in tick-collecting output: "+e.getMessage());
@@ -175,7 +163,7 @@ public class Flowcell{
 	public int getNumberOfAlivePores(){
 		int numAlivePores = 0;
 		for(Pore p : poreList){
-			if(p.checkStatus() != "Dead"){
+			if(!p.checkStatus().equals("Dead")){
 				numAlivePores++;
 			}
 		}
@@ -185,10 +173,9 @@ public class Flowcell{
 	public double[] getStates() throws MyException
 	{
 		//TODO return lengths of finished sequences?
-		double[] states = new double[7];		//[0] Running, [1]Bored, [2] Dead,[3] Finished, [4] Sleeping,[4] sum of Pores
+		double[] states = new double[5];		//[0] Running, [1]Bored, [2] Dead,[3] Finished, [4] Sleeping,[4] sum of Pores
 		for(Pore p : poreList)
 		{
-			states[6]++;
 			switch(p.getState()){
 			case "Running": 
 				states[0]++; 
@@ -208,7 +195,7 @@ public class Flowcell{
 			default: throw new MyException(ErrorCodes.FLOWCELL_Invalid_Pore_Status);
 			}
 		}
-		//TODO
+		
 		currentSumOfReads += (int)states[0] * 10;//currentReads are Recorded every Tick and added. 10 is just a example, not sure where the reads per tick are stored
 												//better move this into methode tick
 		return states;

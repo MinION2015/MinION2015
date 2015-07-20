@@ -45,15 +45,16 @@ public class LengthDistribution {
 		
 		Random r = new Random(); 
 		double d = r.nextDouble(); 
-		
+	//	System.out.println("d: "+ d);
 		int i = 0;
 
-		while(d > l.getProb(i))
+		while(d > LengthRate.getProb(i))
 		{
 			i++;
+			///System.out.println("while exe");
 		}
-		
-		return (int)l.getLength(i);
+		//System.out.println("i: "+i);
+		return (int)LengthRate.getLength(i);
 	}
 
 	
@@ -61,9 +62,11 @@ public class LengthDistribution {
  * Test	
  * @throws IOException 
  */
-//	public static void main(String args[]) throws IOException{
-//		LengthDistribution l = new LengthDistribution("ownLengthDistribution.txt",1000);
-//		double rand = l.getRandLength();
-//		System.out.println(rand);
-//	}
+	public static void main(String args[]) throws IOException{
+		//LengthDistribution l = new LengthDistribution("ownLengthDistribution.txt",1000);
+		//double rand = l.getRandLength();
+		//System.out.println(rand);
+		LengthDistribution l = new LengthDistribution(10);
+		
+	}
 }

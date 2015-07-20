@@ -87,8 +87,9 @@ public class Pore {
 		boolean lengthFound = false;
 		for(int i = 0; i < 10; i++){
 			if(!lengthFound){
-				sequenceLength = (int) LengthDistribution.getRandLength();
+				
 				try{
+					sequenceLength = (int) LengthDistribution.getRandLength();
 					if (sequenceLength < seqInPore.lengthOfSequence()){
 						lengthFound = true;
 					}
@@ -108,16 +109,16 @@ public class Pore {
 
 		//	System.out.println(sequence.getSequence().substring(start, start+sequenceLength));
 		String[] mutation;
-		String seqMutated = "";
+		String seqMutated = "ACTG";
 		String score ="";
-		try{
-			mutation = SimulationError.applyErrorBasecalling(seqType,(seqInPore.getSequence().substring(start, start+sequenceLength)));
-			seqMutated = mutation[0];
-			score = mutation[1];
-		}catch(Exception e){//Should be mYException, but basecalling throws index out of bounds thus left it like this to keep the program running
-			seqMutated = "ACTG";
-			System.err.println("Following error occurrs in pore class when simulate tries to apply basecalling error rate :" + e.getMessage());
-		}
+//		try{
+//			mutation = SimulationError.applyErrorBasecalling(seqType,(seqInPore.getSequence().substring(start, start+sequenceLength)));
+//			seqMutated = mutation[0];
+//			score = mutation[1];
+//		}catch(Exception e){//Should be mYException, but basecalling throws index out of bounds thus left it like this to keep the program running
+//			seqMutated = "ACTG";
+//			System.err.println("Following error occurrs in pore class when simulate tries to apply basecalling error rate :" + e.getMessage());
+//		}
 
 		if(seqMutated.isEmpty()){
 			System.out.println("Pore had trouble sequencing. Could not produce any output.");

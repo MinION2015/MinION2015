@@ -24,8 +24,8 @@ import org.jfree.ui.RefineryUtilities;
 public class guiStatistics extends ApplicationFrame {
 
 	private ChartPanel chartPanel;
-	private double[][] porestates = new double[24][5];
-	private double[] reads = new double[24];
+	private double[][] porestates = new double[10][5];
+	private double[] reads = new double[10];
 	private int tick;
     /**
      * @author Daniel and Albert
@@ -33,13 +33,10 @@ public class guiStatistics extends ApplicationFrame {
      * 		  are at the moment
      * @function generates two chartPanels
      */
-    public guiStatistics(double[] porestates, double reads) {
+    public guiStatistics() {
 
         super("Minion Simulation");
-        
-        this.porestates[tick] = porestates;
-        this.reads[tick] = reads;
-        this.tick = 0;
+        tick = 0;
 
         // add the chart to a panel...
         chartPanel = new ChartPanel(createChart());
@@ -54,7 +51,7 @@ public class guiStatistics extends ApplicationFrame {
      * @return A dataset
      * @function computes a database containing the reads due the ticks. Every update the whole database is computed new
      */
-    public CategoryDataset createDataset1() {
+    private CategoryDataset createDataset1() {
 
         final DefaultCategoryDataset result = new DefaultCategoryDataset();
         
@@ -81,7 +78,7 @@ public class guiStatistics extends ApplicationFrame {
      * @return A dataset
      * @function computes a database containing the porestates due the ticks. Every update the whole database is computed new
      */
-    public CategoryDataset createDataset2() {
+    private CategoryDataset createDataset2() {
 //		porestates[i]
 //    	[0] Running, [1]Bored, [2] Dead,[3] Finished, [4] Sleeping,[5]
         final DefaultCategoryDataset result = new DefaultCategoryDataset();
@@ -163,7 +160,7 @@ public class guiStatistics extends ApplicationFrame {
 //        double[] porestates = {1,1,1,1,2};
 //        double reads = 3;
 //        
-//    	final guiStatistics demo = new guiStatistics(porestates, reads);
+//    	final guiStatistics demo = new guiStatistics();
 //        demo.pack();
 //        RefineryUtilities.centerFrameOnScreen(demo);
 //        demo.setVisible(true);
@@ -174,20 +171,7 @@ public class guiStatistics extends ApplicationFrame {
 //        }
 //
 //    }
-    
-    /**
-     * @author Daniel
-     * @input porestates, reads, ticks
-     * @function creates a guiStatisticsObject and visualizes it
-     * 
-     */
-    public void createguiStatistics(double[] porestates, double reads)
-    {
-    	final guiStatistics demo = new guiStatistics(porestates, reads);
-    	demo.pack();
-    	 RefineryUtilities.centerFrameOnScreen(demo);
-    	 demo.setVisible(true);
-    }
+   
     
     /**
      * @author Daniel
@@ -198,14 +182,14 @@ public class guiStatistics extends ApplicationFrame {
      */
     public void updateData(double[] porestates, double reads)
 	   {
-    			this.tick++;
+    			
     			this.porestates[tick] = porestates;
     			this.reads[tick] = reads;
 		   		JFreeChart JFreetemp = createChart();
 //		   		chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
 		        this.chartPanel.setChart(JFreetemp);
 		        chartPanel.updateUI();
-
+		        this.tick++;
 	   }
     
     

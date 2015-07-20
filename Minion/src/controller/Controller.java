@@ -1,6 +1,5 @@
 package controller;
 
-import error.Chance;
 import error.ErrorCodes;
 import error.MyException;
 import gui.GUIOptions;
@@ -9,7 +8,9 @@ import guiStatistics.guiStatistics;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import reader.*;
+import reader.FastA;
+import reader.FastQ;
+import reader.FiletypeContainingSequences;
 import Basecalling.BasecallingErrorRate;
 import LengthDistribution.LengthDistribution;
 
@@ -41,7 +42,10 @@ public class Controller {
 	private boolean hasBeenStopped =false;
 	private boolean isPaused = false;
 	private Runner runningThread;
+	private guiStatistics statistic;
 	
+
+
 //	public Controller(){
 //		
 //	} //used for testing
@@ -75,23 +79,28 @@ public class Controller {
 		}catch(Exception e){
 			System.err.println("Error in controller constructor intilaize: "+e.getMessage());
 		}
+		
+		//TODO implement correct double
+//		try {
+//			statistic = new guiStatistics(flowcell.getStates(),1.0);
+//		} catch (MyException e) {
+//			System.err.println("Gui statistics could'nt be generated.");
+//		}
+		
 		runningThread = new Runner(this);
+		
 		
 	}
 
 
 	public void startController() throws MyException{
 		try{
-			checkIfPaused();
+			//checkIfPaused();
 			runningThread.start();
 			System.out.println("Run is started");
-		}catch(MyException e){
-			System.err.println(e.getErrorMessage() +". Please press stop before starting a new run.");
+		}catch(Exception e){
+			System.err.println(e.getMessage() +". Please press stop before starting a new run.");
 		}
-
-		//TODO
-		//createguiStatistics(double[][] porestates, double[] reads, int tick);
-		//updateData(double[][] porestates, double[] reads, int tick)
 
 	}
 
@@ -156,6 +165,10 @@ public class Controller {
 		return outputFile;
 	}
 
+
+	public guiStatistics getStatistic() {
+		return statistic;
+	}
 
 	public void setOutputFile(FiletypeContainingSequences outputFile) {
 		this.outputFile = outputFile;
