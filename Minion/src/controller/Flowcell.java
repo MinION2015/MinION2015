@@ -22,7 +22,7 @@ import error.MyException;
  *@output none
  */
 public class Flowcell{
-	
+	int counter =0;
 	private ArrayList<Pore> poreList = new ArrayList<Pore>();
 	private FiletypeContainingSequences outputSequence;
 	private int maxAgeOfPores;
@@ -70,7 +70,7 @@ public class Flowcell{
 	
 		try{
 			for(int i = 0; i < numberOfPores; i++){
-				Pore p = new Pore(maxAgeOfPores);
+				Pore p = new Pore(maxAgeOfPores,outputFormat);
 				poreList.add(p);
 			}
 			checkFlowcellState();
@@ -117,16 +117,17 @@ public class Flowcell{
 				setFlowcellOutputFormat(outputFormat);
 				checkFlowcellState();
 				for(Pore p : poreList){
-					//TODO Status hard gecoded
-					String statusOfPore = "Finished";//"Finished"//"Dead"//"sleeping"
-
+					
+					String statusOfPore = p.checkStatus();//"Finished";//"Finished"//"Dead"//"sleeping"
+					
+					
 					if(statusOfPore.equals("Running") || statusOfPore.equals("Dead") || statusOfPore.equals("Sleeping")){
 						System.out.println("This pore is busy with running or being dead or sleeping");
 						continue;
 					}else if(statusOfPore.equals("Bored")){
 						System.out.println("This pore is bored, thus should be simulated");
 						try{
-							p.simulate(seq,outputFormat);
+							p.simulate(seq);
 							System.out.println("Pore was simulated in flowcell");
 						}catch(MyException e){
 							System.err.println("Pore could not be simulated because: " +e.getErrorMessage());
@@ -134,8 +135,8 @@ public class Flowcell{
 					}else if(statusOfPore.equals("Finished")){
 						//collecting output
 						try{
-							//System.out.println(p.getSequenceFromPore().getSequence());
-							outputSequence.addSeq(seq);
+							System.out.println(p.getSequenceFromPore().getSequence());
+							outputSequence.addSeq(p.getSequenceFromPore());
 						}catch(Exception e){
 							System.err.println("Error in tick-collecting output: "+e.getMessage());
 						}

@@ -63,6 +63,11 @@ public class FastQSequence implements Sequence{
 			// TODO Auto-generated method stub
 			this.score = score;
 		}
+
+
+		public void setHeader(String header) {
+			this.header = header;
+		}
 	}
 
 

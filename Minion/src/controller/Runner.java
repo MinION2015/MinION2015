@@ -41,6 +41,7 @@ public class Runner extends Thread{
 				flowcell.tick(inputFile.getSequence().get(pos));
 				
 				if(currentNumberOfTicks % 100 == 0){//every 100 ticks the statistics are getting updated
+					System.out.println("flowcelloutput sice: "+flowcell.getFlowcellOutput().getSequence().size());
 					statistics.updateData(flowcell.getStates(),flowcell.getFlowcellOutput().getSequence().size());
 					visualize(statistics);
 				}

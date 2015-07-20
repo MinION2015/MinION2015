@@ -191,7 +191,7 @@ public class Controller {
 			System.out.println("SetupModel method in Controller created new length distribution.");
 		
 			//TODO error occurs when trying to set up basecalling method
-			BasecallingErrorRate basecallingError = new BasecallingErrorRate(basecalling,settingfile);
+			BasecallingErrorRate basecallingError = new BasecallingErrorRate(basecalling,"default.setting");
 			System.out.println("SetupModel method in Controller created new basecalling error rate.");
 		
 	}
