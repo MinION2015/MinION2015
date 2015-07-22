@@ -345,7 +345,7 @@ public class Pore {
 		return numbersOfTimeAsked;
 	}
 	public Sequence getSequenceFromPore(){
-		
+		System.out.println(seqInPore.getSequence());
 		return seqInPore;
 	}
 	

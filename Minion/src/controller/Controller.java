@@ -76,8 +76,10 @@ public class Controller {
 			initialize(options);
 		}catch(MyException e){
 			System.err.println("Error in controller constructor initialize: "+e.getErrorMessage());
+		
 		}catch(Exception e){
 			System.err.println("Error in controller constructor intilaize: "+e.getMessage());
+			
 		}
 		
 		//TODO implement correct double
@@ -96,7 +98,9 @@ public class Controller {
 	public void startController() throws MyException{
 		try{
 			//checkIfPaused();
+			flowcell.setStatus("Running");
 			runningThread.start();
+			
 			System.out.println("Run is started");
 		}catch(Exception e){
 			System.err.println(e.getMessage() +". Please press stop before starting a new run.");
@@ -109,6 +113,7 @@ public class Controller {
 	public void resume() throws MyException{
 		try{
 			checkIfStoppedYet();
+			flowcell.setStatus("Running");
 			runningThread.resume();
 			System.out.println("Program resumed");
 		}catch(MyException e){
@@ -119,6 +124,7 @@ public class Controller {
 	public void pause() throws MyException{
 		try{
 			checkIfStoppedYet();
+			flowcell.setStatus("NotRunning");
 			runningThread.suspend();
 			System.out.println("Program paused");
 		}catch(MyException e){
@@ -127,14 +133,19 @@ public class Controller {
 	}
 	
 	public void stop() throws MyException{
-		runningThread.suspend();
+		runningThread.stopped();
+		flowcell.setStatus("NotRunning");
+		runningThread.stop();
+		
 		hasBeenStopped = true;
+		
 		System.out.println("Program stopped");
 
 	}
 	
 	private void checkIfStoppedYet() throws MyException{
 		if(hasBeenStopped){
+			
 			System.out.println("Program has been stopped: "+hasBeenStopped);
 			throw new MyException(ErrorCodes.CONTROLLER_NOT_RUNNING);
 		}
@@ -186,12 +197,13 @@ public class Controller {
 
 	//throws error: For input string: "0.1#"
 	private static void setupModel(int basecalling, String settingfile, int windowSize) throws Exception{
-		
+	
 			LengthDistribution lengthDistribution = new LengthDistribution(windowSize);
 			System.out.println("SetupModel method in Controller created new length distribution.");
 		
 			//TODO error occurs when trying to set up basecalling method
-			BasecallingErrorRate basecallingError = new BasecallingErrorRate(basecalling,"default.setting");
+			System.out.println("basecalling error model input: "+ settingfile);
+			BasecallingErrorRate basecallingError = new BasecallingErrorRate(basecalling,settingfile);
 			System.out.println("SetupModel method in Controller created new basecalling error rate.");
 		
 	}
@@ -237,7 +249,7 @@ public class Controller {
 	 */
 	private void initialize(GUIOptions options) throws MyException{
 
-		this.flowcell = new Flowcell(options.getNumberOfPores(),options.getMaxAgeOfPores(),options.getOutputFormat());
+		this.flowcell = new Flowcell(options.getNumberOfPores(),10000,options.getOutputFormat());//options.getMaxAgePores
 		System.out.println("New flowcell object is created in controller");
 		
 		try{
@@ -252,6 +264,7 @@ public class Controller {
 			/**********************/
 		}catch(Exception e){
 			System.err.println("Error in setupModel method" + e.getMessage());
+			e.printStackTrace();
 		}
 
 	}

@@ -36,7 +36,7 @@ public class guiStatistics extends ApplicationFrame {
     public guiStatistics() {
 
         super("Minion Simulation");
-        tick = 0;
+        this.tick = 0;
 
         // add the chart to a panel...
         chartPanel = new ChartPanel(createChart());
@@ -183,8 +183,8 @@ public class guiStatistics extends ApplicationFrame {
     public void updateData(double[] porestates, double reads)
 	   {
     			
-    			this.porestates[tick] = porestates;
-    			this.reads[tick] = reads;
+    			this.porestates[this.tick] = porestates;
+    			this.reads[this.tick] = reads;
 		   		JFreeChart JFreetemp = createChart();
 //		   		chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
 		        this.chartPanel.setChart(JFreetemp);

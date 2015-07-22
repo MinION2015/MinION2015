@@ -61,6 +61,9 @@ public class Flowcell{
 			throw new MyException(ErrorCodes.FLOWCELL_OUTPUT_FORMAT_COULD_NOT_BE_CREATED);
 		}
 	}
+	
+
+
 	/**
 	 * The integer gives the number of pores that should be added. They are stored in a Arraylist, thus they are just added as a new object to the flowcell array list 
 	 * Since the flowcell won't get any more pores after being initiated I made the method private
@@ -112,15 +115,15 @@ public class Flowcell{
 	 * In each tick all pores are checked and either given work , if their are bored, else they are left alone. If one is finished the output is added to the FastA object, so later it can be printed to a file
 	 */
 	public void tick(Sequence seq){
-
+		if(status.equals("Running")){
 			try{
 				setFlowcellOutputFormat(outputFormat);
 				checkFlowcellState();
 				for(Pore p : poreList){
 					
 					String statusOfPore = p.checkStatus();//"Finished";//"Finished"//"Dead"//"sleeping"
-					
-					
+					System.out.println("This sequences are in the pores right now but can't be returned as the pore isn't done yet: "+p.getSequenceFromPore().getSequence());
+
 					if(statusOfPore.equals("Running") || statusOfPore.equals("Dead") || statusOfPore.equals("Sleeping")){
 						System.out.println("This pore is busy with running or being dead or sleeping");
 						continue;
@@ -134,8 +137,9 @@ public class Flowcell{
 						}
 					}else if(statusOfPore.equals("Finished")){
 						//collecting output
+						System.out.println("This pore is finished.");
 						try{
-							System.out.println(p.getSequenceFromPore().getSequence());
+							System.out.println("flowcell output size: "+p.getSequenceFromPore().getSequence().length());
 							outputSequence.addSeq(p.getSequenceFromPore());
 						}catch(Exception e){
 							System.err.println("Error in tick-collecting output: "+e.getMessage());
@@ -146,6 +150,7 @@ public class Flowcell{
 				System.err.println("This error occurs in the flowcell tick method: "+ e.getErrorMessage());
 
 			}
+		}
 		
 	}
 	
