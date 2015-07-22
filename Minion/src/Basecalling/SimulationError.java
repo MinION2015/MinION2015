@@ -19,10 +19,10 @@ public class SimulationError{
 		
 	}
 	//String seqtype determins fasta/fastq
-	public static String[] applyErrorBasecalling(String seqType,String seq,String score) throws MyException {
+	public static String[] applyErrorBasecalling(String seqType,String seq,String scoreI) throws MyException {
 		
 		String err = "";
-		String generatedScore ="";
+		String score ="";
 		String[] output = new String[2];
 		String cache = "";
 		double scoreCache;
@@ -33,8 +33,8 @@ public class SimulationError{
 		int rand;
 		switch(seqType){
 		case "0":
-			for(int i = 0; i < Input[0].length();i++){
-				cache = callBase(Input[0].charAt(i));
+			for(int i = 0; i < seq.length();i++){
+				cache = callBase(seq.charAt(i));
 				if(cache=="add"){
 					i--;
 					rand = Chance.getRandInt(1, 4);
@@ -79,11 +79,11 @@ public class SimulationError{
 			break;
 		default:
 			if(seqType == "1"){
-			for(int i=0;i<Input[0].length();i++)
-				Input[1]=Input[i].concat(" ");
+			for(int i=0;i<seq.length();i++)
+				scoreI=scoreI.concat(" ");
 			}
-			for(int i = 0; i < Input[0].length();i++){
-				cache = callBase(Input[0].charAt(i));
+			for(int i = 0; i < seq.length();i++){
+				cache = callBase(seq.charAt(i));
 				if(cache=="add"){
 					
 					i--;
@@ -126,9 +126,9 @@ public class SimulationError{
 					}while(prob<=BasecallingErrorRate.getDeletionExtProb());
 				}else{
 					err = err.concat(cache);
-				row=BasecallingErrorRate.getRow(Input[0].charAt(i));
+				row=BasecallingErrorRate.getRow(seq.charAt(i));
 				column=BasecallingErrorRate.getRow(cache.charAt(0));
-				scoreCache=(int) Input[1].charAt(i)-33;
+				scoreCache=(int) scoreI.charAt(i)-33;
 				scoreCache=Math.pow(10,scoreCache/-10);
 				cachetrash=BasecallingErrorRate.getValue(row, column);
 				if(column!=0)
@@ -146,7 +146,7 @@ public class SimulationError{
 		
 		
 		output[0] = err;
-		output[1] = generatedScore;
+		output[1] = score;
 		return output;
 	}
 	
@@ -195,12 +195,12 @@ public class SimulationError{
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		String[] input = new String[2];
-		input[0]="CCCCCC";
-		input[1]="######";
+		
+		String inputSeq="CCCCCC";
+		String inputScore="######";
 		String[] output = new String[2];
 		try {
-			output = applyErrorBasecalling("2",input);
+			output = applyErrorBasecalling("2",inputSeq, inputScore);
 		} catch (MyException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
