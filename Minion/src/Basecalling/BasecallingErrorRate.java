@@ -31,12 +31,12 @@ public class BasecallingErrorRate {
 	private static double deletionProb = 0;
 	private static double deletionExtProb = 0;
 	
-	public BasecallingErrorRate(int dimension,String settingFilePath) throws Exception{
-		generate(dimension, settingFilePath);
+	public BasecallingErrorRate(String settingFilePath) throws Exception{
+		generate(settingFilePath);
 	}
 	
 	
-	private static void generate(int dimension,String settingFilePath) throws Exception{
+	private static void generate(String settingFilePath) throws Exception{
 		char cacheChar = ' ';
 		String Value;
 		BufferedReader Input = new BufferedReader(new FileReader(settingFilePath));
@@ -53,24 +53,26 @@ public class BasecallingErrorRate {
 						if(cacheChar!='#')
 							Value = Value+cacheChar;
 					}
-					if(i!=0)
-						transProbMatrix[i][j] = Double.parseDouble(Value)+transProbMatrix[i-1][j];
-					else
+					
 						transProbMatrix[i][j] = Double.parseDouble(Value);
 				}
 			}
+			cacheChar= ' ';
 			while(cacheChar!='#')
 				cacheChar=(char) Input.read();
 			Value = Input.readLine();
 			insertionProb = Double.parseDouble(Value);
+			cacheChar= ' ';
 			while(cacheChar!='#')
 				cacheChar=(char) Input.read();
 			Value = Input.readLine();
 			insertionExtProb = Double.parseDouble(Value);
+			cacheChar= ' ';
 			while(cacheChar!='#')
 				cacheChar=(char) Input.read();
 			Value = Input.readLine();
 			deletionProb = Double.parseDouble(Value);
+			cacheChar= ' ';
 			while(cacheChar!='#')
 				cacheChar=(char) Input.read();
 			Value = Input.readLine();
@@ -101,31 +103,7 @@ public class BasecallingErrorRate {
 		}
 	}
 	
-	public static String applyScoreCHanging(String score, String seq){
-		String scoreChanged = "";
-		double[]scoreArray = new double[score.length()];
-		for(int i=0;i<score.length();i++){
-			scoreArray[i]=(int) score.charAt(i)-33;
-			scoreArray[i]=Math.pow(10,scoreArray[i]/-10);
-			switch(seq.charAt(i)){
-			case'A':
-				scoreArray[i]=scoreArray[i]*transProbMatrix[0][0];
-				break;
-			case'T':
-				scoreArray[i]=scoreArray[i]*transProbMatrix[1][1];
-				break;
-			case'G':
-				scoreArray[i]=scoreArray[i]*transProbMatrix[2][2];
-				break;
-			case'C':
-				scoreArray[i]=scoreArray[i]*transProbMatrix[3][3];
-				break;
-			}
-			scoreArray[i]=(int) -10*Math.log10(scoreArray[i]);
-			scoreChanged = scoreChanged+(char)scoreArray[i];
-		}
-		return scoreChanged;
-	}
+	
 
 	public static double getValue(int i, int j){
 		return transProbMatrix[i][j];
@@ -162,19 +140,24 @@ public class BasecallingErrorRate {
 	/**
 	 * Test
 	 */
-/* test works
+/*test works
 	public static void main(String args[]){
 		BasecallingErrorRate err;
 		try {
-			err = new BasecallingErrorRate(2,"default");
+			err = new BasecallingErrorRate(2,"/Users/kevinlindner/Documents/null.setting");
 		} catch (Exception e) {
 		}
 		for(int i = 0; i < 4;i++){
-			for(int j = 0; j < 5;j++){
+			for(int j = 0; j < 4;j++){
 				System.out.print(BasecallingErrorRate.getValue(i,j) + " ");
 		}
 		System.out.println();
 		}
+		System.out.println(BasecallingErrorRate.getInsertionProb());
+		System.out.println(BasecallingErrorRate.getInsertionExtProb());
+		System.out.println(BasecallingErrorRate.getDeletionProb());
+		System.out.println(BasecallingErrorRate.getDeletionExtProb());
+		
 		
 //		System.out.println(err.getBase(2)); //T
 		

@@ -2,6 +2,7 @@ package Basecalling;
 
 import error.Chance;
 import error.MyException;
+import Basecalling.BasecallingErrorRate;
 
 
 /**
@@ -18,63 +19,138 @@ public class SimulationError{
 		
 	}
 	//String seqtype determins fasta/fastq
-	public static String[] applyErrorBasecalling(String seqType,String seq) throws MyException {
+	public static String[] applyErrorBasecalling(String seqType,String seq,String score) throws MyException {
 		
 		String err = "";
-		String score ="";
+		String generatedScore ="";
 		String[] output = new String[2];
-		
 		String cache = "";
+		double scoreCache;
+		double cachetrash;
+		int row;
+		int column;
 		double prob;
 		int rand;
-		for(int i = 0; i < seq.length();i++){
-			cache = callBase(seq.charAt(i));
-			if(cache=="add"){
-				i--;
-				rand = Chance.getRandInt(1, 4);
-				switch(rand){
-				case 1: err = err.concat("A");
-				break;
-				case 2: err = err.concat("T");
-				break;
-				case 3: err = err.concat("G");
-				break;
-				case 4: err = err.concat("C");
-				break;
-				}
-				do{
-					prob = Chance.getRand();
-					if(prob<=BasecallingErrorRate.getInsertionExtProb()){
-						i--;
-						rand = Chance.getRandInt(1, 4);
-						switch(rand){
-						case 1: err = err.concat("A");
-						break;
-						case 2: err = err.concat("T");
-						break;
-						case 3: err = err.concat("G");
-						break;
-						case 4: err = err.concat("C");
-						break;
+		switch(seqType){
+		case "0":
+			for(int i = 0; i < Input[0].length();i++){
+				cache = callBase(Input[0].charAt(i));
+				if(cache=="add"){
+					i--;
+					rand = Chance.getRandInt(1, 4);
+					switch(rand){
+					case 1: err = err.concat("A");
+					break;
+					case 2: err = err.concat("T");
+					break;
+					case 3: err = err.concat("G");
+					break;
+					case 4: err = err.concat("C");
+					break;
+					}
+					do{
+						prob = Chance.getRand();
+						if(prob<=BasecallingErrorRate.getInsertionExtProb()){
+							rand = Chance.getRandInt(1, 4);
+							switch(rand){
+							case 1: err = err.concat("A");
+							break;
+							case 2: err = err.concat("T");
+							break;
+							case 3: err = err.concat("G");
+							break;
+							case 4: err = err.concat("C");
+							break;
+							}
 						}
+					}while(prob<=BasecallingErrorRate.getInsertionExtProb());
+				}else if(cache=="del"){
+					do{
+						prob = Chance.getRand();
+						if(prob<=BasecallingErrorRate.getDeletionExtProb()){
+							i++;
+						}
+					}while(prob<=BasecallingErrorRate.getDeletionExtProb());
+				}else
+					err = err.concat(cache);
+				//Test: expected: t
+				//err = err.concat("t");
+			}
+			break;
+		default:
+			if(seqType == "1"){
+			for(int i=0;i<Input[0].length();i++)
+				Input[1]=Input[i].concat(" ");
+			}
+			for(int i = 0; i < Input[0].length();i++){
+				cache = callBase(Input[0].charAt(i));
+				if(cache=="add"){
+					
+					i--;
+					rand = Chance.getRandInt(1, 4);
+					switch(rand){
+					case 1: err = err.concat("A");
+					break;
+					case 2: err = err.concat("T");
+					break;
+					case 3: err = err.concat("G");
+					break;
+					case 4: err = err.concat("C");
+					break;
 					}
-				}while(prob<=BasecallingErrorRate.getInsertionExtProb());
-			}else if(cache=="del"){
-				do{
-					prob = Chance.getRand();
-					if(prob<=BasecallingErrorRate.getDeletionExtProb()){
-						i++;
-					}
-				}while(prob<=BasecallingErrorRate.getDeletionExtProb());
-			}else
-				err = err.concat(cache);
-			//Test: expected: t
-			//err = err.concat("t");
+					prob = Chance.getRand()*0.2;
+					cache=String.valueOf((char)((Math.log(prob)*-10)+33));
+					score=score.concat(cache);
+					do{
+						prob = Chance.getRand();
+						if(prob<=BasecallingErrorRate.getInsertionExtProb()){
+							rand = Chance.getRandInt(1, 4);
+							switch(rand){
+							case 1: err = err.concat("A");
+							break;
+							case 2: err = err.concat("T");
+							break;
+							case 3: err = err.concat("G");
+							break;
+							case 4: err = err.concat("C");
+							break;
+							}
+						}
+					}while(prob<=BasecallingErrorRate.getInsertionExtProb());
+				}else if(cache=="del"){
+					do{
+						prob = Chance.getRand();
+						if(prob<=BasecallingErrorRate.getDeletionExtProb()){
+							i++;
+						}
+					}while(prob<=BasecallingErrorRate.getDeletionExtProb());
+				}else{
+					err = err.concat(cache);
+				row=BasecallingErrorRate.getRow(Input[0].charAt(i));
+				column=BasecallingErrorRate.getRow(cache.charAt(0));
+				scoreCache=(int) Input[1].charAt(i)-33;
+				scoreCache=Math.pow(10,scoreCache/-10);
+				cachetrash=BasecallingErrorRate.getValue(row, column);
+				if(column!=0)
+				cachetrash=cachetrash-BasecallingErrorRate.getValue(row, column-1);
+				if(row!=column)
+				cachetrash+=1;
+				scoreCache=scoreCache*cachetrash;
+				scoreCache=(Math.log(scoreCache)*-10)+33;
+				score=score.concat(String.valueOf((char)scoreCache));
+			}}
+			
+			
 		}
+		
+		
+		
 		output[0] = err;
 		output[1] = score;
 		return output;
 	}
+	
+	
 
 	
 	private static String callBase(char letter){
@@ -111,23 +187,30 @@ public class SimulationError{
 	/**
 	 * Tests
 	 */
-//	public static void main(String args[]){
-//		
-//		SimulationError base = new SimulationError();
-//		
-//		base.callBase('A');
-//		//use 0.45 as probBase, expected : A stays A 
-//		//use 0.8 as probBase, expected: A mutates to C
-//		String output="";
-//		try {
-//			output = base.applyErrorBasecalling("A",1,"");
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		System.out.println(output);
-//
-//	}
-	
+
+	public static void main(String args[]){
+		try {
+			BasecallingErrorRate basecallingError = new BasecallingErrorRate("/Users/kevinlindner/Documents/null.setting");
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		String[] input = new String[2];
+		input[0]="CCCCCC";
+		input[1]="######";
+		String[] output = new String[2];
+		try {
+			output = applyErrorBasecalling("2",input);
+		} catch (MyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		for(int i=0;i<output[0].length();i++)
+			System.out.print(output[0].charAt(i));
+		System.out.println();
+		for(int i=0;i<output[1].length();i++)
+			System.out.print(output[1].charAt(i));
+		
+	}
 
 }
