@@ -203,7 +203,7 @@ public class Controller {
 		
 			//TODO error occurs when trying to set up basecalling method
 			System.out.println("basecalling error model input: "+ settingfile);
-			BasecallingErrorRate basecallingError = new BasecallingErrorRate(basecalling,settingfile);
+			BasecallingErrorRate basecallingError = new BasecallingErrorRate(settingfile);
 			System.out.println("SetupModel method in Controller created new basecalling error rate.");
 		
 	}
