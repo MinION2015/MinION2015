@@ -761,17 +761,20 @@ public class gui extends javax.swing.JFrame {
         pack();
     }// </editor-fold>                        
 
-    private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {                                            
-    	 pauseButton.setEnabled(true);
-    	    stopButton.setEnabled(true);
-
-    		String message= "";
-    		int basecalling = 0;
-    		String inputFormat = ".fasta";
+    private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    	
+        if(checkInput(numberOfPoresFormattedTextField1.getText(),maxAgeOfPoresTextField.getText(),numberOfTicksTextField.getText(),durationPerTickFormattedTextField.getText(),
+                windowSizeFormattedTextField.getText())){
+    	
+    	pauseButton.setEnabled(true);
+    	stopButton.setEnabled(true);
+    	String message= "";
+    	int basecalling = 0;
+    	String inputFormat = ".fasta";
     		
-    		//Check which Input format is chosen
-    	    if(fastA.isSelected()){
-    	        inputFormat=".fasta";
+    	//Check which Input format is chosen
+    	if(fastA.isSelected()){
+    	   inputFormat=".fasta";
     	    }
     	    else if(fastQ.isSelected()){
     	        inputFormat=".fastq";
@@ -846,6 +849,7 @@ public class gui extends javax.swing.JFrame {
     				outputTextArea.setText(message); 
     			}
     		}
+        }
 
     		/*testing the outputTextFieldArea
     		for(int i=0; i<100; i++){
@@ -887,7 +891,7 @@ public class gui extends javax.swing.JFrame {
 
     private void mainLdBrowseButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                   
     	 lengthDistributionChooser.showOpenDialog(gui.this);
-    	    mainLdSettingTextField.setText(lengthDistributionChooser.getSelectedFile().getAbsolutePath());
+    	 mainLdSettingTextField.setText(lengthDistributionChooser.getSelectedFile().getAbsolutePath());
     }                                                  
 
     private void mainBasecallingBrowseButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                            
@@ -1101,11 +1105,104 @@ public class gui extends javax.swing.JFrame {
     private javax.swing.JFormattedTextField windowSizeFormattedTextField;
     // End of variables declaration                   
 
+    //Sanity Checks
+    
+    public static boolean checkNumOfPores(String num){
+        try {
+            Integer.parseInt(num);
+            }
+        catch(NumberFormatException e) {
+          JOptionPane.showMessageDialog(null,"Number of Pores is not a number.","Wrong Input",JOptionPane.WARNING_MESSAGE);
+        return false;
+            }
+        if(Integer.parseInt(num)>0){
+            return true;
+        }else{
+            JOptionPane.showMessageDialog(null,"Number of Pores can't be negative.","Wrong Input",JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+    }
+    
+        public static boolean checkTicks(String num){
+        try {
+            Integer.parseInt(num);
+            }
+        catch(NumberFormatException e) {
+          JOptionPane.showMessageDialog(null,"Number of Ticks is not a number.","Wrong Input",JOptionPane.WARNING_MESSAGE);
+        return false;
+            }
+        if(Integer.parseInt(num)>0){
+            return true;
+        }else{
+            JOptionPane.showMessageDialog(null,"Number of Ticks can't be negative.","Wrong Input",JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+    }
+        public static boolean checkAge(String num){
+        try {
+            Integer.parseInt(num);
+            }
+        catch(NumberFormatException e) {
+          JOptionPane.showMessageDialog(null,"Maximal Age is not a number","Wrong Input",JOptionPane.WARNING_MESSAGE);
+        return false;
+            }
+        if(Integer.parseInt(num)>0){
+            return true;
+        }else{
+            JOptionPane.showMessageDialog(null,"Maximal Age can't be negative","Wrong Input",JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+    }
+    public static boolean checkDuration(String num){
+        try {
+            Integer.parseInt(num);
+            }
+        catch(NumberFormatException e) {
+          JOptionPane.showMessageDialog(null,"Duration per Tick is not a number","Wrong Input",JOptionPane.WARNING_MESSAGE);
+        return false;
+            }
+        if(Integer.parseInt(num)>0){
+            return true;
+        }else{
+            JOptionPane.showMessageDialog(null,"Duration per Tick can't be negative","Wrong Input",JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+    }
+    
+    public static boolean checkWindowSize(String num){
+        try {
+            Integer.parseInt(num);
+            }
+        catch(NumberFormatException e) {
+          JOptionPane.showMessageDialog(null,"Window Size is not a number","Wrong Input",JOptionPane.WARNING_MESSAGE);
+        return false;
+            }
+        if(Integer.parseInt(num)>0){
+            return true;
+        }else{
+            JOptionPane.showMessageDialog(null,"Window Size can't be negative","Wrong Input",JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+    }
+    
+    public static boolean checkInput(String numOfPores, String age, String numTicks, String duration, String windowSize){
+        
+        
+        if(checkNumOfPores(numOfPores) && checkAge(age) && checkTicks(numTicks) && checkDuration(duration) && checkWindowSize(windowSize)){
+            return true;
+        }else  
+            return false;
+        
+    }
+    
+    
+    
+    /*
     public static void main(String[] args) throws MyException {
         gui sim = new gui();
         sim.setVisible(true);
 //        sim.statistics();
-    }
+    }*/
 
     
     /**
