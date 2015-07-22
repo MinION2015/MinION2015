@@ -82,12 +82,7 @@ public class Controller {
 			
 		}
 		
-		//TODO implement correct double
-//		try {
-//			statistic = new guiStatistics(flowcell.getStates(),1.0);
-//		} catch (MyException e) {
-//			System.err.println("Gui statistics could'nt be generated.");
-//		}
+
 		
 		runningThread = new Runner(this);
 		

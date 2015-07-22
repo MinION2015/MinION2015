@@ -184,9 +184,15 @@ public class guiStatistics extends ApplicationFrame {
 	   {
     			
     			this.porestates[this.tick] = porestates;
-    			this.reads[this.tick] = reads;
-		   		JFreeChart JFreetemp = createChart();
-//		   		chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
+    			if(tick != 0)
+    			{
+    			this.reads[this.tick] = this.reads[tick-1]+reads;
+    			}else
+    			{
+    				this.reads[tick] = reads;
+    			}
+    			JFreeChart JFreetemp = createChart();
+		   		//chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
 		        this.chartPanel.setChart(JFreetemp);
 		        chartPanel.updateUI();
 		        this.tick++;

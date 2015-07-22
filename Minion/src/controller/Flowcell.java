@@ -122,19 +122,18 @@ public class Flowcell{
 				for(Pore p : poreList){
 					
 					//TODO remove fake setting the pore to finish for testing runner and controller
-					if(Chance.getRand() < 0.2){
-						p.setStatus("Dead");
-					}else if (Chance.getRand() < 0.5){
-						p.setStatus("Sleeping");
-					}else{
-						p.setStatus("Bored");
-					}
-					String statusOfPore = p.checkStatus();//"Finished";//"Finished"//"Dead"//"sleeping"
+//					if(Chance.getRand() < 0.2){
+//						p.setStatus("Dead");
+//					}else if (Chance.getRand() < 0.5){
+//						p.setStatus("Sleeping");
+//					}else{
+//						p.setStatus("Bored");
+//					}
+					
+					String statusOfPore = p.getState();//"Finished";//"Finished"//"Dead"//"sleeping"
+					
 //					System.out.println("This sequences are in the pores right now but can't be returned as the pore isn't done yet: "+p.getSequenceFromPore().getSequence());
-					if(Chance.getRand() < 0.2){
-						p.setStatus("Finished");
-						statusOfPore = "Finished";
-					}
+					
 					
 
 					if(statusOfPore.equals("Running") || statusOfPore.equals("Dead") || statusOfPore.equals("Sleeping")){
@@ -191,7 +190,7 @@ public class Flowcell{
 	
 	public double[] getStates() throws MyException
 	{
-		//TODO return lengths of finished sequences?
+		
 		double[] states = new double[5];		//[0] Running, [1]Bored, [2] Dead,[3] Finished, [4] Sleeping,[4] sum of Pores
 		for(Pore p : poreList)
 		{
