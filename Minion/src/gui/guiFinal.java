@@ -34,7 +34,7 @@ public class guiFinal extends javax.swing.JFrame {
     javax.swing.JFileChooser createLengthDistributionFastAFileChooser = new javax.swing.JFileChooser();
     javax.swing.JFileChooser settingFileDirectory = new javax.swing.JFileChooser();
     
-    private String inputFilename;
+    	private String inputFilename;
 	private String outputFilename;
 	private int basecalling;
 	private int ticksPerSecond;
@@ -1257,7 +1257,29 @@ public class guiFinal extends javax.swing.JFrame {
 //        sim.statistics();
     }
 
+    
+    /**
+     * @author Daniel
+     * @throws MyException
+     * @function computes a new guiFinalstatistics object. 
+     */
+ /* public void statistics() throws MyException
+  { 	//TODO reads need to be implemented
+  	//gets a double array with the values (number of Reads), Quality, dead pores, running pores, sleeping pores, alive pores, bored pores usw.
+  	//[0] Running, [1]Bored, [2] Dead,[3] Finished, [4] Sleeping,[5] sum of Pores
+	double reads = 10;
+	double[] porestates =  cd.getFlowcell().getStates(); 
+  	guiFinalStatistics chart = new guiFinalStatistics(porestates,reads);
+	chart.pack();
+	chart.setVisible(true);
+
+	//adds new data everytime the update function is called.
+	chart.updateData(porestates, reads);
+  	
+	      
+	     
+  }*/ 
+
 
 }
-
 
