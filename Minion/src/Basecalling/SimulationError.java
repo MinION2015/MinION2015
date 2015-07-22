@@ -19,7 +19,7 @@ public class SimulationError{
 		
 	}
 	//String seqtype determins fasta/fastq
-	public static String[] applyErrorBasecalling(String seqType,String seq,String scoreI) throws MyException {
+	public static String[] applyErrorBasecalling(String seqType,String seq,String scoreI) {
 		
 		String err = "";
 		String score ="";
