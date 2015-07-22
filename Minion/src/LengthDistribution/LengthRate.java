@@ -25,10 +25,12 @@ public class LengthRate {
  */
 	
 	public LengthRate(int window) throws IOException{
-		
 		possibilitiesLength = 	GetDefaultLengths(window);
-
 	}
+		
+		
+
+	
 	
 	public LengthRate(String filename, int window) throws IOException{
 		possibilitiesLength = 	GetSelectedLengths(filename, window);
@@ -53,7 +55,7 @@ public class LengthRate {
 	 * @param outputName	Name of the file in which the Lengthdistribution is stored
 	 * @throws IOException
 	 */
-	public static void saveSelectedLengths(String filename, String outputName) throws IOException
+	public void saveSelectedLengths(String filename, String outputName) throws IOException
 	{
 
 		

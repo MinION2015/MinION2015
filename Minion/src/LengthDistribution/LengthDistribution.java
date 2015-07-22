@@ -25,6 +25,12 @@ public class LengthDistribution {
 		l = new LengthRate(filename, window);
 	}
 	
+	public LengthRate getRate(){
+		return this.l;
+		
+	}
+	
+	
 	//scond constructor for default LengthDistribution
 	/**
 	 * Only needs the Windowsize, gets the lengths from default file

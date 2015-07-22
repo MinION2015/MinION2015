@@ -18,7 +18,8 @@ import javax.swing.JTextField;
 import Basecalling.createSetting;
 import controller.Controller;
 import error.MyException;
-
+import LengthDistribution.LengthDistribution;
+import LengthDistribution.LengthRate;
 
 /**
  * @author Sven
@@ -26,6 +27,7 @@ import error.MyException;
 public class guiFinal extends javax.swing.JFrame {
 	
 	private Controller cd;
+
     
     javax.swing.JFileChooser mainFileChooser = new javax.swing.JFileChooser();
     javax.swing.JFileChooser lengthDistributionChooser = new javax.swing.JFileChooser();
@@ -34,13 +36,7 @@ public class guiFinal extends javax.swing.JFrame {
     javax.swing.JFileChooser createLengthDistributionFastAFileChooser = new javax.swing.JFileChooser();
     javax.swing.JFileChooser settingFileDirectory = new javax.swing.JFileChooser();
     
-    	private String inputFilename;
-	private String outputFilename;
-	private int basecalling;
-	private int ticksPerSecond;
-	private int numberOfPores;
-	private int runningTime;
-	private int windowSizeForLengthDistribution;
+
     /**
      * Creates new form NewJFrame
      */
@@ -1054,8 +1050,18 @@ public class guiFinal extends javax.swing.JFrame {
     	}
     }                                              
 
-    private void ldCreateButtonActionPerformed(java.awt.event.ActionEvent evt) {                                               
-        // TODO add your handling code here:
+    private void ldCreateButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    	
+    	
+    int ws=Integer.parseInt(windowSizeFormattedTextField.getText());
+    try{
+    	LengthDistribution ld = new LengthDistribution(ldFastATextField.getText(),ws);
+    	ld.getRate().saveSelectedLengths(ldFastATextField.getText(), ldFileNameTextField.getText());
+    }catch (IOException e){
+    	e.printStackTrace();
+    }
+    
+    	
     }                                              
 
     private void bCreateButtonActionPerformed(java.awt.event.ActionEvent evt) {                                              
