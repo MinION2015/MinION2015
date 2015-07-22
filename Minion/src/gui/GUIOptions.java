@@ -21,7 +21,7 @@ public class GUIOptions {
 	private int windowSizeForLengthDistribution;
 	private String basecallingSetup;
 	private String lengthDistributionSetup;
-	private String outputFormat;
+	private String outputFormat; //sequences will be returned as fasta or fastq
 
 	
 	public GUIOptions(String inputFilename, 
@@ -90,6 +90,33 @@ public class GUIOptions {
 
 	public int getDurationOfTick() {
 		return durationOfTick;
+	}
+	
+	public boolean hasValidParameters(){
+		
+		if(!(this.inputFilename.endsWith("fasta")||this.inputFilename.endsWith("fastq"))){
+			return false;
+		}
+		if(!(this.writeInFileOption.equals("Real-Time")||this.writeInFileOption.equals("Write all"))){
+			return false;
+		}
+		if(!(this.outputFormat.endsWith("fasta")||this.outputFormat.endsWith("fastq"))){
+			return false;
+		}
+		if(!(basecalling == 1 || basecalling == 2 )){
+			return false;
+		}
+		if(numberOfPores <= 0||maxAgeOfPores <=0 || totalNumberOfTicks <=0 || durationOfTick <=0|| windowSizeForLengthDistribution <= 0){
+			return false;
+		}
+		if(durationOfTick > totalNumberOfTicks){
+			return false;
+		}
+		if(!this.basecallingSetup.endsWith("setting")){
+			return false;
+		}
+		
+		return true;
 	}
 	
 

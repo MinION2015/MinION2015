@@ -122,19 +122,19 @@ public class Flowcell{
 				for(Pore p : poreList){
 					
 					//TODO remove fake setting the pore to finish for testing runner and controller
-//					if(Chance.getRand() < 0.7){
-//						p.setStatus("Dead");
-//					}else if (Chance.getRand() < 0.5){
-//						p.setStatus("Sleeping");
-//					}else{
-//						p.setStatus("Bored");
-//					}
+					if(Chance.getRand() < 0.2){
+						p.setStatus("Dead");
+					}else if (Chance.getRand() < 0.5){
+						p.setStatus("Sleeping");
+					}else{
+						p.setStatus("Bored");
+					}
 					String statusOfPore = p.checkStatus();//"Finished";//"Finished"//"Dead"//"sleeping"
 //					System.out.println("This sequences are in the pores right now but can't be returned as the pore isn't done yet: "+p.getSequenceFromPore().getSequence());
-//					if(Chance.getRand() < 0.1){
-//						p.setStatus("Finished");
-//						statusOfPore = "Finished";
-//					}
+					if(Chance.getRand() < 0.2){
+						p.setStatus("Finished");
+						statusOfPore = "Finished";
+					}
 					
 
 					if(statusOfPore.equals("Running") || statusOfPore.equals("Dead") || statusOfPore.equals("Sleeping")){
