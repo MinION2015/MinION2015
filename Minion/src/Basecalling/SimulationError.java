@@ -32,7 +32,7 @@ public class SimulationError{
 		double prob;
 		int rand;
 		switch(seqType){
-		case "0":
+		case "fasta":
 			for(int i = 0; i < seq.length();i++){
 				cache = callBase(seq.charAt(i));
 				if(cache=="add"){
@@ -78,9 +78,9 @@ public class SimulationError{
 			}
 			break;
 		default:
-			if(seqType == "1"){
+			if(scoreI.length()<2){
 			for(int i=0;i<seq.length();i++)
-				scoreI=scoreI.concat(" ");
+				scoreI=scoreI.concat("!");
 			}
 			for(int i = 0; i < seq.length();i++){
 				cache = callBase(seq.charAt(i));
@@ -187,7 +187,7 @@ public class SimulationError{
 	/**
 	 * Tests
 	 */
-
+/*
 	public static void main(String args[]){
 		try {
 			BasecallingErrorRate basecallingError = new BasecallingErrorRate("/Users/kevinlindner/Documents/null.setting");
@@ -211,6 +211,6 @@ public class SimulationError{
 		for(int i=0;i<output[1].length();i++)
 			System.out.print(output[1].charAt(i));
 		
-	}
+	}*/
 
 }
