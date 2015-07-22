@@ -146,7 +146,7 @@ public class SimulationError{
 		
 		
 		output[0] = err;
-		output[1] = score;
+		output[1] = generatedScore;
 		return output;
 	}
 	

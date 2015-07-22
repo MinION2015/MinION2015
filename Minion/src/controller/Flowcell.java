@@ -121,11 +121,24 @@ public class Flowcell{
 				checkFlowcellState();
 				for(Pore p : poreList){
 					
+					//TODO remove fake setting the pore to finish for testing runner and controller
+					if(Chance.getRand() < 0.2){
+						p.setStatus("Dead");
+					}else if (Chance.getRand() < 0.5){
+						p.setStatus("Sleeping");
+					}else{
+						p.setStatus("Bored");
+					}
 					String statusOfPore = p.checkStatus();//"Finished";//"Finished"//"Dead"//"sleeping"
-					System.out.println("This sequences are in the pores right now but can't be returned as the pore isn't done yet: "+p.getSequenceFromPore().getSequence());
+//					System.out.println("This sequences are in the pores right now but can't be returned as the pore isn't done yet: "+p.getSequenceFromPore().getSequence());
+					if(Chance.getRand() < 0.2){
+						p.setStatus("Finished");
+						statusOfPore = "Finished";
+					}
+					
 
 					if(statusOfPore.equals("Running") || statusOfPore.equals("Dead") || statusOfPore.equals("Sleeping")){
-						System.out.println("This pore is busy with running or being dead or sleeping");
+						System.out.println("This pore is running, dead or sleeping");
 						continue;
 					}else if(statusOfPore.equals("Bored")){
 						System.out.println("This pore is bored, thus should be simulated");
@@ -139,13 +152,13 @@ public class Flowcell{
 						//collecting output
 						System.out.println("This pore is finished.");
 						try{
-							System.out.println("flowcell output size: "+p.getSequenceFromPore().getSequence().length());
 							outputSequence.addSeq(p.getSequenceFromPore());
 						}catch(Exception e){
 							System.err.println("Error in tick-collecting output: "+e.getMessage());
 						}
 					}
 				}
+				checkFlowcellState();
 			}catch(MyException e){
 				System.err.println("This error occurs in the flowcell tick method: "+ e.getErrorMessage());
 

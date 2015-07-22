@@ -118,7 +118,7 @@ public class Pore {
 		String seqMutated = "";
 		String score = "";
 		try{
-			mutation = SimulationError.applyErrorBasecalling(outputFormat,(sequence.getSequence().substring(start, start+sequenceLength)));
+			mutation = SimulationError.applyErrorBasecalling(outputFormat,(sequence.getSequence().substring(start, start+sequenceLength)),(sequence.getScore().substring(start, start+sequenceLength)));
 			seqMutated = mutation[0];
 			score = mutation[1];
 		}catch(Exception e){//Should be mYException, but basecalling throws index out of bounds thus left it like this to keep the program running

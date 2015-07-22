@@ -820,11 +820,18 @@ public class gui extends javax.swing.JFrame {
     					Integer.parseInt(numberOfTicksTextField.getText()),
     					Integer.parseInt(windowSizeFormattedTextField.getText()));
     			this.cd = new Controller(options);
-    			System.out.println(options.getInputFilename());
-    			try {
-    				cd.startController();
-    			} catch (MyException e) {
-    				e.printStackTrace();
+    			
+    			//System.out.println(options.getInputFilename());
+    			
+    			//sanity check
+    			if(options.hasValidParameters()){
+    				try {
+    					cd.startController();
+    				} catch (MyException e) {
+    					e.printStackTrace();
+    				}
+    			}else{
+    				System.err.println("Please enter valid parameters.");
     			}
     				
 
