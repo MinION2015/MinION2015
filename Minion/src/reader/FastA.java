@@ -96,10 +96,11 @@ public class FastA implements FiletypeContainingSequences {
 				FastASequence seq = new FastASequence(header, sequence);
 				seqList.add(seq);
 				errList.add(e);
+				System.out.println("seuqence has gaps");
 			}else{
-			FastASequence seq = new FastASequence(null,null);
-			seqList.add(seq);
-			errList.add(e);
+				FastASequence seq = new FastASequence(null,null);
+				seqList.add(seq);
+				errList.add(e);
 			}
 		}
 

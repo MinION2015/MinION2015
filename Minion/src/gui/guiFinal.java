@@ -1042,12 +1042,23 @@ public class guiFinal extends javax.swing.JFrame {
         pauseButton.setText("Pause");
         pauseButton.setEnabled(false);
         stopButton.setEnabled(false);
+        String message ="";
         try {
     		cd.stop();
     	} catch (MyException e) {
-    		// TODO Auto-generated catch block
     		e.printStackTrace();
     	}
+        int length= cd.getOutputFileErrors().size();
+        System.out.println(cd.getOutputFileErrors().size());
+    	for(int i=0; i<length;i++)
+		{
+			if(this.cd.getOutputFileErrors().get(i).isCriticalError()) {
+				JOptionPane.showMessageDialog(null, this.cd.getOutputFileErrors().get(i).getErrorMessage(), "Critical Error", JOptionPane.ERROR_MESSAGE);
+			} else {
+				message= message + " " + this.cd.getOutputFileErrors().get(i).getErrorMessage()+"\n";
+				outputTextArea.setText(message); 
+			}
+		}
     }                                              
 
     private void ldCreateButtonActionPerformed(java.awt.event.ActionEvent evt) {

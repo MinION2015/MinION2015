@@ -39,11 +39,11 @@ public class Controller {
 	private FiletypeContainingSequences outputFile;
 	private Flowcell flowcell;
 	
-	private boolean hasBeenStopped =false;
-	private boolean isPaused = false;
+	private boolean hasBeenStopped =false; 
 	private Runner runningThread;
 	private guiStatistics statistic;
 	
+	private boolean isRunning;
 
 
 //	public Controller(){
@@ -82,59 +82,143 @@ public class Controller {
 			
 		}
 		
-
-		
 		runningThread = new Runner(this);
-		
+		isRunning = false;
 		
 	}
 
 
-	public void startController() throws MyException{
-		try{
-			//checkIfPaused();
-			flowcell.setStatus("Running");
-			runningThread.start();
+	//throws error: For input string: "0.1#"
+		private static void setupModel(int basecalling, String settingfile, int windowSize) throws Exception{
+		
+				LengthDistribution lengthDistribution = new LengthDistribution(windowSize);
+				System.out.println("SetupModel method in Controller created new length distribution.");
 			
-			System.out.println("Run is started");
-		}catch(Exception e){
-			System.err.println(e.getMessage() +". Please press stop before starting a new run.");
+				
+				BasecallingErrorRate basecallingError = new BasecallingErrorRate(settingfile);
+				System.out.println("SetupModel method in Controller created new basecalling error rate.");
+			
+		}
+		
+		/**
+		 * Either a new fasta or fastq inputFile is created depending on gui input
+		 * @param filename
+		 * @throws MyException
+		 */
+		private void createInputFormat(String filename) throws MyException{
+			if(filename.endsWith(".fasta")){
+				inputFile = new FastA();
+				System.out.println("new FastA file created");
+			}else if(filename.endsWith(".fastq")){
+				inputFile = new FastQ();
+				System.out.println("new FastQ file created");
+			}else{
+				throw new MyException(ErrorCodes.BAD_FILETYPE);
+			}
+		}
+
+		/**
+		 * According to user input a new output format filetype is created (is still stored as txt, but the user can choose in the controller if he wants fasta or fastq as output and accordingly the sequencing should happen
+		 * @param format fasta or fastq as String
+		 * @throws MyException
+		 */
+		private void createOutputFormat(String format) throws MyException{
+			if(format.endsWith("fasta")){
+				outputFile = new FastA();
+				System.out.println("fastA output created");
+			}else if(format.endsWith("fastq")){
+				outputFile = new FastQ();
+				System.out.println("fastq output created");
+			}else{
+				throw new MyException(ErrorCodes.BAD_FILETYPE);
+			}
+		}
+		
+		/**
+		 * Flowcell, current number of Ticks and status of Controller is set. Model is created
+		 * @param options
+		 * @throws MyException
+		 */
+		private void initialize(GUIOptions options) throws MyException{
+
+			this.flowcell = new Flowcell(options.getNumberOfPores(),10000,options.getOutputFormat());//options.getMaxAgePores
+			System.out.println("New flowcell object is created in controller");
+			
+			try{
+				inputFile.parse(options.getInputFilename());
+			}catch(IOException e){
+				System.out.println("Sth went wrong when parsing inputFile in controller: " + e.getMessage());
+			}
+			//doens't work: error message: For input string: "0.1#" looks like sth isn't formatted correctly for cretae setting, maybe kevin knows better, can't find the error in the file
+			//setting up new length distribuiton works
+			try{
+				setupModel(options.getBasecalling(),options.getBasecallingSetup(),options.getWindowSizeForLengthDistribution());
+				/**********************/
+			}catch(Exception e){
+				System.err.println("Error in setupModel method" + e.getMessage());
+				e.printStackTrace();
+			}
+
+		}
+		
+		
+	public void startController() throws MyException{
+		if(isRunning){
+			System.err.println("Please press stop before starting a new run.");
+		}else{
+			try{
+				isRunning = true;
+				flowcell.setStatus("Running");
+				runningThread.start();
+				System.out.println("Run is started");
+			}catch(Exception e){
+
+			}
 		}
 
 	}
 
-
-
 	public void resume() throws MyException{
-		try{
-			checkIfStoppedYet();
-			flowcell.setStatus("Running");
-			runningThread.resume();
-			System.out.println("Program resumed");
-		}catch(MyException e){
-			System.err.println("Run is not resuming. It was stopped already. A new one has to be initialized first");
+		if(!isRunning){
+			try{
+				
+				checkIfStoppedYet();
+				flowcell.setStatus("Running");
+				runningThread.resume();
+				isRunning = true;
+				System.out.println("Program resumed");
+			}catch(MyException e){
+				System.err.println("Run is not resuming. It was stopped already. A new one has to be initialized first");
+			}
 		}
 	}
 	
 	public void pause() throws MyException{
-		try{
-			checkIfStoppedYet();
-			flowcell.setStatus("NotRunning");
-			runningThread.suspend();
-			System.out.println("Program paused");
-		}catch(MyException e){
-			throw new MyException(ErrorCodes.CONTROLLER_NOT_PAUSING);
+		if(isRunning){
+			try{
+				
+				checkIfStoppedYet();
+				flowcell.setStatus("NotRunning");
+				runningThread.suspend();
+				isRunning = false;
+				System.out.println("Program paused");
+				System.out.println(outputFile.getErrorInSequence().size());
+			}catch(MyException e){
+				throw new MyException(ErrorCodes.CONTROLLER_NOT_PAUSING);
+			}
 		}
 	}
 	
 	public void stop() throws MyException{
-		runningThread.stopped();
-		flowcell.setStatus("NotRunning");
-		runningThread.stop();
-		
-		hasBeenStopped = true;
-		
-		System.out.println("Program stopped");
+		if(isRunning){
+			
+			runningThread.stopped();
+			flowcell.setStatus("Not running");
+			runningThread.stop();
+			isRunning = false;
+			hasBeenStopped = true;
+			System.out.println("Program stopped");
+		}
 
 	}
 	
@@ -146,23 +230,27 @@ public class Controller {
 		}
 	}
 
-	private void checkIfPaused() throws MyException {
-		if(isPaused){
-			throw new MyException(ErrorCodes.CONTROLLER_IS_PAUSING);
-		}
-		
+	/**
+	 * Getters
+	 * @return
+	 */
+	public boolean isHasBeenStopped() {
+		return hasBeenStopped;
 	}
-
+	
 	public ArrayList<MyException> getInputFileErrors() {
 		return inputFile.getErrorInSequence();
 	}
+	
 	public ArrayList<MyException> getOutputFileErrors(){
 		return outputFile.getErrorInSequence();
 	}
+	
 	public Flowcell getFlowcell()
 	{
 		return flowcell;
 	}
+	
 	public GUIOptions getOptions(){
 		return options;
 	}
@@ -171,9 +259,12 @@ public class Controller {
 		return outputFile;
 	}
 
-
 	public guiStatistics getStatistic() {
 		return statistic;
+	}
+
+	public FiletypeContainingSequences getInputFile() {
+		return inputFile;
 	}
 
 	public void setOutputFile(FiletypeContainingSequences outputFile) {
@@ -181,89 +272,6 @@ public class Controller {
 	}
 
 
-	public FiletypeContainingSequences getInputFile() {
-		return inputFile;
-	}
-
-
-	public boolean isHasBeenStopped() {
-		return hasBeenStopped;
-	}
-
-	//throws error: For input string: "0.1#"
-	private static void setupModel(int basecalling, String settingfile, int windowSize) throws Exception{
-	
-			LengthDistribution lengthDistribution = new LengthDistribution(windowSize);
-			System.out.println("SetupModel method in Controller created new length distribution.");
-		
-			//TODO error occurs when trying to set up basecalling method
-			System.out.println("basecalling error model input: "+ settingfile);
-			BasecallingErrorRate basecallingError = new BasecallingErrorRate(settingfile);
-			System.out.println("SetupModel method in Controller created new basecalling error rate.");
-		
-	}
-	
-	/**
-	 * Either a new fasta or fastq inputFile is created depending on gui input
-	 * @param filename
-	 * @throws MyException
-	 */
-	private void createInputFormat(String filename) throws MyException{
-		if(filename.endsWith(".fasta")){
-			inputFile = new FastA();
-			System.out.println("new FastA file created");
-		}else if(filename.endsWith(".fastq")){
-			inputFile = new FastQ();
-			System.out.println("new FastQ file created");
-		}else{
-			throw new MyException(ErrorCodes.BAD_FILETYPE);
-		}
-	}
-
-	/**
-	 * According to user input a new output format filetype is created (is still stored as txt, but the user can choose in the controller if he wants fasta or fastq as output and accordingly the sequencing should happen
-	 * @param format fasta or fastq as String
-	 * @throws MyException
-	 */
-	private void createOutputFormat(String format) throws MyException{
-		if(format.endsWith("fasta")){
-			outputFile = new FastA();
-			System.out.println("fastA output created");
-		}else if(format.endsWith("fastq")){
-			outputFile = new FastQ();
-			System.out.println("fastq output created");
-		}else{
-			throw new MyException(ErrorCodes.BAD_FILETYPE);
-		}
-	}
-	
-	/**
-	 * Flowcell, current number of Ticks and status of Controller is set. Model is created
-	 * @param options
-	 * @throws MyException
-	 */
-	private void initialize(GUIOptions options) throws MyException{
-
-		this.flowcell = new Flowcell(options.getNumberOfPores(),10000,options.getOutputFormat());//options.getMaxAgePores
-		System.out.println("New flowcell object is created in controller");
-		
-		try{
-			inputFile.parse(options.getInputFilename());
-		}catch(IOException e){
-			System.out.println("Sth went wrong when parsing inputFile in controller: " + e.getMessage());
-		}
-		//doens't work: error message: For input string: "0.1#" looks like sth isn't formatted correctly for cretae setting, maybe kevin knows better, can't find the error in the file
-		//setting up new length distribuiton works
-		try{
-			setupModel(options.getBasecalling(),options.getBasecallingSetup(),options.getWindowSizeForLengthDistribution());
-			/**********************/
-		}catch(Exception e){
-			System.err.println("Error in setupModel method" + e.getMessage());
-			e.printStackTrace();
-		}
-
-	}
-	
 	
 	
 
@@ -271,11 +279,11 @@ public class Controller {
 // * Tests
 // * @param args
 // */
-//	public static void main(String[] args){
-//		
-//		GUIOptions op = new GUIOptions("src/example4.fasta","TestController.txt","Real-Time","fasta","C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/default.setting",1,1,100,10,100,10);
-//		Controller cd = new Controller();
-//		
+	public static void main(String[] args){
+		
+		GUIOptions op = new GUIOptions("src/example4.fasta","TestController.txt","Real-Time","fasta","C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/default.setting",1,1,1000,1,1000,10);
+		Controller cd = new Controller(op);
+		
 //		//expected output
 //		try {
 //			cd.createInputFormat("example.fastq"); //expected: new FastQ is created
@@ -311,12 +319,14 @@ public class Controller {
 //		}
 //		
 //		Controller cd = new Controller(op);
-//		try{
-//			cd.run();
-//		}catch (MyException e){
-//			System.err.println("Running thrwos: "+ e.getErrorMessage());
-//		}
 //		
+		try{
+			cd.startController();
+			
+		}catch (MyException e){
+			System.err.println("Running throws: "+ e.getErrorMessage());
+		}
+		
 //		try{
 //			cd.pause();
 //		}catch(MyException e){
@@ -335,8 +345,8 @@ public class Controller {
 //			System.err.println("Stop throws: "+ e.getErrorMessage());
 //		}
 //		
-//		
-//	}
+		
+	}
 
 }
 

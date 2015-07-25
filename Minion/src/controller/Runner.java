@@ -45,67 +45,61 @@ public class Runner extends Thread{
 			
 			//Sequence seq = new FastASequence("me","GGTTAAGCGACTAAGCGTACACGGTGGATGCCTAGGCAGTCAGAGGCGATGAAGGGCGTGCTAATCTGCGAAAAGCGTCGGTAAGCTGATATGAAGCGTTATAACCGACGATACCCGAATGGGGAAACCCAGTGCAATACGTTGCACTATCGTTAGATGAATACATAGTCTAACGAGGCGAACCGGGGGAACTGAAACATCTAAGTACCCCGAGGAAAAGAAATCAACCGAGATTCCCCCAGTAGCGGCGAGCGAACGGGGAGGAGCCCAGAGTCTGAATCAGTTTGTGTGTTAGTGGAAGCGTCTGGAAAGTCGCACGGTACAGGGTGATAGTCCCGTACACCAAAATGCACAGGCTGTGAACTCGATGAGTAGGGCGGGACACGTGACATCCTGTCTGAATATGGGGGGACCATCCTCCAAGGCTAAATACTCCTGACTGACCGATAGTGAACCAGTACCGTGAGGGAAAGGCGAAAAGAACCCCGGCGAGGGGAGTGAAATAGAACCTGAAACCGTGTACGTACAAGCAGTGGGAGCACCTTCGTGGTGTGACTGCGTACCTTTTGTATAATGGGTCAGCGACTTATATTTTGTAGCAAGGTTAACCGAATAGGGGAGCCGTAGGGAAACCGAGTCTTAACTAGGCGTCTAGTTGCAAGGTATAGACCCGAAACCCGGTGATCTAGCCATGGGCAGGTTGAAGGTTGGGTAACACTAACTGGAGGACCGAACCGACTAATGTTGAAAAATTAGCGGATGACTTGTGGTGGGGGTGAAAGGCCAATCAAACCGGGAGATAGCTGGTTCTCCCCGAAAGCTATTTAGGTAGCGCCTCGTGAACTCATCTTCGGGGGTAGAGCACTGTTTCGGCTAGGGGGCCATCCCGGCTTACCAAACCGATGCAAAGGTTAAGCGACTAAGCGTACACGGTGGATGCCTAGGCAGTCAGAGGCGATGAAGGGCGTGCTAATCTGCGAAAAGCGTCGGTAAGCTGATATGAAGCGTTATAACCGACGATACCCGAATGGGGAAACCCAGTGCAATACGTTGCACTATCGTTAGATGAATACATAGTCTAACGAGGCGAACCGGGGGAACTGAAACATCTAAGTACCCCGAGGAAAAGAAATCAACCGAGATTCCCCCAGTAGCGGCGAGCGAACGGGGAGGAGCCCAGAGTCTGAATCAGTTTGTGTGTTAGTGGAAGCGTCTGGAAAGTCGCACGGTACAGGGTGATAGTCCCGTACACCAAAATGCACAGGCTGTGAACTCGATGAGTAGGGCGGGACACGTGACATCCTGTCTGAATATGGGGGGACCATCCTCCAAGGCTAAATACTCCTGACTGACCGATAGTGAACCAGTACCGTGAGGGAAAGGCGAAAAGAACCCCGGCGAGGGGAGTGAAATAGAACCTGAAACCGTGTACGTACAAGCAGTGGGAGCACCTTCGTGGTGTGACTGCGTACCTTTTGTATAATGGGTCAGCGACTTATATTTTGTAGCAAGGTTAACCGAATAGGGGAGCCGTAGGGAAACCGAGTCTTAACTAGGCGTCTAGTTGCAAGGTATAGACCCGAAACCCGGTGATCTAGCCATGGGCAGGTTGAAGGTTGGGTAACACTAACTGGAGGACCGAACCGACTAATGTTGAAAAATTAGCGGATGACTTGTGGTGGGGGTGAAAGGCCAATCAAACCGGGAGATAGCTGGTTCTCCCCGAAAGCTATTTAGGTAGCGCCTCGTGAACTCATCTTCGGGGGTAGAGCACTGTTTCGGCTAGGGGGCCATCCCGGCTTACCAAACCGATGCAAA");
 			
-			while((currentNumberOfTicks < totalNumberOfTicks)){ //&& hasAlivePores){
+			while((currentNumberOfTicks < totalNumberOfTicks) && hasAlivePores){
 				
 				int pos = Chance.getRandInt(0, inputFile.getSequence().size()-1);
 				flowcell.tick(inputFile.getSequence().get(pos));
-			
-				//won't print out anything if all pores are dead, program holds: //TODO inform user
-				if(currentNumberOfTicks % 1000 == 0){
-				//if(currentNumberOfTicks % (totalNumberOfTicks/10) == 0 && counterStat < 9){//every 100 ticks the statistics are getting updated
-					statistics.updateData(flowcell.getStates(),flowcell.getFlowcellOutput().getSequence().size());
-					visualize(statistics);
-					counterStat++;
+				for(Sequence s : flowcell.getFlowcellOutput().getSequence()){
+					outputFile.addSeq(s);
 				}
 				
 				if(cd.getOptions().getWriteInFileOption().equals("Real-Time")){
 					try{
 						flowcell.getFlowcellOutput().writeInFile(cd.getOptions().getOutputFilename());
-						System.out.println("Numbers of reads when write in file: "+ flowcell.getFlowcellOutput().getSequence().size());
 						Thread.sleep(cd.getOptions().getDurationOfTick());
 					}catch(Exception e){
 						System.err.println(e.getMessage());
 					}
 				}else if(cd.getOptions().getWriteInFileOption().equals("Write all")){
 					try{
-						for(Sequence s : flowcell.getFlowcellOutput().getSequence()){
-							outputFile.addSeq(s);
-						}
 						Thread.sleep(cd.getOptions().getDurationOfTick());
 					}catch(Exception e){
 						System.err.println(e.getMessage());
 					}
 				}
 				
-				//print out data from last tick
-				if(currentNumberOfTicks == totalNumberOfTicks-1 && counterStat == 9){
+				if(currentNumberOfTicks % (totalNumberOfTicks/10) == 0 && counterStat < 9){//every maxNUmberfTicks/10 the statistics are getting updated
 					statistics.updateData(flowcell.getStates(),flowcell.getFlowcellOutput().getSequence().size());
 					visualize(statistics);
+					counterStat++;
+				}
+				//print out data from last tick, either when the run is over or when all pores are dead
+				if(currentNumberOfTicks == totalNumberOfTicks && counterStat == 9 || flowcell.getNumberOfAlivePores() == 0){
+					statistics.updateData(flowcell.getStates(),flowcell.getFlowcellOutput().getSequence().size());
+					visualize(statistics);
+					if(flowcell.getNumberOfAlivePores() == 0){
+						hasAlivePores = false;
+						System.err.println("All pores were dead at tick: "+currentNumberOfTicks);
+					}
 				}
 				
 				currentNumberOfTicks++;
 				
-				if(flowcell.getNumberOfAlivePores() == 0){
-					hasAlivePores = false;
-				}	
-				
 			}
-			
-			
-			
 			if(cd.getOptions().getWriteInFileOption().equals("Write all")){
 				outputFile.writeInFile(cd.getOptions().getOutputFilename());
 			}
-			
 			System.out.println("Run was executed without throwing errors");
 			
 		}catch(Exception e){
 			System.err.println("Run method in Runner throws error: "+e.getMessage());
 			e.printStackTrace();
 		}
+		System.out.println(outputFile.getErrorInSequence().size());
+		this.cd.setOutputFile(outputFile);
+		
 	}
 
-	
 	//works
 	private void visualize(guiStatistics statistics) {
 		statistics.pack();

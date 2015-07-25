@@ -112,8 +112,6 @@ public class Pore {
 
 		//random number between 0 and sequenceLength-lenght is created
 		int start = Chance.getRandInt(0,sequence.lengthOfSequence()-sequenceLength);		
-
-		//	System.out.println(sequence.getSequence().substring(start, start+sequenceLength));
 		String[] mutation;
 		String seqMutated = "";
 		String score = "";
@@ -122,7 +120,7 @@ public class Pore {
 			seqMutated = mutation[0];
 			score = mutation[1];
 		}catch(Exception e){//Should be mYException, but basecalling throws index out of bounds thus left it like this to keep the program running
-			seqMutated = "ACTG";
+			seqMutated = "ACTG-";
 			System.err.println("Following error occurrs in pore class when simulate tries to apply basecalling error rate :" + e.getMessage());
 		}
 
@@ -135,7 +133,9 @@ public class Pore {
 		seqInPore.setScore(score);
 	}
 	
-	
+	/**Friederike
+	 * initializes the outputType according to the user input of what outputtype he would like: fasta or fastq
+	 */
 	private void initializeOutputSequence(String seqType) {
 		if(seqType.endsWith("fasta")){
 			seqInPore = new FastASequence(null,null);
@@ -368,7 +368,7 @@ public class Pore {
 //		}
 //		p.numbersOfTimeAsked=10;
 //		p.sequenceLength=20;
-		//System.out.println(p.checkStatus());
+//		System.out.println(p.checkStatus());
 //		Sequence seq = new FastASequence("me","CCCCCC");
 //		try {
 //			LengthDistribution l = new LengthDistribution(10);
@@ -377,7 +377,7 @@ public class Pore {
 //			e.printStackTrace();
 //		}
 //		try {
-//			p.simulate(seq, "fasta");
+//			p.simulate(seq);
 //		} catch (MyException e) {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
