@@ -802,10 +802,10 @@ public class guiFinal extends javax.swing.JFrame {
 
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {                                            
 
-    	
         if(checkInput(numberOfPoresFormattedTextField.getText(),maxAgeOfPoresTextField.getText(),numberOfTicksTextField.getText(),durationPerTickFormattedTextField.getText(),
                 windowSizeFormattedTextField.getText())){
-    	
+        	
+    	startButton.setEnabled(false);
     	pauseButton.setEnabled(true);
     	stopButton.setEnabled(true);
     	String message= "";
@@ -1042,6 +1042,7 @@ public class guiFinal extends javax.swing.JFrame {
         pauseButton.setText("Pause");
         pauseButton.setEnabled(false);
         stopButton.setEnabled(false);
+        startButton.setEnabled(true);
         String message ="";
         try {
     		cd.stop();

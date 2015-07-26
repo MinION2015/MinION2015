@@ -112,7 +112,8 @@ public class LengthRate {
 		
 		
 		
-		print(LengthsArraytemp, outputName);	
+		print(LengthsArraytemp, outputName);
+		System.out.println("dummy");
 	}
 	/**
 	 * @author Daniel Dehncke 
