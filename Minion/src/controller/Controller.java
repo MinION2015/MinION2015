@@ -36,7 +36,6 @@ public class Controller {
 	private Runner runningThread;
 	private guiStatistics statistic;
 
-	private boolean isRunning;
 
 
 	//	public Controller(){
@@ -63,7 +62,7 @@ public class Controller {
 		}
 
 		runningThread = new Runner(this);
-		isRunning = false;
+		
 
 	}
 

@@ -10,9 +10,10 @@ public interface Sequence {
 	public String getSequence();
 	public String getScore();
 	
+	public void setHeader(String header);
 	public void setSequence(String seq);
 	public void setScore(String score);
-	public void setHeader(String header);
+	
 	
 	public int lengthOfSequence();
 	
