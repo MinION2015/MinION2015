@@ -16,7 +16,7 @@ import error.*;
  *@output none
  */
 public class Flowcell{
-	int counter =0;
+	
 	private ArrayList<Pore> poreList = new ArrayList<Pore>();
 	private FiletypeContainingSequences outputSequence;
 	private int maxAgeOfPores;

@@ -112,10 +112,10 @@ public class FastA implements FiletypeContainingSequences {
  * @return
  * @throws MyException
  */
-	private void checkForReadingError(String identity, String sequence)
+	private void checkForReadingError(String header, String sequence)
 			throws MyException {
 
-		char[] id = identity.toCharArray();
+		char[] id = header.toCharArray();
 		boolean emptyName = true;
 		for (int i = 1; i < id.length; i++) {
 			if (id[i] != ' ') {

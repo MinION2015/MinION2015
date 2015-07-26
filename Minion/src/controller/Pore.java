@@ -51,7 +51,6 @@ public class Pore {
 		this.state = "Bored";
 		this.age = 0;
 		this.numbersOfTimeAsked = 0;
-		this.sequenceLength = 0;
 		this.outputFormat = outputFormat;
 		initializeOutputSequence(outputFormat);
 		
