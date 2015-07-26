@@ -117,19 +117,19 @@ public class Flowcell{
 					String statusOfPore = p.getState();//"Finished";//"Finished"//"Dead"//"sleeping"
 
 					if(statusOfPore.equals("Running") || statusOfPore.equals("Dead") || statusOfPore.equals("Sleeping")){
-						System.out.println("This pore is running, dead or sleeping");
+						//System.out.println("This pore is running, dead or sleeping");
 						continue;
 					}else if(statusOfPore.equals("Bored")){
-						System.out.println("This pore is bored, thus should be simulated");
+						//System.out.println("This pore is bored, thus should be simulated");
 						try{
 							p.simulate(seq);
-							System.out.println("Pore was simulated in flowcell");
+							//System.out.println("Pore was simulated in flowcell");
 						}catch(MyException e){
 							System.err.println("Pore could not be simulated because: " +e.getErrorMessage());
 						}
 					}else if(statusOfPore.equals("Finished")){
 						//collecting output
-						System.out.println("This pore is finished sequencing");
+						//System.out.println("This pore is finished sequencing");
 						try{
 							outputSequence.addSeq(p.getSequenceFromPore());
 							currentSumOfReads++;
