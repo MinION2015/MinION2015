@@ -192,7 +192,7 @@ public class SimulationError{
 				return BasecallingErrorRate.getBase(3);
 			}
 		}
-		return "";
+		return "A";
 	}
 
 	/**
