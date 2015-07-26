@@ -182,31 +182,15 @@ public class Pore {
 							{
 								setStatus("Finished");
 								return "Finished";
-							}
-							else
-							{
-								boolean dead=false;
-								
-								if(age<ageLimit)
-								{
-								dead=tryToDie(age);
-								}
-								
-								
-								if(dead)
-								{
-									setStatus("Dead");
-									wokeUp=false;
-									timeBetweenLastSlumber=0;
-									return "Dead";
-								}
+							
+							}	
 					
 								else{
 									age++;
 									numbersOfTimeAsked++;
 									return "Running";
 								}
-							}
+							
 		//the Pore can wake if its sleeping or continue to sleep					
 		case "Sleeping":  	age++;
 							boolean wake= tryToWake(sleepTime);
@@ -229,12 +213,10 @@ public class Pore {
 		case "Bored":		if(state.equals("Bored"))
 							{
 								boolean asleep=false;
+								
 								if(timeBetweenLastSlumber<sleepProbs.length)
 								{
 								asleep=tryToSleep(timeBetweenLastSlumber);
-								}
-								
-								
 								if(asleep)
 								{
 									
@@ -242,6 +224,23 @@ public class Pore {
 									timeBetweenLastSlumber=0;
 									wokeUp=false;
 									return "Sleeping";
+								}
+								}
+								
+								boolean dead=false;
+								
+								if(age<ageLimit)
+								dead=tryToDie(age);
+								
+								
+							
+					
+								if(dead)
+								{
+									setStatus("Dead");
+									wokeUp=false;
+									timeBetweenLastSlumber=0;
+									return "Dead";
 								}
 								else
 								{
@@ -270,8 +269,8 @@ public class Pore {
 		boolean dead=false;
 		Random rand = new Random();
 		int r = rand.nextInt(100)+1; 
-		//System.out.println("Zufallszahl: "+r);
-		//System.out.println("Obergrenze: "+deathProbs[age]);
+//		System.out.println("Zufallszahl: "+r);
+//		System.out.println("Obergrenze: "+deathProbs[age]);
 		
 		if(r<=deathProbs[age]) return dead=true;
 		else return dead=false;
@@ -329,16 +328,16 @@ public class Pore {
 		for(int i=0; i<ageLimit;i++)
 		{
 			if(i<ageLimit*0.1) probs[i]=0;
-			if(ageLimit*0.1<=i && i <ageLimit*0.2) probs[i]=0+n;
-			if(ageLimit*0.2<=i && i<ageLimit*0.3) probs[i]=0+n;
-			if(ageLimit*0.3<=i &&i<ageLimit*0.4) probs[i]=0+n;
-			if(ageLimit*0.4<=i &&i<ageLimit*0.5) probs[i]=0+n;
-			if(ageLimit*0.5<=i &&i<ageLimit*0.6) probs[i]=0+n;
-			if(ageLimit*0.6<=i &&i<ageLimit*0.7) probs[i]=0+n;
-			if(ageLimit*0.7<=i &&i<ageLimit*0.8) probs[i]=0+n;
-			if(ageLimit*0.8<=i &&i<ageLimit*0.9) probs[i]=1+n;
-			if(ageLimit*0.9<=i &&i<ageLimit*0.95) probs[i]=2+n;
-			if(ageLimit*0.95<=i &&i<ageLimit) probs[i]=3;
+			if(ageLimit*0.1<=i && i <ageLimit*0.2) probs[i]=n;
+			if(ageLimit*0.2<=i && i<ageLimit*0.3) probs[i]=n;
+			if(ageLimit*0.3<=i &&i<ageLimit*0.4) probs[i]=n;
+			if(ageLimit*0.4<=i &&i<ageLimit*0.5) probs[i]=n;
+			if(ageLimit*0.5<=i &&i<ageLimit*0.6) probs[i]=1+n;
+			if(ageLimit*0.6<=i &&i<ageLimit*0.7) probs[i]=2+n;
+			if(ageLimit*0.7<=i &&i<ageLimit*0.8) probs[i]=5+n;
+			if(ageLimit*0.8<=i &&i<ageLimit*0.9) probs[i]=7+n;
+			if(ageLimit*0.9<=i &&i<ageLimit*0.95) probs[i]=10+n;
+			if(ageLimit*0.95<=i &&i<ageLimit) probs[i]=90;
 			
 		}
 		return probs;
@@ -364,22 +363,49 @@ public class Pore {
 	
 	/**
 	 * Test Friederike
-	 * @param argss
+	 * @param args
+	 * @throws MyException 
 	 */
-//	public static void main(String[] args){
+//	public static void main(String[] args) throws MyException{
+//		
+//		Flowcell f = new Flowcell(20,10000,"fasta");
+//		boolean dying=false;
+//		int n=1;
+//		
+//		for(Pore p :f.getPoreList()){
+//		
+//			p.sequenceLength=1000;
+//			
+//			for(int i=0;i<10000;i++)
+//			{		
+//				if(p.checkStatus()=="Dead")
+//				{	
+//					System.out.println("PORE "+n+" died at Age: "+p.age);
+//					break;
+//				}
+//			}
+//			n++;
+//		}
 //		Pore p = new Pore(1000,"fasta");
 //		p.sequenceLength=30;
-//		p.state="Sleeping";
+//		p.state="Bored";
 //		
-//	
-//		
-//		
+	
+		
+		
 //		for(int i=0;i<1000;i++)
 //		{
-//			
+//			System.out.println(p.checkStatus());
+//			System.out.println(p.age);
+//			if(p.checkStatus()=="Finished"){
+//				System.out.println("**************************");
+//				System.out.println("FINI at age: "+p.age);
+//			}			
 //			if(p.checkStatus()=="Dead")
 //			{	
-//			System.out.println("Pore died at Age: "+p.age);
+//			System.out.println("Pore died at Age: "+p.age
+//					);
+//			break;
 //			}
 //		}
 //		p.numbersOfTimeAsked=10;

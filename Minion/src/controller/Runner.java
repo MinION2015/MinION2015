@@ -6,6 +6,7 @@ import guiStatistics.guiStatistics;
 
 import org.jfree.ui.RefineryUtilities;
 
+import Basecalling.BasecallingErrorRate;
 import reader.*;
 
 
@@ -86,7 +87,9 @@ public class Runner extends Thread{
 					counterStat++;
 				}
 				
+				BasecallingErrorRate.age(cd.getOptions().getDurationOfTick());
 				currentNumberOfTicks++;
+				
 				
 			}
 			
