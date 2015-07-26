@@ -112,16 +112,21 @@ public class Pore {
 
 		//random number between 0 and sequenceLength-lenght is created
 		int start = Chance.getRandInt(0,sequence.lengthOfSequence()-sequenceLength);		
-		String[] mutation;
+		String[] mutation = new String[2];
 		String seqMutated = "";
 		String score = "";
 		try{
-			mutation = SimulationError.applyErrorBasecalling(outputFormat,(sequence.getSequence().substring(start, start+sequenceLength)),(sequence.getScore().substring(start, start+sequenceLength)));
-			seqMutated = mutation[0];
-			score = mutation[1];
+			// m,mutation = SimulationError.applyErrorBasecalling(outputFormat,(sequence.getSequence().substring(start, start+sequenceLength)),(sequence.getScore().substring(start, start+sequenceLength)));
+			if(sequence.getScore() != null){
+				seqMutated = SimulationError.applyErrorBasecalling(outputFormat,(sequence.getSequence().substring(start, start+sequenceLength)),(sequence.getScore().substring(start, start+sequenceLength)))[0];
+				score =SimulationError.applyErrorBasecalling(outputFormat,(sequence.getSequence().substring(start, start+sequenceLength)),(sequence.getScore().substring(start, start+sequenceLength)))[1];
+			}else{
+				seqMutated = SimulationError.applyErrorBasecalling(outputFormat,(sequence.getSequence().substring(start, start+sequenceLength)),null)[0];
+			}
 		}catch(Exception e){//Should be mYException, but basecalling throws index out of bounds thus left it like this to keep the program running
 			seqMutated = "ACTG-";
 			System.err.println("Following error occurrs in pore class when simulate tries to apply basecalling error rate :" + e.getMessage());
+			e.printStackTrace();
 		}
 
 		if(seqMutated.isEmpty()){

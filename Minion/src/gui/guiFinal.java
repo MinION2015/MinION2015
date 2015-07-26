@@ -1048,8 +1048,15 @@ public class guiFinal extends javax.swing.JFrame {
     	} catch (MyException e) {
     		e.printStackTrace();
     	}
+        
+        
         int length= cd.getOutputFileErrors().size();
-        System.out.println(cd.getOutputFileErrors().size());
+       
+        System.out.println("Outputfile size(gui): "+cd.getOutputFileErrors().size());
+        if(length == 0){
+        	message = "No output was produced";
+        	outputTextArea.setText(message);
+        }
     	for(int i=0; i<length;i++)
 		{
 			if(this.cd.getOutputFileErrors().get(i).isCriticalError()) {

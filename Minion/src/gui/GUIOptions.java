@@ -92,6 +92,11 @@ public class GUIOptions {
 		return durationOfTick;
 	}
 	
+	public String getLengthDistributionSetup() {
+		return lengthDistributionSetup;
+	}
+
+	
 	public boolean hasValidParameters(){
 		
 		if(!(this.inputFilename.endsWith("fasta")||this.inputFilename.endsWith("fastq"))){
