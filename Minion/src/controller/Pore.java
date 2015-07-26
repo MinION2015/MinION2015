@@ -364,7 +364,7 @@ public class Pore {
 	
 	/**
 	 * Test Friederike
-	 * @param args
+	 * @param argss
 	 */
 //	public static void main(String[] args){
 //		Pore p = new Pore(1000,"fasta");
