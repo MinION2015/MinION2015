@@ -3,15 +3,9 @@ package controller;
 
 import java.util.ArrayList;
 
-import reader.FastA;
-import reader.FastASequence;
-import reader.FastQ;
-import reader.FiletypeContainingSequences;
-import reader.Sequence;
-import error.Chance;
-import error.ErrorCodes;
-import error.MyException;
-//TODO LEngthDistribution is returning nullpointers!
+import reader.*;
+import error.*;
+
 
 /**
  * 
@@ -138,6 +132,7 @@ public class Flowcell{
 						System.out.println("This pore is finished sequencing");
 						try{
 							outputSequence.addSeq(p.getSequenceFromPore());
+							currentSumOfReads++;
 						}catch(Exception e){
 							System.err.println("Error in tick-collecting output: "+e.getMessage());
 						}
@@ -200,10 +195,11 @@ public class Flowcell{
 			}
 		}
 		
-		currentSumOfReads += (int)states[0] * 10;//currentReads are Recorded every Tick and added. 10 is just a example, not sure where the reads per tick are stored
+		//currentSumOfReads += (int)states[0] * 10;//currentReads are Recorded every Tick and added. 10 is just a example, not sure where the reads per tick are stored
 												//better move this into methode tick
 		return states;
 	}
+	
 	public int getcurrentSumOfReads()
 	{
 		return currentSumOfReads;

@@ -81,19 +81,20 @@ public class Runner extends Thread{
 					System.err.println("All pores were dead at tick: "+currentNumberOfTicks);
 				}
 				if(currentNumberOfTicks % (totalNumberOfTicks/10) == 0 && counterStat < 9 && hasAlivePores){//every maxNUmberfTicks/10 the statistics are getting updated
-					statistics.updateData(flowcell.getStates(),flowcell.getFlowcellOutput().getSequence().size());
+					statistics.updateData(flowcell.getStates(),flowcell.getcurrentSumOfReads());
 					visualize(statistics);
 					counterStat++;
 				}
-				//print out data from last tick, either when the run is over or when all pores are dead
-				if(currentNumberOfTicks == totalNumberOfTicks || !hasAlivePores){
-					statistics.updateData(flowcell.getStates(),flowcell.getFlowcellOutput().getSequence().size());
-					visualize(statistics);
-				}
+				
 				currentNumberOfTicks++;
 				
 			}
 			
+			if(currentNumberOfTicks == totalNumberOfTicks || !hasAlivePores){
+				System.out.println("Last statistic:");
+				statistics.updateData(flowcell.getStates(),flowcell.getFlowcellOutput().getSequence().size());
+				visualize(statistics);
+			}
 			
 			if(cd.getOptions().getWriteInFileOption().equals("Write all")){
 				outputFile.writeInFile(cd.getOptions().getOutputFilename());
