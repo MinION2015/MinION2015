@@ -363,7 +363,7 @@ public class Pore {
 	
 	/**
 	 * Test Friederike
-	 * @param argss
+	 * @param args
 	 * @throws MyException 
 	 */
 	public static void main(String[] args) throws MyException{
