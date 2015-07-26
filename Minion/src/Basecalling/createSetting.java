@@ -29,6 +29,11 @@ public class createSetting {
 		print(outputPath,dimension);
 	}
 	
+	/**
+	 * reads the blast file and calculates the prob.
+	 * @param sourcepath blast file
+	 * @throws IOException
+	 */
 	private static void calculate(String sourcepath) throws IOException{
 
 		BufferedReader Input = new BufferedReader(new FileReader(sourcepath));
@@ -167,7 +172,12 @@ public class createSetting {
 		percentageMatrix=matrix;
 	}
 	
-	
+	/**
+	 * writes the variables in a setting file
+	 * @param outputPath
+	 * @param dimension
+	 * @throws IOException
+	 */
 	private static void print(String outputPath, int dimension) throws IOException{
 		BufferedWriter Output = new BufferedWriter(new FileWriter(outputPath));
 		switch(dimension){

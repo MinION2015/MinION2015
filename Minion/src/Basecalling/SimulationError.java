@@ -18,7 +18,14 @@ public class SimulationError{
 	public SimulationError(){
 		
 	}
-	//String seqtype determins fasta/fastq
+
+/**
+ * changes the sequences and scores based on the parameters in basecallingErrorRate
+ * @param seqType information if fasta to fasta /fasta to fastq / fastq to fastq
+ * @param seq origin seq	
+ * @param scoreI origin score
+ * @return changed seq and score
+ */
 	public static String[] applyErrorBasecalling(String seqType,String seq,String scoreI) {
 		
 		String err = "";
@@ -152,7 +159,11 @@ public class SimulationError{
 	
 	
 
-	
+	/**
+	 * changes the base / insert a new one / deletes this one 
+	 * @param letter origin base
+	 * @return changed base or add/del for insertion/deletion
+	 */
 	private static String callBase(char letter){
 		
 		double prob = Chance.getRand();
