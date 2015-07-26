@@ -366,26 +366,26 @@ public class Pore {
 	 * @param args
 	 * @throws MyException 
 	 */
-	public static void main(String[] args) throws MyException{
-		
-		Flowcell f = new Flowcell(20,10000,"fasta");
-		boolean dying=false;
-		int n=1;
-		
-		for(Pore p :f.getPoreList()){
-		
-			p.sequenceLength=1000;
-			
-			for(int i=0;i<10000;i++)
-			{		
-				if(p.checkStatus()=="Dead")
-				{	
-					System.out.println("PORE "+n+" died at Age: "+p.age);
-					break;
-				}
-			}
-			n++;
-		}
+//	public static void main(String[] args) throws MyException{
+//		
+//		Flowcell f = new Flowcell(20,10000,"fasta");
+//		boolean dying=false;
+//		int n=1;
+//		
+//		for(Pore p :f.getPoreList()){
+//		
+//			p.sequenceLength=1000;
+//			
+//			for(int i=0;i<10000;i++)
+//			{		
+//				if(p.checkStatus()=="Dead")
+//				{	
+//					System.out.println("PORE "+n+" died at Age: "+p.age);
+//					break;
+//				}
+//			}
+//			n++;
+//		}
 //		Pore p = new Pore(1000,"fasta");
 //		p.sequenceLength=30;
 //		p.state="Bored";
@@ -425,7 +425,7 @@ public class Pore {
 //			e.printStackTrace();
 //		}
 //		System.out.println(p.getSequenceFromPore().getSequence());	
-	}
+//	}
 
 
 
