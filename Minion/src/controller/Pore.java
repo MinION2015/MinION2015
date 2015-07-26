@@ -364,22 +364,22 @@ public class Pore {
 	 * Test Friederike
 	 * @param args
 	 */
-	public static void main(String[] args){
-		Pore p = new Pore(1000,"fasta");
-		p.sequenceLength=30;
-		p.state="Sleeping";
-		
-	
-		
-		
-		for(int i=0;i<1000;i++)
-		{
-			
-			if(p.checkStatus()=="Dead")
-			{	
-			System.out.println("Pore died at Age: "+p.age);
-			}
-		}
+//	public static void main(String[] args){
+//		Pore p = new Pore(1000,"fasta");
+//		p.sequenceLength=30;
+//		p.state="Sleeping";
+//		
+//	
+//		
+//		
+//		for(int i=0;i<1000;i++)
+//		{
+//			
+//			if(p.checkStatus()=="Dead")
+//			{	
+//			System.out.println("Pore died at Age: "+p.age);
+//			}
+//		}
 //		p.numbersOfTimeAsked=10;
 //		p.sequenceLength=20;
 //		System.out.println(p.checkStatus());
@@ -397,7 +397,7 @@ public class Pore {
 //			e.printStackTrace();
 //		}
 //		System.out.println(p.getSequenceFromPore().getSequence());	
-	}
+//	}
 
 
 
