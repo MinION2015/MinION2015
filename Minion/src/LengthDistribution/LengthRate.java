@@ -113,7 +113,7 @@ public class LengthRate {
 		
 		
 		print(LengthsArraytemp, outputName);
-		System.out.println("dummy");
+//		System.out.println(outputName);
 	}
 	/**
 	 * @author Daniel Dehncke 
@@ -221,6 +221,7 @@ public class LengthRate {
 		
 		//window is the Size we look at
 		br.close();
+//		System.out.println(filename);
 		return generatePossibilities(LengthsArraytemp, window, sumOfSequences);
 
 	}

@@ -29,6 +29,8 @@ public enum ErrorCodes {
 	FLOWCELL_ONLY_CONTAINS_DEAD_PORES(4003,"All pores are dead",true),
 	FLOWCELL_OUTPUT_FORMAT_COULD_NOT_BE_CREATED(4004,"Flowcell output format could not be created.", true),
 	
+	GUISTATIATICS_NO_OUTPUR_DATA(4005,"No data to display", false),
+	
 	CONTROLLER_NOT_RUNNING(5000,"Program doesn't run.",true),
 	CONTROLLER_NOT_PAUSING(5001,"Program deosn't pause",true),
 	CONTROLLER_NOT_RESUMING(5002,"Program doesn't resume",true),

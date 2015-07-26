@@ -20,19 +20,22 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.RefineryUtilities;
 
+import error.ErrorCodes;
+import error.MyException;
+
 /**
  * Holds a ChartPanel
  */
 public class guiStatistics extends ApplicationFrame {
 
 	private ChartPanel chartPanel;
-	private double[][] porestates = new double[10][5];
-	private double[] reads = new double[10];
+	private double[][] porestates = new double[14][5];
+	private double[] reads = new double[14];
 	private int tick;
-	private int time;
+	private Integer time;
     /**
      * @author Daniel and Albert
-     * @input gets the porestates containing the states of teh pore, the reads, containing the reads that are made at a special tick and the tick 
+     * @input gets the porestates containing the states of the pore, the reads, containing the reads that are made at a special tick and the tick 
      * 		  are at the moment
      * @function generates two chartPanels
      */
@@ -40,7 +43,8 @@ public class guiStatistics extends ApplicationFrame {
 
         super("Minion Simulation");
         this.tick = 0;
-        time = timeinput;
+        time = 120;
+//        System.out.println(timeinput);
 //        this.time = timeinput;
 
         // add the chart to a panel...
@@ -65,11 +69,13 @@ public class guiStatistics extends ApplicationFrame {
 
         for(Integer i = 0; i < tick; i++)
         {
-        	result.addValue(reads[i], series1, i.toString());
+        	Integer convertToInteger = i* time;
+        	result.addValue(reads[i], series1, convertToInteger.toString());
         }
         for(Integer i = tick; i < reads.length;i++)
         {
-        	result.addValue(null, series1, i.toString());
+        	Integer convertToInteger = i* time;
+        	result.addValue(null, series1, convertToInteger.toString());
         }
 
 
@@ -97,14 +103,16 @@ public class guiStatistics extends ApplicationFrame {
         {
         	for(int j = 0; j < porestates[i].length; j++)
         	{
-        		result.addValue(porestates[i][j], states[j], i.toString());
+        		Integer convertToInteger = i* time;
+        		result.addValue(porestates[i][j], states[j], convertToInteger.toString());
         	}
         	
         }
         //fill the rest of the chart with null
         for(Integer i = tick; i < porestates.length;i++)
         {
-        	result.addValue(null, "remain", i.toString());
+        	Integer convertToInteger = i* time;
+        	result.addValue(null, "remain", convertToInteger.toString());
         }
      
         
@@ -138,7 +146,7 @@ public class guiStatistics extends ApplicationFrame {
         final CategoryPlot subplot2 = new CategoryPlot(dataset2, null, rangeAxis2, renderer11);
         subplot2.setDomainGridlinesVisible(true);
 
-        final CategoryAxis domainAxis = new CategoryAxis("Time");
+        final CategoryAxis domainAxis = new CategoryAxis("Time(in min)");
         final CombinedDomainCategoryPlot plot = new CombinedDomainCategoryPlot(domainAxis);
 
         plot.add(subplot1, 2);
@@ -198,10 +206,15 @@ public class guiStatistics extends ApplicationFrame {
      * @param porestates 
      * @param reads
      * @param tick
+     * @throws MyException 
      * @function updates the chart by computing a new one everytime.
      */
-    public void updateData(double[] porestatestoadd, double readstoadd)
+    public void updateData(double[] porestatestoadd, double readstoadd) throws MyException
 	   {
+    			if(porestatestoadd == null)
+    			{
+    				throw new MyException(ErrorCodes.GUISTATIATICS_NO_OUTPUR_DATA);
+    			}
     			
     			porestates[tick] = porestatestoadd;
     			reads[tick] = readstoadd;

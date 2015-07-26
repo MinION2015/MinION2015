@@ -80,7 +80,7 @@ public class Runner extends Thread{
 					hasAlivePores = false;
 					System.err.println("All pores were dead at tick: "+currentNumberOfTicks);
 				}
-				if(currentNumberOfTicks % (totalNumberOfTicks/10) == 0 && counterStat < 9 && hasAlivePores){//every maxNUmberfTicks/10 the statistics are getting updated
+				if(currentNumberOfTicks % (totalNumberOfTicks/13) == 0 && counterStat < 13 && hasAlivePores){//every maxNUmberfTicks/10 the statistics are getting updated
 					statistics.updateData(flowcell.getStates(),flowcell.getcurrentSumOfReads());
 					visualize(statistics);
 					counterStat++;
