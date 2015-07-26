@@ -12,13 +12,10 @@ import error.MyException;
 /**
  * 
  * @author Kevin Lindner & Friederike Hanssen
- * started  to make class static, not sure how to test, as the whole class is not functioning for me with the settingFilename etc.(Friederike)
- * above is fixed
- *@functionailty For a certain base and a basecalling type the transformation rate can becalled here
- * @Input: basecalling type and the settingFilename
+ * @functionailty For a certain base the transformation rate can becalled here
+ * @Input: settingFilename
  * @Output: getters for the value, base and row
  * default values of the lambda_phage are in the default.setting
- *
  *To generate the values for each position each letter gets a window. For example if a A switches to a G the value wirtten down is 1, but the prob is 0.1(->1-0.9).
  */
 public class BasecallingErrorRate {
@@ -35,7 +32,11 @@ public class BasecallingErrorRate {
 		generate(settingFilePath);
 	}
 	
-	
+	/**
+	 * reads in the setting file and loads the probabilities
+	 * @param settingFilePath
+	 * @throws Exception
+	 */
 	private static void generate(String settingFilePath) throws Exception{
 		char cacheChar = ' ';
 		String Value;
@@ -80,6 +81,9 @@ public class BasecallingErrorRate {
 			Input.close();
 	}
 	
+	/**
+	 * make the variables worse to simulate the aging of pores
+	 */
 	public static void age(){
 		double percentageReduction = 0;
 		double baseFalseProb = 0;
