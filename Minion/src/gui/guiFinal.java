@@ -1112,7 +1112,7 @@ public class guiFinal extends javax.swing.JFrame {
         pauseButton.setEnabled(false);
         stopButton.setEnabled(false);
         startButton.setEnabled(true);
-        String message ="";
+        String message ="Errors found:" +"\n";
         try {
     		cd.stop();
     	} catch (MyException e) {
