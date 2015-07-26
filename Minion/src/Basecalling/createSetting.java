@@ -36,12 +36,13 @@ public class createSetting {
 	 */
 	private static void calculate(String sourcepath) throws IOException{
 
+		@SuppressWarnings("resource")
 		BufferedReader Input = new BufferedReader(new FileReader(sourcepath));
-		String cacheString = "";
+		String cacheString = " ";
 		int endInt = 0;
 		int end=0;
-		String query= "";
-		String sbjct= "";
+		String query= " ";
+		String sbjct= " ";
 		//A T G C -
 		double[][] matrix = new double[4][4];
 		for(int i=0;i<4;i++)

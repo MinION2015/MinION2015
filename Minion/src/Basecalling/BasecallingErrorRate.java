@@ -84,27 +84,30 @@ public class BasecallingErrorRate {
 	/**
 	 * make the variables worse to simulate the aging of pores
 	 */
-	public static void age(){
-		double percentageReduction = 0;
-		double baseFalseProb = 0;
-		insertionProb=insertionProb*1.05;
-		insertionExtProb=insertionExtProb*1.05;
-		deletionProb=deletionProb*1.05;
-		deletionExtProb=deletionExtProb*1.05;
+	public static void age(int secondsPerTick){
+		double[][] cache = new double[4][4];
+		for(int i=0;i<4;i++)
+			for(int j=0;j<4;j++)
+				cache[i][j]=transProbMatrix[i][j];
+		for(int i=3;i>0;i--)
+			for(int j=1;j<4;j++)
+				cache[j][i]=cache[j][i]-cache[j-1][i];
+		double changeValue = Math.pow(Math.log(259200)-4.414,0.1);
+		changeValue=Math.pow(changeValue, secondsPerTick);
+		insertionProb=insertionProb*(2-changeValue);
+		deletionProb=deletionProb*(2-changeValue);
 		for(int i=0;i<4;i++){
 			for(int j=0;j<4;j++){
 				if(i==j)
-					percentageReduction=transProbMatrix[i][j]-(transProbMatrix[i][j]*0.95);
+					cache[i][j]=changeValue*cache[i][j];
 				else
-					baseFalseProb += transProbMatrix[i][j];
-			}
-			for(int j=0;j<4;j++){
-				if(i==j)
-					transProbMatrix[i][j]=transProbMatrix[i][j]-percentageReduction;
-				else
-					transProbMatrix[i][j]=transProbMatrix[i][j]+(percentageReduction*(transProbMatrix[i][j]/baseFalseProb));
+					cache[i][j]=(2-changeValue)*cache[i][j];
 			}
 		}
+		for(int i=0;i<4;i++)
+			for(int j=1;j<4;j++)
+				cache[i][j]=cache[i][j]+cache[i][j-1];
+		transProbMatrix=cache;
 	}
 	
 	
