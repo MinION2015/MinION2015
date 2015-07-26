@@ -95,7 +95,7 @@ public class Pore {
 				
 				try{
 					sequenceLength = (int) LengthDistribution.getRandLength();
-					if (sequenceLength < sequence.lengthOfSequence() && sequence.lengthOfSequence() - sequenceLength > 0 && sequenceLength >0){
+					if (sequenceLength < sequence.lengthOfSequence() && sequence.lengthOfSequence() - sequenceLength > 0 && sequenceLength > 0){
 						lengthFound = true;
 					}
 				}catch(Exception e){
@@ -121,6 +121,8 @@ public class Pore {
 				seqMutated =mutation[0];
 				score= mutation[1];
 			}else{
+				System.out.println(sequence.getSequence().substring(start, start+sequenceLength));
+				System.out.println("sequence blub is applied");
 				seqMutated = SimulationError.applyErrorBasecalling(outputFormat,(sequence.getSequence().substring(start, start+sequenceLength)),"")[0];
 			}
 
