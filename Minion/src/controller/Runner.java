@@ -28,7 +28,7 @@ public class Runner extends Thread{
 	
 
 	private guiStatistics statistics;
-	private int counterStat = 0;
+	private int counterStat;
 	
 	
 	
@@ -41,6 +41,7 @@ public class Runner extends Thread{
 		}else{
 			this.hasAlivePores = false;
 		}
+		this.counterStat = 0;
 		 
 		
 	}
