@@ -95,11 +95,11 @@ public class Pore {
 				
 				try{
 					sequenceLength = (int) LengthDistribution.getRandLength();
-					if (sequenceLength < sequence.lengthOfSequence()){
+					if (sequenceLength < sequence.lengthOfSequence() && sequence.lengthOfSequence() - sequenceLength > 0 && sequenceLength > 0){
 						lengthFound = true;
 					}
 				}catch(Exception e){
-					//TODO LEngthDistribution throws NUllpointers right now
+					
 					sequenceLength = 4;
 					lengthFound = true;
 					System.err.println("Lenght distribution class caused following error: "+ e.getMessage());
@@ -108,34 +108,36 @@ public class Pore {
 		}
 		
 
+		if(lengthFound){
+			
+			int start = Chance.getRandInt(0,sequence.lengthOfSequence()-sequenceLength-1);		
+			String[] mutation = new String[2];
+			String seqMutated = "";
+			String score = "";
 
 
-		//random number between 0 and sequenceLength-lenght is created
-		int start = Chance.getRandInt(0,sequence.lengthOfSequence()-sequenceLength);		
-		String[] mutation = new String[2];
-		String seqMutated = "";
-		String score = "";
-		try{
-			// m,mutation = SimulationError.applyErrorBasecalling(outputFormat,(sequence.getSequence().substring(start, start+sequenceLength)),(sequence.getScore().substring(start, start+sequenceLength)));
 			if(sequence.getScore() != null){
-				seqMutated = SimulationError.applyErrorBasecalling(outputFormat,(sequence.getSequence().substring(start, start+sequenceLength)),(sequence.getScore().substring(start, start+sequenceLength)))[0];
-				score =SimulationError.applyErrorBasecalling(outputFormat,(sequence.getSequence().substring(start, start+sequenceLength)),(sequence.getScore().substring(start, start+sequenceLength)))[1];
+				mutation = SimulationError.applyErrorBasecalling(outputFormat,(sequence.getSequence().substring(start, start+sequenceLength)),(sequence.getScore().substring(start, start+sequenceLength)));
+				seqMutated =mutation[0];
+				score= mutation[1];
 			}else{
-				seqMutated = SimulationError.applyErrorBasecalling(outputFormat,(sequence.getSequence().substring(start, start+sequenceLength)),null)[0];
+				System.out.println(sequence.getSequence().substring(start, start+sequenceLength));
+				System.out.println("sequence blub is applied");
+				seqMutated = SimulationError.applyErrorBasecalling(outputFormat,(sequence.getSequence().substring(start, start+sequenceLength)),"")[0];
 			}
-		}catch(Exception e){//Should be mYException, but basecalling throws index out of bounds thus left it like this to keep the program running
-			seqMutated = "ACTG-";
-			System.err.println("Following error occurrs in pore class when simulate tries to apply basecalling error rate :" + e.getMessage());
-			e.printStackTrace();
-		}
 
-		if(seqMutated.isEmpty()){
-			System.out.println("Pore had trouble sequencing. Could not produce any output.");
-		}
+			if(seqMutated.isEmpty()){
+				System.out.println("Pore had trouble sequencing. Could not produce any output.");
+			}
 
-		seqInPore.setHeader(sequence.getHeader());
-		seqInPore.setSequence(seqMutated);
-		seqInPore.setScore(score);
+			seqInPore.setHeader(sequence.getHeader());
+			seqInPore.setSequence(seqMutated);
+			seqInPore.setScore(score);
+		}else{
+			seqInPore.setHeader(null);
+			seqInPore.setSequence(null);
+			seqInPore.setScore(null);
+		}
 	}
 	
 	/**Friederike

@@ -3,15 +3,9 @@ package controller;
 
 import java.util.ArrayList;
 
-import reader.FastA;
-import reader.FastASequence;
-import reader.FastQ;
-import reader.FiletypeContainingSequences;
-import reader.Sequence;
-import error.Chance;
-import error.ErrorCodes;
-import error.MyException;
-//TODO LEngthDistribution is returning nullpointers!
+import reader.*;
+import error.*;
+
 
 /**
  * 
@@ -119,37 +113,26 @@ public class Flowcell{
 				setFlowcellOutputFormat(outputFormat);
 				checkFlowcellState();
 				for(Pore p : poreList){
-					
-					//TODO remove fake setting the pore to finish for testing runner and controller
-//					if(Chance.getRand() < 0.2){
-//						p.setStatus("Dead");
-//					}else if (Chance.getRand() < 0.5){
-//						p.setStatus("Sleeping");
-//					}else{
-//						p.setStatus("Bored");
-//					}
-					
+
 					String statusOfPore = p.getState();//"Finished";//"Finished"//"Dead"//"sleeping"
-					if(statusOfPore.equals("Dead")){
-						statusOfPore = "Sleeping";
-						p.setStatus("Sleeping"); 
-					}
+
 					if(statusOfPore.equals("Running") || statusOfPore.equals("Dead") || statusOfPore.equals("Sleeping")){
-//						System.out.println("This pore is running, dead or sleeping");
+						System.out.println("This pore is running, dead or sleeping");
 						continue;
 					}else if(statusOfPore.equals("Bored")){
-//						System.out.println("This pore is bored, thus should be simulated");
+						System.out.println("This pore is bored, thus should be simulated");
 						try{
 							p.simulate(seq);
-//							System.out.println("Pore was simulated in flowcell");
+							System.out.println("Pore was simulated in flowcell");
 						}catch(MyException e){
-//							System.err.println("Pore could not be simulated because: " +e.getErrorMessage());
+							System.err.println("Pore could not be simulated because: " +e.getErrorMessage());
 						}
 					}else if(statusOfPore.equals("Finished")){
 						//collecting output
-						
+						System.out.println("This pore is finished sequencing");
 						try{
 							outputSequence.addSeq(p.getSequenceFromPore());
+							currentSumOfReads++;
 						}catch(Exception e){
 							System.err.println("Error in tick-collecting output: "+e.getMessage());
 						}
@@ -212,10 +195,11 @@ public class Flowcell{
 			}
 		}
 		
-		currentSumOfReads += (int)states[0] * 10;//currentReads are Recorded every Tick and added. 10 is just a example, not sure where the reads per tick are stored
+		//currentSumOfReads += (int)states[0] * 10;//currentReads are Recorded every Tick and added. 10 is just a example, not sure where the reads per tick are stored
 												//better move this into methode tick
 		return states;
 	}
+	
 	public int getcurrentSumOfReads()
 	{
 		return currentSumOfReads;

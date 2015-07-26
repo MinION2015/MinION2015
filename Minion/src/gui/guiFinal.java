@@ -22,7 +22,24 @@ import LengthDistribution.LengthDistribution;
 import LengthDistribution.LengthRate;
 
 /**
- * @author Sven
+ * @author Sven Bizu
+ * -Class creates frame to interact with user. 
+ * -Gui gets all userinput and performs sanitychecks.
+ * -Userinput:	
+ * 	inputFilename:						Receives FastaFile
+	outputFilename:						Outfilename for simulation
+	writeInFileOption:					Write in File or in Real-Time?
+	basecalling:						1D/2D basecalling?
+	numberOfPores:						Number of Pores to be simulated
+	maxAgeOfPores:						Maximal Age of Pores (time dependant)
+	durationOfTick:						How long does one simulation step take
+	totalNumberOfTicks:					How long should be simulated.
+	windowSizeForLengthDistribution:	Window Size
+	basecallingSetup:					Simulate with a given basecalling-probability-file.
+	lengthDistributionSetup:			Simulate with a given Length-Distribution-file (not working)
+	outputFormat:						Determine Output file (fasta or fastq)
+ * -Created with Netbeans Formeditor.
+ * 
  */
 public class guiFinal extends javax.swing.JFrame {
 	
@@ -800,12 +817,16 @@ public class guiFinal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>                        
 
+    /*@author Sven Bizu and Friederike Hanssen
+     *@functionality Starts Simulation when sanitychecks were passed.
+     *@input All inputs by Textfields, Comboboxes and Radiobuttons
+     */
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {                                            
 
-    	
         if(checkInput(numberOfPoresFormattedTextField.getText(),maxAgeOfPoresTextField.getText(),numberOfTicksTextField.getText(),durationPerTickFormattedTextField.getText(),
                 windowSizeFormattedTextField.getText())){
-    	
+        	
+    	startButton.setEnabled(false);
     	pauseButton.setEnabled(true);
     	stopButton.setEnabled(true);
     	String message= "";
@@ -820,7 +841,7 @@ public class guiFinal extends javax.swing.JFrame {
     	        inputFormat=".fastq";
     	    }
 
-    	    //Check which dimension is chosen
+    	    //Check which dimension for basecalling is chosen
     		String chosen = (String) dimComboBox.getSelectedItem();
 
     				if (chosen.equals("1D")) {
@@ -851,6 +872,8 @@ public class guiFinal extends javax.swing.JFrame {
     				private int totalNumberOfTicks;
     				private int windowSizeForLengthDistribution*/
     				
+    				
+    			//Class GUIOptions contains all Input Parameters.	
     			GUIOptions options = new GUIOptions(
     					sourceField.getText(),
     					outputFileTextField.getText(), 
@@ -866,7 +889,7 @@ public class guiFinal extends javax.swing.JFrame {
     			
     			//System.out.println(options.getInputFilename());
     			
-    			//sanity check
+    			//sanity check by Friederike
     			if(options.hasValidParameters()){
     				try {
     					cd.startController();
@@ -880,6 +903,8 @@ public class guiFinal extends javax.swing.JFrame {
 
     		int length= cd.getOutputFileErrors().size();
 
+    		//Creating output for Outputtextfield (not working as intended)
+    		
     		for(int i=0; i<length;i++)
     		{
     			if(this.cd.getOutputFileErrors().get(i).isCriticalError()) {
@@ -900,12 +925,15 @@ public class guiFinal extends javax.swing.JFrame {
     }                                           
     
 
-    
-    
-                                               
+    /*
+    *@author Friederike; Sven Bizu
+    *@functionality pauses Simulation and provides ability to resume simulation
+    */                                          
 
     private void pauseButtonActionPerformed(java.awt.event.ActionEvent evt) {                                            
         
+    	
+    	//If Simulation is paused rename label "Pause" to "Resume"
     	if(pauseButton.getText()=="Pause"){
 	    	stopButton.setEnabled(false);
 	    	pauseButton.setText("Resume");
@@ -916,6 +944,7 @@ public class guiFinal extends javax.swing.JFrame {
 				e.printStackTrace();
 			}
 	    }
+    	//If Simulation is resumed rename label "Resume" to "Pause"
 	    else{
 	    	stopButton.setEnabled(true);
 	    	pauseButton.setText("Pause");
@@ -931,20 +960,32 @@ public class guiFinal extends javax.swing.JFrame {
 		
     	}                                         
                                                
-
+    /*
+    *@author Sven Bizu
+    *@functionality close Programm when clicking on Exit in menubar
+    */  
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {                                             
     System.exit(0);
     }                                            
-
+    
+    /*
+    *@author Sven Bizu
+    *@functionality browse to set directory for LengthDistribution in Mainframe (unused)
+    */
     private void mainLdBrowseButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                   
    	 lengthDistributionChooser.showOpenDialog(guiFinal.this);
    	 mainLdSettingTextField.setText(lengthDistributionChooser.getSelectedFile().getAbsolutePath());
     }                                                  
 
+    /*
+    *@author Sven Bizu
+    *@functionality browse to set directory for Basecalling (unused)
+    */
     private void mainBasecallingBrowseButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                            
     baseCallingChooser.showOpenDialog(guiFinal.this);
     mainBasecallingSourceTextField.setText(baseCallingChooser.getSelectedFile().getAbsolutePath());
-    }                                                           
+    }
+    
 
     private void mainLdSettingTextFieldActionPerformed(java.awt.event.ActionEvent evt) {                                                       
         // TODO add your handling code here:
@@ -962,6 +1003,10 @@ public class guiFinal extends javax.swing.JFrame {
 
     }                                                   
 
+    /*
+    *@author Sven Bizu
+    *@functionality browse to set directory for FastA/FastQ file
+    */
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
    	 mainFileChooser.showOpenDialog(guiFinal.this);
      sourceField.setText(mainFileChooser.getSelectedFile().getAbsolutePath());
@@ -980,6 +1025,10 @@ public class guiFinal extends javax.swing.JFrame {
      }
     }                                            
 
+    /*
+    *@author Sven Bizu
+    *@functionality browse to set directory for SettingFiles (Basecalling and LengthDistribution
+    */
     private void settingFileDirectoryButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                           
     	settingFileDirectory.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         settingFileDirectory.showOpenDialog(guiFinal.this);
@@ -990,6 +1039,10 @@ public class guiFinal extends javax.swing.JFrame {
         // TODO add your handling code here:
     }                                                             
 
+    /*
+    *@author Sven Bizu
+    *@functionality choose Basecalling-File for simulation run (not used)
+    */
     private void bBrowseButtonActionPerformed(java.awt.event.ActionEvent evt) {                                              
     	createBasecallingBlastFileChooser.showOpenDialog(guiFinal.this);
         bBlastPathTextField.setText(createBasecallingBlastFileChooser.getSelectedFile().getAbsolutePath());
@@ -1007,6 +1060,10 @@ public class guiFinal extends javax.swing.JFrame {
         // TODO add your handling code here:
     }                                                
 
+    /*
+    *@author Sven Bizu
+    *@functionality select Length-Distribution-File for simulation (not used)
+    */
     private void ldBrowseButtonActionPerformed(java.awt.event.ActionEvent evt) {                                               
    	 createLengthDistributionFastAFileChooser.showOpenDialog(guiFinal.this);
      ldFastATextField.setText(createLengthDistributionFastAFileChooser.getSelectedFile().getAbsolutePath());
@@ -1024,6 +1081,10 @@ public class guiFinal extends javax.swing.JFrame {
         // TODO add your handling code here:
     }                                              
 
+    /*
+    *@author Sven Bizu
+    *@functionality open tabbedpane in settingfile-tab
+    */
     private void createSettingFileMenuItemActionPerformed(java.awt.event.ActionEvent evt) {                                                          
         optionsTabbedPane.setSelectedIndex(1);
         optionsDialog.setVisible(true);
@@ -1033,15 +1094,24 @@ public class guiFinal extends javax.swing.JFrame {
         // TODO add your handling code here:
     }                                                
 
+    /*
+    *@author Sven Bizu
+    *@functionality open tabbed-pane in input-tab
+    */
     private void InputSettingsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {                                                      
         optionsTabbedPane.setSelectedIndex(0);
         optionsDialog.setVisible(true);
     }                                                     
 
+    /*
+    *@author Friederike and Sven Bizu 
+    *@functionality Stop Simulation and reset Buttons to original state
+    */
     private void stopButtonActionPerformed(java.awt.event.ActionEvent evt) {                                           
         pauseButton.setText("Pause");
         pauseButton.setEnabled(false);
         stopButton.setEnabled(false);
+        startButton.setEnabled(true);
         String message ="";
         try {
     		cd.stop();
@@ -1068,6 +1138,10 @@ public class guiFinal extends javax.swing.JFrame {
 		}
     }                                              
 
+    /*
+    *@author Sven Bizu
+    *@functionality create Length Distribution by reading a FastA-File and Name for File to be created (not working)
+    */
     private void ldCreateButtonActionPerformed(java.awt.event.ActionEvent evt) {
     	
     	
@@ -1082,6 +1156,10 @@ public class guiFinal extends javax.swing.JFrame {
     	
     }                                              
 
+    /*
+    *@author Sven Bizu and Kevin
+    *@functionality create basecalling-settingfile by Blast-file
+    */
     private void bCreateButtonActionPerformed(java.awt.event.ActionEvent evt) {                                              
     	try {
 			createSetting.createSettingFile(bBlastPathTextField.getText(),settingFileDirectoryTextField.getText()+"\\"+bNameTextField.getText(),bComboBox.getSelectedIndex()+1);
@@ -1187,6 +1265,12 @@ public class guiFinal extends javax.swing.JFrame {
     private javax.swing.JFormattedTextField windowSizeFormattedTextField;
     // End of variables declaration                   
 
+    /*
+    *@author Sven Bizu
+    *@functionality check each textfield (not Directories!). Pop up if input is NaN or not a valid number.
+    *@output boolean
+    */
+    
     public static boolean checkNumOfPores(String num){
         try {
             Integer.parseInt(num);
@@ -1264,6 +1348,12 @@ public class guiFinal extends javax.swing.JFrame {
             return false;
         }
     }
+    
+    /*
+    *@author Sven Bizu
+    *@functionality use all sanity check functions
+    *@output boolean
+    */
     
     public static boolean checkInput(String numOfPores, String age, String numTicks, String duration, String windowSize){
         
