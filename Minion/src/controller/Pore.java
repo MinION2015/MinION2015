@@ -67,8 +67,8 @@ public class Pore {
 		Pore.sleepProbs = new int[sleepForSure];
 		Pore.wakeProbs = new int [wakeForSure];
 		Pore.deathProbs =setProbs(ageLimit,deathProbs,0);
-		Pore.sleepProbs=setProbs(sleepForSure,sleepProbs,5); // for now after 500 ticks the Pore will definitely go to sleep
-		Pore.wakeProbs=setProbs(wakeForSure,wakeProbs,3);
+		Pore.sleepProbs=setProbs(sleepForSure,sleepProbs,10); // for now after 500 ticks the Pore will definitely go to sleep
+		Pore.wakeProbs=setProbs(wakeForSure,wakeProbs,15);
 	}
 	
 
@@ -185,7 +185,13 @@ public class Pore {
 							}
 							else
 							{
-								boolean dead=tryToDie(age);
+								boolean dead=false;
+								
+								if(age<ageLimit)
+								{
+								dead=tryToDie(age);
+								}
+								
 								
 								if(dead)
 								{
@@ -328,11 +334,11 @@ public class Pore {
 			if(ageLimit*0.3<=i &&i<ageLimit*0.4) probs[i]=0+n;
 			if(ageLimit*0.4<=i &&i<ageLimit*0.5) probs[i]=0+n;
 			if(ageLimit*0.5<=i &&i<ageLimit*0.6) probs[i]=0+n;
-			if(ageLimit*0.6<=i &&i<ageLimit*0.7) probs[i]=1+n;
-			if(ageLimit*0.7<=i &&i<ageLimit*0.8) probs[i]=2+n;
-			if(ageLimit*0.8<=i &&i<ageLimit*0.9) probs[i]=30+n;
-			if(ageLimit*0.9<=i &&i<ageLimit*0.95) probs[i]=60+n;
-			if(ageLimit*0.95<=i &&i<ageLimit) probs[i]=100;
+			if(ageLimit*0.6<=i &&i<ageLimit*0.7) probs[i]=0+n;
+			if(ageLimit*0.7<=i &&i<ageLimit*0.8) probs[i]=0+n;
+			if(ageLimit*0.8<=i &&i<ageLimit*0.9) probs[i]=1+n;
+			if(ageLimit*0.9<=i &&i<ageLimit*0.95) probs[i]=2+n;
+			if(ageLimit*0.95<=i &&i<ageLimit) probs[i]=3;
 			
 		}
 		return probs;
@@ -358,7 +364,7 @@ public class Pore {
 	
 	/**
 	 * Test Friederike
-	 * @param args
+	 * @param argss
 	 */
 //	public static void main(String[] args){
 //		Pore p = new Pore(1000,"fasta");
@@ -370,8 +376,11 @@ public class Pore {
 //		
 //		for(int i=0;i<1000;i++)
 //		{
-//			System.out.println("timeBetweenLastSlumber: "+p.timeBetweenLastSlumber);
-//			System.out.println(p.checkStatus());
+//			
+//			if(p.checkStatus()=="Dead")
+//			{	
+//			System.out.println("Pore died at Age: "+p.age);
+//			}
 //		}
 //		p.numbersOfTimeAsked=10;
 //		p.sequenceLength=20;
