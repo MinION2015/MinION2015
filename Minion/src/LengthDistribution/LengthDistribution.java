@@ -68,11 +68,11 @@ public class LengthDistribution {
  * Test	
  * @throws IOException 
  */
-	public static void main(String args[]) throws IOException{
-		//LengthDistribution l = new LengthDistribution("ownLengthDistribution.txt",1000);
-		//double rand = l.getRandLength();
-		//System.out.println(rand);
-		LengthDistribution l = new LengthDistribution(10);
-		
-	}
+//	public static void main(String args[]) throws IOException{
+//		//LengthDistribution l = new LengthDistribution("ownLengthDistribution.txt",1000);
+//		//double rand = l.getRandLength();
+//		//System.out.println(rand);
+//		LengthDistribution l = new LengthDistribution(10);
+//		
+//	}
 }

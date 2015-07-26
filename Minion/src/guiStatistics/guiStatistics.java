@@ -4,6 +4,8 @@ import java.awt.Font;
 
 
 
+import java.util.Random;
+
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
@@ -27,20 +29,23 @@ public class guiStatistics extends ApplicationFrame {
 	private double[][] porestates = new double[10][5];
 	private double[] reads = new double[10];
 	private int tick;
+	private int time;
     /**
      * @author Daniel and Albert
      * @input gets the porestates containing the states of teh pore, the reads, containing the reads that are made at a special tick and the tick 
      * 		  are at the moment
      * @function generates two chartPanels
      */
-    public guiStatistics() {
+    public guiStatistics(int timeinput) {
 
         super("Minion Simulation");
         this.tick = 0;
+        time = timeinput;
+//        this.time = timeinput;
 
         // add the chart to a panel...
         chartPanel = new ChartPanel(createChart());
-        chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
+        chartPanel.setPreferredSize(new java.awt.Dimension(1000, 540));
         setContentPane(chartPanel);
 
     }
@@ -56,7 +61,7 @@ public class guiStatistics extends ApplicationFrame {
         final DefaultCategoryDataset result = new DefaultCategoryDataset();
         
         //just need to add some more values. rest is filled with null
-        final String series1 = "Read-Lengths";
+        final String series1 = "Number of Reads";
 
         for(Integer i = 0; i < tick; i++)
         {
@@ -118,7 +123,7 @@ public class guiStatistics extends ApplicationFrame {
     private JFreeChart createChart() {
 
         final CategoryDataset dataset1 = createDataset1();
-        final NumberAxis rangeAxis1 = new NumberAxis("Length of Reads");
+        final NumberAxis rangeAxis1 = new NumberAxis("Number of Reads");
         rangeAxis1.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
         final LineAndShapeRenderer renderer1 = new LineAndShapeRenderer();
         renderer1.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator());
@@ -140,7 +145,7 @@ public class guiStatistics extends ApplicationFrame {
         plot.add(subplot2, 1);
         
         final JFreeChart result = new JFreeChart(
-            "Combined Domain Category Plot Demo",
+            "",
             new Font("SansSerif", Font.BOLD, 12),
             plot,
             true
@@ -157,17 +162,32 @@ public class guiStatistics extends ApplicationFrame {
      */
 //    public static void main(final String[] args) {
 //    	//reads.length and porestates[0].length must be the same
-//        double[] porestates = {1,1,1,1,2};
+//        double[] porestates = {1,1,0,0,2};
 //        double reads = 3;
 //        
-//    	final guiStatistics demo = new guiStatistics();
+//        
+//    	final guiStatistics demo = new guiStatistics(1);
 //        demo.pack();
 //        RefineryUtilities.centerFrameOnScreen(demo);
 //        demo.setVisible(true);
 //        
 //        for(int i = 0; i< 10; i++)
 //        {
-//        	demo.updateData(porestates, reads+i);
+//        	double[] porestates2 = new double[5];
+//        	for(int j = 0; j < 5; j++)
+//        	{
+//        		Random r = new Random(); 
+//                int zahl = r.nextInt(5);
+//                
+//        		porestates2[zahl]++;
+//        	}
+//        	Random r = new Random(); 
+//            int zahl = r.nextInt(4)+1;
+//            
+//            porestates2[zahl]++;
+//            reads+=zahl;
+//            
+//        	demo.updateData(porestates2, reads);
 //        }
 //
 //    }
@@ -180,17 +200,12 @@ public class guiStatistics extends ApplicationFrame {
      * @param tick
      * @function updates the chart by computing a new one everytime.
      */
-    public void updateData(double[] porestates, double reads)
+    public void updateData(double[] porestatestoadd, double readstoadd)
 	   {
     			
-    			this.porestates[this.tick] = porestates;
-    			if(tick != 0)
-    			{
-    			this.reads[this.tick] = this.reads[tick-1]+reads;
-    			}else
-    			{
-    				this.reads[tick] = reads;
-    			}
+    			porestates[tick] = porestatestoadd;
+    			reads[tick] = readstoadd;
+
     			JFreeChart JFreetemp = createChart();
 		   		//chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
 		        this.chartPanel.setChart(JFreetemp);
