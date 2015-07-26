@@ -53,7 +53,7 @@ public class Runner extends Thread{
 	 */
 	public void run(){
 		
-		this.statistics = new guiStatistics();
+		this.statistics = new guiStatistics(cd.getOptions().getDurationOfTick());
 		
 		try{
 			
