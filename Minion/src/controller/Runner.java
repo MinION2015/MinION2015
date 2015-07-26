@@ -24,22 +24,36 @@ public class Runner extends Thread{
 	private Flowcell flowcell;
 	private int totalNumberOfTicks;
 	private int currentNumberOfTicks;
+	private boolean hasAlivePores;
+	
+
 	private guiStatistics statistics;
-	private int counterStat = 0;
+	private int counterStat;
 	
 	
 	
 	public Runner(Controller cd){
 		this.cd = cd;
-		initiliazeRun();
+		initiliaze();
 		this.currentNumberOfTicks = 0;
+		if(flowcell.getNumberOfAlivePores() > 0){
+			this.hasAlivePores = true;
+		}else{
+			this.hasAlivePores = false;
+		}
+		this.counterStat = 0;
+		 
+		
 	}
+
 	
+	/**
+	 * Chooses randomly a sequence from the input file and applies the tick function it. The output is collected in an output file. If the user picked realtime the flowcell output is written to the continuously, otherwise the outputfile is written out in the end. For each totalnumber/10th tick a new statisrtics object is displayed.
+	 * A last statistivs object is always displayed. This can either happen because the time is up or because the flowcell doesn't have any alive pores left.
+	 */
 	public void run(){
 		
 		this.statistics = new guiStatistics();
-		
-		boolean hasAlivePores = true;
 		
 		try{
 			
@@ -56,51 +70,52 @@ public class Runner extends Thread{
 				if(cd.getOptions().getWriteInFileOption().equals("Real-Time")){
 					try{
 						flowcell.getFlowcellOutput().writeInFile(cd.getOptions().getOutputFilename());
-						Thread.sleep(cd.getOptions().getDurationOfTick());
-					}catch(Exception e){
-						System.err.println(e.getMessage());
-					}
-				}else if(cd.getOptions().getWriteInFileOption().equals("Write all")){
-					try{
-						Thread.sleep(cd.getOptions().getDurationOfTick());
 					}catch(Exception e){
 						System.err.println(e.getMessage());
 					}
 				}
+				Thread.sleep(cd.getOptions().getDurationOfTick());
 				
-				if(currentNumberOfTicks % (totalNumberOfTicks/10) == 0 && counterStat < 9){//every maxNUmberfTicks/10 the statistics are getting updated
+				if(flowcell.getNumberOfAlivePores() == 0){
+					hasAlivePores = false;
+					System.err.println("All pores were dead at tick: "+currentNumberOfTicks);
+				}
+				if(currentNumberOfTicks % (totalNumberOfTicks/10) == 0 && counterStat < 9 && hasAlivePores){//every maxNUmberfTicks/10 the statistics are getting updated
 					statistics.updateData(flowcell.getStates(),flowcell.getFlowcellOutput().getSequence().size());
 					visualize(statistics);
 					counterStat++;
 				}
 				//print out data from last tick, either when the run is over or when all pores are dead
-				if(currentNumberOfTicks == totalNumberOfTicks && counterStat == 9 || flowcell.getNumberOfAlivePores() == 0){
+				if(currentNumberOfTicks == totalNumberOfTicks || !hasAlivePores){
 					statistics.updateData(flowcell.getStates(),flowcell.getFlowcellOutput().getSequence().size());
 					visualize(statistics);
-					if(flowcell.getNumberOfAlivePores() == 0){
-						hasAlivePores = false;
-						System.err.println("All pores were dead at tick: "+currentNumberOfTicks);
-					}
 				}
-				
 				currentNumberOfTicks++;
 				
 			}
+			
+			
 			if(cd.getOptions().getWriteInFileOption().equals("Write all")){
 				outputFile.writeInFile(cd.getOptions().getOutputFilename());
 			}
+			
+			System.out.println("Outputfile size: "+outputFile.getErrorInSequence().size());
+			this.cd.setOutputFile(outputFile);
 			System.out.println("Run was executed without throwing errors");
 			
 		}catch(Exception e){
 			System.err.println("Run method in Runner throws error: "+e.getMessage());
 			e.printStackTrace();
 		}
-		System.out.println(outputFile.getErrorInSequence().size());
-		this.cd.setOutputFile(outputFile);
+		
 		
 	}
 
 	//works
+	/**
+	 * Displays the calculated statistics
+	 * @param statistics
+	 */
 	private void visualize(guiStatistics statistics) {
 		statistics.pack();
         RefineryUtilities.centerFrameOnScreen(statistics);
@@ -109,12 +124,18 @@ public class Runner extends Thread{
 	}
 	
 	//works
-	public void stopped(){
-		this.currentNumberOfTicks = this.totalNumberOfTicks;
+	/**
+	 * Sets currentNumberOfTicks
+	 */
+	public void setCurrentNumberOfTicks(int ticks){
+		this.currentNumberOfTicks = ticks;
 	}
 
 	//works
-	private void initiliazeRun() {
+	/**
+	 * Assigns all needed parameters needed to execute the run function: inputfile, outputfile, flowcell and statistics
+	 */
+	private void initiliaze() {
 		this.inputFile = cd.getInputFile();
 		this.flowcell = cd.getFlowcell();
 		this.totalNumberOfTicks = cd.getOptions().getTotalNumberOfTicks();
@@ -122,6 +143,9 @@ public class Runner extends Thread{
 		this.statistics = cd.getStatistic();
 	}
 	
+	public int getCurrentNumberOfTicks() {
+		return currentNumberOfTicks;
+	}
 //	public static void main(String[] args){
 //		
 //		GUIOptions op = new GUIOptions("src/example4.fasta","TestRunner.txt","Real-Time","fasta","C:/Users/Friederike/University/Fourth Semester/Programmierprojekt/git/MinION2015/Minion/setting files/default.setting",1,5,1000,10,100,10);

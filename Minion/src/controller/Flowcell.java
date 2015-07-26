@@ -29,7 +29,10 @@ public class Flowcell{
 	private int currentSumOfReads; //needed for already recorded Reads
 	private String outputFormat;
 	private String status;
-
+	
+//	public Flowcell(){
+//		//for testing reasons
+//	}
 	public Flowcell(int numberOfPores,int maxAgeOfPores,String outputFormat) throws MyException{
 		System.out.println("A new flowcell is created");
 		currentSumOfReads = 0;
@@ -59,6 +62,8 @@ public class Flowcell{
 		}
 	}
 	
+
+
 	/**
 	 * The integer gives the number of pores that should be added. They are stored in a Arraylist, thus they are just added as a new object to the flowcell array list 
 	 * Since the flowcell won't get any more pores after being initiated I made the method private
@@ -114,9 +119,9 @@ public class Flowcell{
 				setFlowcellOutputFormat(outputFormat);
 				checkFlowcellState();
 				for(Pore p : poreList){
-					
+
 					String statusOfPore = p.getState();//"Finished";//"Finished"//"Dead"//"sleeping"
-					
+
 					if(statusOfPore.equals("Running") || statusOfPore.equals("Dead") || statusOfPore.equals("Sleeping")){
 						System.out.println("This pore is running, dead or sleeping");
 						continue;
@@ -130,7 +135,7 @@ public class Flowcell{
 						}
 					}else if(statusOfPore.equals("Finished")){
 						//collecting output
-						System.out.println("This pore is finished.");
+						System.out.println("This pore is finished sequencing");
 						try{
 							outputSequence.addSeq(p.getSequenceFromPore());
 						}catch(Exception e){
@@ -199,7 +204,6 @@ public class Flowcell{
 												//better move this into methode tick
 		return states;
 	}
-	
 	public int getcurrentSumOfReads()
 	{
 		return currentSumOfReads;
