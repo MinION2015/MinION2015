@@ -43,7 +43,7 @@ public class guiStatistics extends ApplicationFrame {
 
         super("Minion Simulation");
         this.tick = 0;
-        time = 120;
+        time = (int)((double)timeinput / 12.0);
 //        System.out.println(timeinput);
 //        this.time = timeinput;
 
@@ -146,7 +146,7 @@ public class guiStatistics extends ApplicationFrame {
         final CategoryPlot subplot2 = new CategoryPlot(dataset2, null, rangeAxis2, renderer11);
         subplot2.setDomainGridlinesVisible(true);
 
-        final CategoryAxis domainAxis = new CategoryAxis("Time(in min)");
+        final CategoryAxis domainAxis = new CategoryAxis("Time(in ticks)");
         final CombinedDomainCategoryPlot plot = new CombinedDomainCategoryPlot(domainAxis);
 
         plot.add(subplot1, 2);
