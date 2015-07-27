@@ -152,6 +152,7 @@ public class guiFinal extends javax.swing.JFrame {
         inputFileType.setBorder(javax.swing.BorderFactory.createTitledBorder("Input-File-Type"));
 
         inputFileTypeGroup.add(fastA);
+        fastA.setSelected(true);
         fastA.setText("FastA");
         fastA.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1325,7 +1326,7 @@ public class guiFinal extends javax.swing.JFrame {
           JOptionPane.showMessageDialog(null,"Duration per Tick is not a number","Wrong Input",JOptionPane.WARNING_MESSAGE);
         return false;
             }
-        if(Integer.parseInt(num)>0){
+        if(Integer.parseInt(num)>=0){
             return true;
         }else{
             JOptionPane.showMessageDialog(null,"Duration per Tick can't be negative","Wrong Input",JOptionPane.WARNING_MESSAGE);
