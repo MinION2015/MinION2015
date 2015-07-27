@@ -182,7 +182,7 @@ public class FastA implements FiletypeContainingSequences {
 				System.out.println(e);
 			}
 
-//			//TODO check if user should be informed about the fact that the filename already exists, so far new content gets appended to old one
+
 
 	}
 
