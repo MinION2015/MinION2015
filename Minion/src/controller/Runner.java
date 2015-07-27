@@ -103,7 +103,7 @@ public class Runner extends Thread{
 				outputFile.writeInFile(cd.getOptions().getOutputFilename());
 			}
 			
-			System.out.println("Outputfile size: "+outputFile.getErrorInSequence().size());
+//			System.out.println("Outputfile size: "+outputFile.getErrorInSequence().size());
 			this.cd.setOutputFile(outputFile);
 			System.out.println("Run was executed without throwing errors");
 			
